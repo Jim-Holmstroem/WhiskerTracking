@@ -1,3 +1,9 @@
+2012-02-17
+Tweaked plan a bit.
+Discussed project plan and implementation details.
+Wrote particle filter core functions.
+Wrote weighted_choice function and some tests for it.
+
 2012-02-16
 Between 10:00 and 12:00: Read more about the particle filter, wrote down the algorithm to better understand it, tried to construct a simple tracking example. Helped Christopher with Ubuntu. Accepted Jim's proposed project plan.
 Between 14:00 and 17:00: Finalized first draft of time plan with the other two. Discussed how the particle filter works. Discussed some implementation details.
