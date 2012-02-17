@@ -4,7 +4,7 @@ from numpy import zeros, zeros_like
 def default_sampler(X_prev):
     raise NotImplementedError()
 
-def naive_resample(X, weights):
+def default_resample(X, weights):
     raise NotImplementedError()
 
 def low_variance_resample(X, weights):
