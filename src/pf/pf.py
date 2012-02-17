@@ -1,4 +1,4 @@
-from random import random
+from random import uniform
 from numpy import zeros, zeros_like
 
 def default_sampler(X_prev):
@@ -12,7 +12,7 @@ def low_variance_resample(X, weights):
 
     M = len(X)
     M_inv = 1.0/M
-    r = (M_inv)*random()
+    r = uniform(0,M_inv) # Random number between 0 and M_inv
     c = weights[0]
 
     j = 0
