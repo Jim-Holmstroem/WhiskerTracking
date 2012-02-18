@@ -1,3 +1,5 @@
 *.planner is the fileformat for planner <http://live.gnome.org/Planner>
+Planner installation instructions for Ubuntu:
+    sudo apt-get install planner
 
 To rotate pdf: Ctrl+Right in evince.
