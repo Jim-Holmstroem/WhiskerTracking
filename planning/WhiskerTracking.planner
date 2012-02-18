@@ -20,12 +20,12 @@
     </calendar>
   </calendars>
   <tasks>
-    <task id="1" name="Report writing" note="" work="1670400" start="20120216T000000Z" end="20120510T170000Z" work-start="20120216T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <task id="2" name="Initial planning" note="" work="28800" start="20120216T000000Z" end="20120216T170000Z" work-start="20120216T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work"/>
+    <task id="1" name="Initial planning" note="" work="28800" start="20120216T000000Z" end="20120216T170000Z" work-start="20120216T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work"/>
+    <task id="2" name="Report writing" note="" work="1728000" start="20120222T000000Z" end="20120515T170000Z" work-start="20120222T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
       <task id="3" name="First draft of report without results" note="" work="806400" start="20120222T000000Z" end="20120330T170000Z" work-start="20120222T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <constraint type="must-start-on" time="20120222T000000Z"/>
         <predecessors>
-          <predecessor id="1" predecessor-id="2" type="FS"/>
+          <predecessor id="1" predecessor-id="1" type="FS"/>
         </predecessors>
       </task>
       <task id="4" name="FIrst draft of report results" note="" work="835200" start="20120330T170000Z" end="20120510T170000Z" work-start="20120402T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
@@ -33,161 +33,177 @@
           <predecessor id="1" predecessor-id="3" type="FS"/>
         </predecessors>
       </task>
-    </task>
-    <task id="5" name="Finilizing report" note="" work="86400" start="20120510T170000Z" end="20120515T170000Z" work-start="20120511T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="4" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="6" name="Sample from distribution" note="" work="28800" start="20120216T000000Z" end="20120216T170000Z" work-start="20120216T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work"/>
-    <task id="7" name="Testing dist-sampler" note="" work="57600" start="20120216T170000Z" end="20120220T170000Z" work-start="20120217T080000Z" percent-complete="50" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="6" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="8" name="Working trivial PF" note="" work="115200" start="20120216T170000Z" end="20120222T170000Z" work-start="20120217T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="6" type="FS"/>
-        <predecessor id="1" predecessor-id="2" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="9" name="Refactoring PF" note="" work="28800" start="20120222T170000Z" end="20120223T170000Z" work-start="20120223T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="8" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="10" name="Testing PF" note="" work="28800" start="20120223T170000Z" end="20120224T170000Z" work-start="20120224T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="9" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="11" name="Generate square video" note="" work="28800" start="20120221T000000Z" end="20120221T170000Z" work-start="20120221T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work">
-      <constraint type="start-no-earlier-than" time="20120221T000000Z"/>
-    </task>
-    <task id="12" name="Working framework for statetransition db" note="" work="201600" start="20120221T000000Z" end="20120229T170000Z" work-start="20120221T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <constraint type="start-no-earlier-than" time="20120221T000000Z"/>
-    </task>
-    <task id="13" name="Working trivial PF with parameterspace Theta (p,theta,size)" note="" work="201600" start="20120229T170000Z" end="20120309T170000Z" work-start="20120301T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="12" type="FS"/>
-        <predecessor id="1" predecessor-id="11" type="FS"/>
-        <predecessor id="1" predecessor-id="8" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="14" name="Refactoring PF" note="" work="28800" start="20120309T170000Z" end="20120312T170000Z" work-start="20120312T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="13" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="15" name="Testing PF" note="" work="28800" start="20120312T170000Z" end="20120313T170000Z" work-start="20120313T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="14" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="16" name="Generalize PF (GPF)" note="" work="86400" start="20120309T170000Z" end="20120314T170000Z" work-start="20120312T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="13" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="17" name="Refactoring GPF" note="" work="28800" start="20120314T170000Z" end="20120315T170000Z" work-start="20120315T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="16" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="18" name="Testing GPF" note="" work="57600" start="20120315T170000Z" end="20120319T170000Z" work-start="20120316T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="17" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="19" name="Generate whisker video" note="" work="117000" start="20120220T000000Z" end="20120224T083000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <constraint type="start-no-earlier-than" time="20120220T000000Z"/>
-      <predecessors>
-        <predecessor id="1" predecessor-id="2" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="20" name="Image processing" note="" work="57600" start="20120224T083000Z" end="20120228T083000Z" work-start="20120224T083000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="19" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="21" name="Refactoring IP" note="" work="28800" start="20120228T083000Z" end="20120229T083000Z" work-start="20120228T083000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="20" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="22" name="Testing IP" note="" work="28800" start="20120229T083000Z" end="20120301T083000Z" work-start="20120229T083000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="21" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="23" name="Create tracking models (whiskers,snout, fitness functions...)" note="" work="288000" start="20120220T000000Z" end="20120302T170000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <constraint type="start-no-earlier-than" time="20120220T000000Z"/>
-      <predecessors>
-        <predecessor id="1" predecessor-id="2" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="24" name="Working PF with gwhiskers" note="" work="288000" start="20120314T170000Z" end="20120328T170000Z" work-start="20120315T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="20" type="FS"/>
-        <predecessor id="1" predecessor-id="23" type="FS"/>
-        <predecessor id="1" predecessor-id="16" type="FS"/>
-        <predecessor id="1" predecessor-id="19" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="25" name="Make performance measures for algorithm" note="" work="201600" start="20120328T170000Z" end="20120406T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="24" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="26" name="Tweak and get performance measures" note="" work="403200" start="20120406T170000Z" end="20120426T170000Z" work-start="20120409T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="25" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="27" name="Analyze the models" note="" work="403200" start="20120223T000000Z" end="20120313T170000Z" work-start="20120223T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="23" type="SS" lag="259200"/>
-      </predecessors>
-    </task>
-    <task id="28" name="Tracking with things in the way (square,gwhiskers,rwhiskers)" note="" work="144000" start="20120328T170000Z" end="20120404T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="24" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="29" name="Tracking multiple objects (square,gwhiskers,rwhiskers)" note="" work="345600" start="20120404T170000Z" end="20120420T170000Z" work-start="20120405T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="28" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="30" name="Create data labeling GUI" note="" work="57600" start="20120216T170000Z" end="20120220T170000Z" work-start="20120217T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="2" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="31" name="Label realdata" note="" work="403200" start="20120220T170000Z" end="20120309T170000Z" work-start="20120221T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <constraint type="start-no-earlier-than" time="20120220T000000Z"/>
-      <predecessors>
-        <predecessor id="1" predecessor-id="30" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="32" name="Working tracking realdata" note="" work="172800" start="20120328T170000Z" end="20120405T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <predecessors>
-        <predecessor id="1" predecessor-id="31" type="FS"/>
-        <predecessor id="1" predecessor-id="24" type="FS"/>
-      </predecessors>
-    </task>
-    <task id="33" name="Oral Presentation" note="" work="201600" start="20120507T000000Z" end="20120515T170000Z" work-start="20120507T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <task id="34" name="First draft of oral presentation" note="" work="57600" start="20120507T000000Z" end="20120508T170000Z" work-start="20120507T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-        <constraint type="must-start-on" time="20120507T000000Z"/>
-      </task>
-      <task id="35" name="Finilizing oral presentation" note="" work="86400" start="20120508T170000Z" end="20120511T170000Z" work-start="20120509T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="5" name="Finilizing report" note="" work="86400" start="20120510T170000Z" end="20120515T170000Z" work-start="20120511T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
-          <predecessor id="1" predecessor-id="34" type="FS"/>
+          <predecessor id="1" predecessor-id="4" type="FS"/>
         </predecessors>
       </task>
-      <task id="36" name="Train for the oral presentation" note="" work="57600" start="20120511T170000Z" end="20120515T170000Z" work-start="20120514T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+    </task>
+    <task id="6" name="Sample from distribution" note="" work="28800" start="20120216T000000Z" end="20120216T170000Z" work-start="20120216T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work"/>
+    <task id="7" name="Testing distr-sampler" note="" work="57600" start="20120216T170000Z" end="20120220T170000Z" work-start="20120217T080000Z" percent-complete="50" priority="0" type="normal" scheduling="fixed-work">
+      <predecessors>
+        <predecessor id="1" predecessor-id="6" type="FS"/>
+      </predecessors>
+    </task>
+    <task id="8" name="Trivial PF" note="" work="172800" start="20120216T170000Z" end="20120224T170000Z" work-start="20120217T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="9" name="Working trivial PF" note="" work="115200" start="20120216T170000Z" end="20120222T170000Z" work-start="20120217T080000Z" percent-complete="40" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="6" type="FS"/>
+          <predecessor id="1" predecessor-id="1" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="10" name="Refactoring PF" note="" work="28800" start="20120222T170000Z" end="20120223T170000Z" work-start="20120223T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="9" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="11" name="Testing PF" note="" work="28800" start="20120223T170000Z" end="20120224T170000Z" work-start="20120224T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="10" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+    <task id="12" name="Generate square video" note="" work="28800" start="20120221T000000Z" end="20120221T170000Z" work-start="20120221T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work">
+      <constraint type="start-no-earlier-than" time="20120221T000000Z"/>
+    </task>
+    <task id="13" name="PF" note="" work="1441800" start="20120220T000000Z" end="20120328T170000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="14" name="Working framework for statetransition db" note="" work="201600" start="20120221T000000Z" end="20120229T170000Z" work-start="20120221T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="start-no-earlier-than" time="20120221T000000Z"/>
+      </task>
+      <task id="15" name="Working trivial PF with parameterspace Theta (p,theta,size)" note="" work="201600" start="20120229T170000Z" end="20120309T170000Z" work-start="20120301T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="14" type="FS"/>
+          <predecessor id="1" predecessor-id="12" type="FS"/>
+          <predecessor id="1" predecessor-id="9" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="16" name="Refactoring PF" note="" work="28800" start="20120309T170000Z" end="20120312T170000Z" work-start="20120312T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="15" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="17" name="Testing PF" note="" work="28800" start="20120312T170000Z" end="20120313T170000Z" work-start="20120313T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="16" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="18" name="Generalize PF (GPF)" note="" work="86400" start="20120309T170000Z" end="20120314T170000Z" work-start="20120312T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="15" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="19" name="Refactoring GPF" note="" work="28800" start="20120314T170000Z" end="20120315T170000Z" work-start="20120315T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="18" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="20" name="Testing GPF" note="" work="57600" start="20120315T170000Z" end="20120319T170000Z" work-start="20120316T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="19" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="21" name="Generate gwhisker video" note="" work="117000" start="20120220T000000Z" end="20120224T083000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="start-no-earlier-than" time="20120220T000000Z"/>
+        <predecessors>
+          <predecessor id="1" predecessor-id="1" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="22" name="Image processing" note="" work="57600" start="20120224T083000Z" end="20120228T083000Z" work-start="20120224T083000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="21" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="23" name="Refactoring IP" note="" work="28800" start="20120228T083000Z" end="20120229T083000Z" work-start="20120228T083000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="22" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="24" name="Testing IP" note="" work="28800" start="20120229T083000Z" end="20120301T083000Z" work-start="20120229T083000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="23" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="25" name="Create tracking models (whiskers,snout, fitness functions...)" note="" work="288000" start="20120220T000000Z" end="20120302T170000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="start-no-earlier-than" time="20120220T000000Z"/>
+        <predecessors>
+          <predecessor id="1" predecessor-id="1" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="26" name="Working PF with gwhiskers" note="" work="288000" start="20120314T170000Z" end="20120328T170000Z" work-start="20120315T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="22" type="FS"/>
+          <predecessor id="1" predecessor-id="25" type="FS"/>
+          <predecessor id="1" predecessor-id="18" type="FS"/>
+          <predecessor id="1" predecessor-id="21" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+    <task id="27" name="Tweaking" note="" work="604800" start="20120328T170000Z" end="20120426T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="28" name="Make performance measures for algorithm" note="" work="201600" start="20120328T170000Z" end="20120406T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="26" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="29" name="Tweak and get performance measures" note="" work="403200" start="20120406T170000Z" end="20120426T170000Z" work-start="20120409T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="28" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+    <task id="30" name="Analyze the models" note="" work="403200" start="20120223T000000Z" end="20120313T170000Z" work-start="20120223T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <predecessors>
+        <predecessor id="1" predecessor-id="25" type="SS" lag="259200"/>
+      </predecessors>
+    </task>
+    <task id="31" name="Added functionallity for tracker" note="" work="489600" start="20120328T170000Z" end="20120420T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="32" name="Tracking with things in the way (square,gwhiskers,rwhiskers)" note="" work="144000" start="20120328T170000Z" end="20120404T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="26" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="33" name="Tracking multiple objects (square,gwhiskers,rwhiskers)" note="" work="345600" start="20120404T170000Z" end="20120420T170000Z" work-start="20120405T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="32" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+    <task id="34" name="Real data" note="" work="921600" start="20120227T000000Z" end="20120405T170000Z" work-start="20120227T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="35" name="Create data labeling GUI" note="" work="57600" start="20120227T000000Z" end="20120228T170000Z" work-start="20120227T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="start-no-earlier-than" time="20120227T000000Z"/>
+        <predecessors>
+          <predecessor id="1" predecessor-id="1" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="36" name="Label realdata" note="" work="403200" start="20120301T000000Z" end="20120320T170000Z" work-start="20120301T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="start-no-earlier-than" time="20120301T000000Z"/>
         <predecessors>
           <predecessor id="1" predecessor-id="35" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="37" name="Working tracking realdata" note="" work="172800" start="20120328T170000Z" end="20120405T170000Z" work-start="20120329T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="36" type="FS"/>
+          <predecessor id="1" predecessor-id="26" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="38" name="Feature detection for realdata" note="" work="288000" start="20120228T170000Z" end="20120313T170000Z" work-start="20120229T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="35" type="FS"/>
+        </predecessors>
+      </task>
+    </task>
+    <task id="39" name="Oral Presentation" note="" work="201600" start="20120507T000000Z" end="20120515T170000Z" work-start="20120507T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="40" name="First draft of oral presentation" note="" work="57600" start="20120507T000000Z" end="20120508T170000Z" work-start="20120507T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <constraint type="must-start-on" time="20120507T000000Z"/>
+      </task>
+      <task id="41" name="Finilizing oral presentation" note="" work="86400" start="20120508T170000Z" end="20120511T170000Z" work-start="20120509T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="40" type="FS"/>
+        </predecessors>
+      </task>
+      <task id="42" name="Train for the oral presentation" note="" work="57600" start="20120511T170000Z" end="20120515T170000Z" work-start="20120514T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+        <predecessors>
+          <predecessor id="1" predecessor-id="41" type="FS"/>
         </predecessors>
       </task>
     </task>
