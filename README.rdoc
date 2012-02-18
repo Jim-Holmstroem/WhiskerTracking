@@ -1,4 +1,7 @@
 == WhiskerTracker
+Bachelordegree project in machinelearning. The goal is to use statistical 
+methods to get reliable unsupervised rat whisker tracking in highspeed video. 
+MORE TO COME
 
 == Project requirements:
 === WhiskerTracker
