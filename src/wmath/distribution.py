@@ -18,7 +18,6 @@ class distribution:
         """
         assert('cumsum' in dir(p))
         assert('searchsorted' in dir(p))
-        print 'sum(p)='+sum(p)
         self.__p=p
 
     def sample(self,n=1,sample_set=None):
@@ -30,8 +29,29 @@ class distribution:
         """
         if self.__cumsum is None:
             self.__cumsum=self.__p.cumsum()
-        indices = [self.__cumsum.searchsorted(random()) for i in range(n)]
+        indices = [self.__cumsum.searchsorted(random()) for i in xrange(n)]
         if sample_set is None:
             return indices
         else:
             return map(lambda i:sample_set[i],indices)
+
+
+if __name__== "__main__":
+    import pylab
+    p=numpy.array([0., 0., 1., 3., 5., 2., 0., 0., 5., 10., 5., 10., 12., 10., 2., 0., 0., 1., 2., 1.])
+    psum=sum(p)
+    p=numpy.array(map(lambda x:x/psum,p))
+    
+    d=distribution(p)
+    N=1000000
+    sample=d.sample(N)
+
+    i=numpy.arange(0,len(p),1)
+    hist=map(lambda t:float(sample.count(t))/N,i)
+
+    pylab.plot(i,p,i,hist,'*')
+
+    pylab.show()
+
+
+

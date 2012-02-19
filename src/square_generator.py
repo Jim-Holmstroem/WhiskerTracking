@@ -36,7 +36,7 @@ def render_movie():
     dy=0.02
     width=0.1
 
-    for i in range(num_frames):
+    for i in xrange(num_frames):
         clear(ctx)
 
         ctx.set_source_rgb(0,0,0)
