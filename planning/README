@@ -1,6 +1,0 @@
-*.planner is the fileformat for planner <http://live.gnome.org/Planner>
-Planner installation instructions for Ubuntu:
-    sudo apt-get install planner
-
-To rotate pdf:
-    pdftk plan.pdf cat 1E output output.pdf;mv output.pdf plan.pdf;

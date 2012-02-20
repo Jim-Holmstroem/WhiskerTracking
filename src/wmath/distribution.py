@@ -38,20 +38,22 @@ class distribution:
 
 if __name__== "__main__":
     import pylab
-    p=numpy.array([0., 0., 1., 3., 5., 2., 0., 0., 5., 10., 5., 10., 12., 10., 2., 0., 0., 1., 2., 1.])
-    psum=sum(p)
-    p=numpy.array(map(lambda x:x/psum,p))
-    
-    d=distribution(p)
-    N=1000000
-    sample=d.sample(N)
+     
+    for p in [numpy.array([0., 0., 1., 3., 5., 2., 0., 0., 5., 10., 5., 10., 12., 10., 2., 0., 0., 1., 2., 1.]),numpy.array([0.,0.,10.0,0.,0.,10.0,0.])]:
 
-    i=numpy.arange(0,len(p),1)
-    hist=map(lambda t:float(sample.count(t))/N,i)
+        psum=sum(p)
+        p=numpy.array(map(lambda x:x/psum,p))
+        
+        d=distribution(p)
+        N=100000
+        sample=d.sample(N)
 
-    pylab.plot(i,p,i,hist,'*')
+        i=numpy.arange(0,len(p),1)
+        hist=map(lambda t:float(sample.count(t))/N,i)
 
-    pylab.show()
+        pylab.plot(i,p,i,hist,'*')
 
+        pylab.show()
+        raw_input("push 4 next")
 
 
