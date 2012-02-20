@@ -1,11 +1,18 @@
+from wmath import weighted_choice
 from random import uniform
 from numpy import zeros, zeros_like
 
 def default_sampler(X_prev):
     raise NotImplementedError()
 
+'''
+Randomly chooses samples from X with replacement, weighted according to weights.
+'''
 def default_resample(X, weights):
-    raise NotImplementedError()
+    X_new = zeros_like(X)
+    for row in X_new:
+        row = weighted_choice(weights, X)
+    return X_new
 
 def low_variance_resample(X, weights):
     X_bar = zeros_like(X)
