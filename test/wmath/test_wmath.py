@@ -47,8 +47,8 @@ class TestWeightedRandomChoice(unittest.TestCase):
             tries_left -= 1
 
     def test_returns_indices_with_expected_probability(self):
-        permitted_relative_deviation = 0.01 # 0.01 = 1%
-        num_samples = len(self.test_population)*1000
+        permitted_relative_deviation = 0.05 # 0.01 = 1%
+        num_samples = len(self.test_population)*10000
         return_frequencies = numpy.zeros(len(self.test_population))
         expected_frequencies = self.test_population / float(sum(self.test_population)) * num_samples
 
