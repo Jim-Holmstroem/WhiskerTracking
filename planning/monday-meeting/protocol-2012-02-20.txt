@@ -1,0 +1,26 @@
+Monday meeting 2012-02-20
+
+Jim has retrieved report skeleton files from higher instances.
+Jim has tweaked the plan a bit.
+We recap'd particle filter concepts and such, and a broad overview of what the
+project is about - what we intend to do and how.
+
+This week:
+- We plan to have a working particle filter implementation for tracking trivial
+things by the middle of the week. A day or two is allocated for refactoring
+it.
+- We are to start building a state-transition database
+- We are to generate a whisker video.
+
+
+Reflections on the future:
+
+What will we include in our state transistion databases? Different databases
+for different states of the project? Will we use synthetic state transitions
+for tracking real whiskers?
+
+When evaluating different models, metrics and whatnot, we should include
+hypotheses on their performance as well as conclusions in the report.
+
+(Lots of?) Models in appendix!
+

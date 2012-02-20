@@ -1,0 +1,91 @@
+\documentclass[a4paper,11pt]{kth-mag}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage{lmodern}
+\usepackage[latin1]{inputenc}
+\usepackage[swedish,english]{babel}
+\usepackage{modifications}
+\title{
+    Probabilistic Tracking of Multiple Rodent Whiskers in Video Sequences
+    \\WORK IN PROGRESS
+}
+
+\subtitle{
+    <one line description on what we intend todo, see examples at homepage> 
+}
+\foreigntitle{
+    Statistisk F\"{o}ljning av Multipla Morrh\aa\r p\aa\ Gnagare i Video.
+}
+\author{
+    Jim Holmstr\"{o}m \& 
+    Emil Lundberg \& 
+    Christopher Nagy
+}
+\date{May 2012}
+\blurb{
+    Bachelor's Thesis at CSC\\
+    Supervisor: \"{O}rjan Ekeberg\\
+    Examiner: ???\"{O}rjan Ekeberg ???
+}
+\trita{TRITA xxx yyyy-nn}
+\begin{document}
+\frontmatter
+\pagestyle{empty}
+\removepagenumbers
+\maketitle
+\selectlanguage{english}
+\begin{abstract}
+    \input{abstract}
+\end{abstract}
+\clearpage
+\begin{foreignabstract}{swedish}
+    \input{foreignabstract}
+\end{foreignabstract}
+\clearpage
+\tableofcontents*
+\mainmatter
+\pagestyle{newchap}
+\chapter{Introduction}
+    \label{sec:introduction}
+    \input{introduction}
+
+\chapter{Theory}
+    \label{sec:theory}
+    \input{theory}
+
+%TODO impl.. or Impl..?
+\chapter{Algorithms \& Implementations}
+    \label{sec:algorithms_implementations}
+    \input{algorithms_implementations}
+
+
+%TODO results or Results?
+%TODO does one write benchmarking? and results?
+\chapter{Benchmarking \& Results}
+    \label{sec:benchmarks_results}
+    \input{benchmarks_results}
+
+%TODO discussion or Discussion?
+\chapter{Analysis \& Discussion}
+    \label{sec:analysis_discussion}
+    \input{analysis_discussion}
+
+
+%\input{appendixA} howto?
+\appendix
+\addappheadtotoc
+
+\chapter{RDF}\label{appA}
+
+
+\begin{figure}[ht]
+\begin{center}
+And here is a figure
+\caption{\small{Several statements describing the same resource.}}\label{RDF_4}
+\end{center}
+\end{figure}
+
+that we refer to here: \ref{RDF_4}
+
+
+\end{document}
