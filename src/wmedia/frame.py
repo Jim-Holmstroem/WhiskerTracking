@@ -1,3 +1,6 @@
+from PIL import Image
+import numpy
+
 class frame:
     """
     Dual for image as numpy.array and PIL.Image with lazy loading/constructing
@@ -19,43 +22,29 @@ class frame:
     @Note the dual could be generalized and perhaps used elsewhere
     """
 
-    __img=None
-    __img_hash=hash(__img) #last hash in which we updated the image with
-    __arr=None
-    __arr_hash=hash(__arr) #last hash in which we updated the array with
+    array=None
 
     def __init__(self,image):
-        raise Exception("Not tested yet")
-        self.__img=image
+        self.array=numpy.asarray(image).copy()
 
-    def __update_hash(self):
+    def get_copy_of_current_image(self):
         """
-        Called when __img and __arr is synced
+        Generates an new image from the array each time its called
+
+        @Return An PIL.Image from the current array
         """
-        self.__img_hash=hash(self.__img)
-        self.__arr_hash=hash(self.__arr)
-
-    def __update_image(self):
-        self.__img=Image.fromarray(numpy.uint(self.__arr))
-        self.__update_hash()
-
-    def __update_array(self):
-        self.__arr=numpy.asarray(self.__img)
-        self.__update_hash()
-
-    def get_image(self):
-        """
-
-        """
-        if(self.__arr_hash!=hash(self.__arr)): #if __arr has changed
-            self.__update_image()
-        return self.__img
+        return Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in xrange(1)]),'raw','RGBA',0,1)
 
     def get_array(self):
         """
+        Gets the array representing the image.
 
+        @Return numpy.array representing the image
         """
-        if(self.__img_hash!=hash(self.__img)): #if __img has changed
-            self.__update_array()
-        return self.__arr
+        return self.array
 
+
+if(__name__=='__main__'):
+    img=frame(Image.open("../../data/square_simple.pngvin/frame-00000.png"))
+    img.get_copy_of_current_image().show()
+   # Image.frombuffer('RGBA',(16,16),numpy.zeros((16,16,4)),'raw','RGBA',0,1).show()
