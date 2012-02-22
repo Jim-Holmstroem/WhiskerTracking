@@ -8,3 +8,7 @@
 
 == Install chipmunk (Ubuntu 11.10)
     sudo apt-get install chipmunk-dev
+
+
+== Notes on linking chipmunk (Ubuntu 11.10)
+    #include <chipmunk.h> should be #include <chipmunk/chipmunk.h>
