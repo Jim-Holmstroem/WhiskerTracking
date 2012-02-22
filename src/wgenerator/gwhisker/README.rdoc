@@ -19,4 +19,4 @@
     #include <chipmunk.h> should be #include <chipmunk/chipmunk.h>
 
 == Tutorial on Chipmunk 
-    !http://chipmunk-physics.net/release/ChipmunkLatest-Docs/!
+http://chipmunk-physics.net/release/ChipmunkLatest-Docs/
