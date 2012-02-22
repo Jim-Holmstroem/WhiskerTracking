@@ -1,19 +1,19 @@
 #include <stdio.h>
-#include <chipmunk.h>
+#include <chipmunk/chipmunk.h>
 
 int main(void){
-    cpVect is a 2D vector and cpv() is a shortcut for initializing them.
-    cpVect gravity = cpv(0, -100);
+    //cpVect is a 2D vector and cpv() is a shortcut for initializing them.
+//    cpVect gravity = cpv(0, -100);
      
     // Create an empty space.
     cpSpace *space = cpSpaceNew();
-    cpSpaceSetGravity(space, gravity);
+//    cpSpaceSetGravity(space, gravity);
              
     // Add a static line segment shape for the ground.
     // We'll make it slightly tilted so the ball will roll off.
     // We attach it to space->staticBody to tell Chipmunk it shouldn't be movable.
-    cpShape *ground = cpSegmentShapeNew(space->staticBody, cpv(-20, 5), cpv(20, -5), 0);
-    cpShapeSetFriction(ground, 1);
+    cpShape *ground = cpSegmentShapeNew(&space->staticBody, cpv(-20, 5), cpv(20, -5), 0);
+//    cpShapeSetFriction(ground, 1);
     cpSpaceAddShape(space, ground);
                    
     // Now let's make a ball that falls onto the line and rolls off.
@@ -34,9 +34,9 @@ int main(void){
      
     // Now we create the collision shape for the ball.
     // You can create multiple collision shapes that point to the same body.
-    // They will all be attached to the body and move around to follow it.
+    
     cpShape *ballShape = cpSpaceAddShape(space, cpCircleShapeNew(ballBody, radius, cpvzero));
-    cpShapeSetFriction(ballShape, 0.7);
+//    cpShapeSetFriction(ballShape, 0.7);
     
     // Now that it's all set up, we simulate all the objects in the space by
     // stepping forward through time in small increments called steps.
