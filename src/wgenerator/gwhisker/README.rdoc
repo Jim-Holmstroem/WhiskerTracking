@@ -9,9 +9,15 @@
 == Install chipmunk (Ubuntu 11.10)
     sudo apt-get install chipmunk-dev
 
+<<<<<<< HEAD
 == Get your own programs to work (Ubuntu 11.10)
     cd chipmunk/src
     make #must run cmake as in "Compile Chipmunk Demo"
     cp libchipmunk.a path_to_program_src
     #check out the Makefile from WhiskerTracking/src/gwhisker
 
+=======
+
+== Notes on linking chipmunk (Ubuntu 11.10)
+    #include <chipmunk.h> should be #include <chipmunk/chipmunk.h>
+>>>>>>> 466ada414debb104b3835c38f8954a1537b9f529
