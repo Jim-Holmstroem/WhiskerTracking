@@ -1,5 +1,5 @@
 == Install Chipmunk Demo (Ubuntu 11.10)
-    sudo apt-get install freeglut3 freeglut3-dev libxmu
+    sudo apt-get install freeglut3 freeglut3-dev libxmu-dev
     git clone git@github.com:slembcke/Chipmunk-Physics.git chipmunk
     cd chipmunk
     cmake CMakeLists.txt
