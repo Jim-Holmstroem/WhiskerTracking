@@ -14,10 +14,11 @@ class distribution:
         """
         Constructor for distribution
 
-        @Param p numpy-array representing the probability function, should be normalized
+        @Param p normalized numpy array representing a finite discrete probability function
         """
         assert('cumsum' in dir(p))
         assert('searchsorted' in dir(p))
+        assert(abs(p.sum()-1.0) < 0.001) # Make sure p is normalized
         self.__p=p
 
     def sample(self,n=1,sample_set=None):

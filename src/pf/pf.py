@@ -1,6 +1,6 @@
-from wmath import weighted_choice
+from wmath import weighted_choice, distribution
 from random import uniform
-from numpy import zeros, zeros_like
+from numpy import array, zeros, zeros_like
 
 def default_sampler(X_prev):
     raise NotImplementedError()
@@ -13,6 +13,13 @@ def default_resample(X, weights):
     for row in X_new:
         row = weighted_choice(weights, X)
     return X_new
+
+'''
+Better version of default_resample, uses wmath.distribution instead which is
+O(log n) for getting a sample in a population of size n
+'''
+def better_resample(X, weights):
+    return array(distribution(weights).sample(X.shape[0], X))
 
 def low_variance_resample(X, weights):
     X_bar = zeros_like(X)
@@ -40,12 +47,17 @@ def low_variance_resample(X, weights):
 pf
 @param X_prev
 '''
-def pf(X_prev, observation, importance_function, sampling_function=default_sampler, resampling_function=low_variance_resample):
+def pf(X_prev, observation, importance_function, sampling_function=default_sampler, resampling_function=better_resample):
     X_bar = zeros_like(X_prev)
     weights = zeros(len(X_prev))
 
     for rownum in xrange(len(X_prev)):
         X_bar[rownum] = sampling_function(X_prev[rownum]) # TODO
-        weights[rownum] = importance_function(observation, X_prev[rownum]) # TODO
+        weights[rownum] = importance_function(X_prev[rownum], observation) # TODO
+
+    if weights.sum() == 0:
+        weights += 1.0/weights.size
+    else:
+        weights = weights/float(weights.sum())
     
     return resampling_function(X_bar, weights)
