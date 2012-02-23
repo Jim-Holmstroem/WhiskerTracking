@@ -14,7 +14,7 @@
     #in the downloaded source since somethings wrong with the include files
     cd src
     make
-    sudo cp chipmunk /usr/include
+    sudo cp include/chipmunk /usr/include
 
 == Get your own programs to work (Ubuntu 11.10)
     cd chipmunk/src
