@@ -1,0 +1,24 @@
+2012-02-23
+Christropher informed us that he will switch to another project group. The reason was that the other group had received a project he had asked for.
+
+2012-02-20
+Monday meeting, see protocol.
+Worked on the simple implementation of the particle filter.
+
+2012-02-17
+Tweaked plan a bit.
+Discussed project plan and implementation details.
+Wrote particle filter core functions.
+Wrote weighted_choice function and some tests for it.
+
+2012-02-16
+Between 10:00 and 12:00: Read more about the particle filter, wrote down the algorithm to better understand it, tried to construct a simple tracking example. Helped Christopher with Ubuntu. Accepted Jim's proposed project plan.
+Between 14:00 and 17:00: Finalized first draft of time plan with the other two. Discussed how the particle filter works. Discussed some implementation details.
+
+2012-02-15
+Between 10:00 and 12:00: Read about particle filter, instructed Christopher in the use of git, and read some more.
+Between 15:00 and 17:00: Inspected a simple third party Python implementation of the particle filter, discussed the project a bit, read a lot more about the particle filter.
+
+2012-02-13
+Did complimentary assignment for missing lecture 2012-02-08 for ~4 hours.
+Monday Meeting with Jim and Christopher for 2 hours (they started some 1.5 hours earlier). Goal of the week is to complete a particle filter implementation and some fabricated input data.
