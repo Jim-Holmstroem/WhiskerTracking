@@ -28,9 +28,6 @@ num_particles = 1000
 particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
 
 for frame in v:
-#    frame.get_copy_of_current_image().show()
-#    raw_input()
-#    continue
 
     img = frame.get_copy_of_current_image()
     draw = ImageDraw.Draw(img)
