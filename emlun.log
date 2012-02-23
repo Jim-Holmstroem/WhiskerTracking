@@ -1,5 +1,7 @@
 2012-02-23
 Christropher informed us that he will switch to another project group. The reason was that the other group had received a project he had asked for.
+Finished the trivial particle filter implementation. Can now track a moving, rotating square well enough.
+Fixed some errors in wmath.distribution and wmedia.video.
 
 2012-02-20
 Monday meeting, see protocol.
