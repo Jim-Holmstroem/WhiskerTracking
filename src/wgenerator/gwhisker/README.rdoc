@@ -1,0 +1,25 @@
+== Compile Chipmunk Demo (Ubuntu 11.10)
+    sudo apt-get install freeglut3 freeglut3-dev libxmu-dev
+    git clone git@github.com:slembcke/Chipmunk-Physics.git chipmunk
+    cd chipmunk
+    cmake CMakeLists.txt
+    cd Demo
+    make
+
+== Install chipmunk (Ubuntu 11.10)
+    sudo apt-get install chipmunk-dev
+
+== Get your own programs to work (Ubuntu 11.10)
+    cd chipmunk/src
+    make #must run cmake as in "Compile Chipmunk Demo"
+    cp libchipmunk.a path_to_program_src
+    #check out the Makefile from WhiskerTracking/src/gwhisker
+
+== Notes on linking chipmunk (Ubuntu 11.10)
+    #include <chipmunk.h> should be #include <chipmunk/chipmunk.h>
+
+== Tutorial on Chipmunk 
+http://chipmunk-physics.net/release/ChipmunkLatest-Docs/
+
+== Reference to Chipmunk
+http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/
