@@ -8,7 +8,6 @@ class wlayermanager(gtk.DrawingArea):
 
     def __init__(self):
         super(wlayermanager,self).__init__()
-        #gtk.DrawingArea.__init__(self)
         self.connect("expose_event",self.expose)
 
     def add_layer(self,layer,zindex=None):
@@ -28,8 +27,11 @@ class wlayermanager(gtk.DrawingArea):
         
         for layer in self.__layers:
             layer.draw(self.context)
-        
-        self.draw(self.context)
+            
+        self.context.rectangle(event.area.x, event.area.y,event.area.width, event.area.height)
+        self.context.clip()
+
+        #self.draw(self.context)
         return False
 
 
