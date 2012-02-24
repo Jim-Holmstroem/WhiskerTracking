@@ -6,6 +6,9 @@ all:
 
 linktest:
 	g++ -c hellochipmunk.c -o hellochipmunk.o
-	g++ hellochipmunk.o -lchipmunk -o hello
+	g++ hellochipmunk.o -o hello -lchipmunk 
 run:
 	./hello
+
+clean:
+	rm *.o hello

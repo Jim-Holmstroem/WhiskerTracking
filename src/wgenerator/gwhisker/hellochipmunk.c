@@ -46,7 +46,7 @@ int main(void){
         cpVect pos = cpBodyGetPos(ballBody);
         cpVect vel = cpBodyGetVel(ballBody);
         printf(
-            "Time is %5.2f. ballBody is at (%5.2f, %5.2f). It's velocity is (%5.2f, %5.2f)\n",
+            "[%5.2f,(%5.2f,%5.2f),(%5.2f,%5.2f)]\n",
             time, pos.x, pos.y, vel.x, vel.y
         );
            
