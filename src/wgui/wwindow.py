@@ -12,10 +12,18 @@ class wwindow(gtk.Window):
     def __init__(self,layermanager):
         gtk.Window.__init__(self)
         self.set_title(self.__program_name+" - v"+self.__version__)
-        self.set_default_size(1024,768)
         self.connect("destroy",gtk.main_quit)
         
-        self.add(layermanager)
+        vbox = gtk.VBox(False,0)
+        hbox = gtk.HBox(False,0)
+        
+        vbox.add(layermanager)
+
+        vbox.add(gtk.HScale(gtk.Adjustment(0,0,32,1,1,1)))
+        
+        hbox.add(vbox)
+        hbox.add(gtk.Button("Knappis"))
+        self.add(hbox)
         
         self.show_all()
 
