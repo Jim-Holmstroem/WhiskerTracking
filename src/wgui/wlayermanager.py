@@ -22,16 +22,23 @@ class wlayermanager(gtk.DrawingArea):
     def remove_layer(self,layer):
         self.__layers.remove(layer)
 
+
+    def configure_event(self,widget,event):
+        print "configure_event()=changed size on widget"
+
+
     def expose(self,widget,event):
         self.context = widget.window.cairo_create()
         
         for layer in self.__layers:
-            layer.draw(self.context)
-            
-        self.context.rectangle(event.area.x, event.area.y,event.area.width, event.area.height)
-        self.context.clip()
+            layer.draw(self.context)     
+        
+        
+        #think we need widget.queue_draw_area(rectangle)
+        #self.context.rectangle(event.area.x, event.area.y,event.area.width, event.area.height)
+        #self.context.clip()
 
-        #self.draw(self.context)
+        #self.draw(self.context) ?? why cant i do this?
         return False
 
 

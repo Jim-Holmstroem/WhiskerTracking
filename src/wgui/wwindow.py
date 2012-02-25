@@ -3,6 +3,7 @@ import pygtk
 
 from wlayermanager import *
 from wimagelayer import *
+from wtestlayer import *
 
 class wwindow(gtk.Window):
 
@@ -14,20 +15,15 @@ class wwindow(gtk.Window):
         self.set_default_size(1024,768)
         self.connect("destroy",gtk.main_quit)
         
-        
         self.add(layermanager)
         
-        
         self.show_all()
-
-
 
 if __name__=="__main__":
     
     layermanager = wlayermanager()
     layermanager.add_layer(wimagelayer())
-
-    
+    layermanager.add_layer(wtestlayer())
     
     win=wwindow(layermanager)
    
