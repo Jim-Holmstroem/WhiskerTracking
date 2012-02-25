@@ -22,7 +22,14 @@ class wwindow(gtk.Window):
         vbox.add(gtk.HScale(gtk.Adjustment(0,0,32,1,1,1)))
         
         hbox.add(vbox)
-        hbox.add(gtk.Button("Knappis"))
+
+
+        btn = gtk.Button("Knappis")
+        #TODO button to activate som plotting of values in current frame`
+
+        hbox.add(btn)
+        
+        
         self.add(hbox)
         
         self.show_all()
