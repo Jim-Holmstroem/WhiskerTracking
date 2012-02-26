@@ -30,3 +30,9 @@ http://chipmunk-physics.net/release/ChipmunkLatest-Docs/
 
 == Reference to Chipmunk
 http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/
+
+== Cairo PNG
+http://cairographics.org/manual/cairo-PNG-Support.html
+
+== Cairo examples
+http://cairographics.org/samples/

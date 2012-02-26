@@ -1,5 +1,10 @@
 #include <stdio.h>
+#include <iostream>
+#include <sstream>
+#include <string>
 #include <chipmunk/chipmunk.h>
+
+#include <cairo/cairo.h>
 
 int main(void){
     //cpVect is a 2D vector and cpv() is a shortcut for initializing them.
@@ -30,7 +35,7 @@ int main(void){
     // The cpSpaceAdd*() functions return the thing that you are adding.
     // It's convenient to create and add an object in one line.
     cpBody *ballBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
-    cpBodySetPos(ballBody, cpv(0, 15));
+    cpBodySetPos(ballBody, cpv(0, 30));
      
     // Now we create the collision shape for the ball.
     // You can create multiple collision shapes that point to the same body.
@@ -42,16 +47,55 @@ int main(void){
     // stepping forward through time in small increments called steps.
     // It is *highly* recommended to use a fixed size time step.
     cpFloat timeStep = 1.0/60.0;
-    for(cpFloat time = 0; time < 2; time += timeStep){
+
+    int WIDTH=512;
+    int HEIGHT=512;
+
+    cairo_surface_t *surface;
+    cairo_t *cr;
+    
+    surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,WIDTH,HEIGHT);
+    cr=cairo_create(surface);
+    cr = cairo_create(surface);
+    cairo_translate(cr,256,256);
+    
+    int frame = 0;
+
+    for(cpFloat time = 0; time < 4; time += timeStep,++frame){
         cpVect pos = cpBodyGetPos(ballBody);
         cpVect vel = cpBodyGetVel(ballBody);
+
+        cairo_set_source_rgba(cr,1,1,1,1);
+        cairo_rectangle(cr,-256,-256,512,512); 
+        cairo_fill(cr);
+
+        cairo_set_source_rgba(cr,0,0,0,0.7);
+        cairo_arc(cr,pos.x,pos.y,2,0,2*M_PI);
+        cairo_fill(cr);
+
+        cairo_set_source_rgba(cr,1,0,0,0.7);
+        cairo_rectangle(cr,-20,-5,2*20,2*5);
+        cairo_set_line_width(cr,1);
+        cairo_stroke(cr);
+
+        std::stringstream ss;
+        ss.fill('0');
+        ss.width(5);
+        ss << frame; 
+        cairo_surface_write_to_png(surface,("testoutput.pngvin/frame-"+ss.str()+".png").c_str());
+
         printf(
             "[%5.2f,(%5.2f,%5.2f),(%5.2f,%5.2f)]\n",
             time, pos.x, pos.y, vel.x, vel.y
         );
-           
+        
+
+
         cpSpaceStep(space, timeStep);
     }
+    
+    cairo_destroy(cr);
+    cairo_surface_destroy(surface);
 
     // Clean up our objects and exit!
     cpShapeFree(ballShape);
