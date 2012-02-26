@@ -34,6 +34,9 @@ class wwindow(gtk.Window):
         
         self.show_all()
 
+
+
+
 if __name__=="__main__":
     
     layermanager = wlayermanager()
