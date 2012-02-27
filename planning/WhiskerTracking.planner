@@ -22,7 +22,7 @@
   <tasks>
     <task id="1" name="Initial planning" note="" work="28800" start="20120216T000000Z" end="20120216T170000Z" work-start="20120216T080000Z" percent-complete="100" priority="0" type="normal" scheduling="fixed-work"/>
     <task id="2" name="Report writing" note="" work="1728000" start="20120222T000000Z" end="20120515T170000Z" work-start="20120222T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <task id="3" name="First draft of report without results" note="" work="806400" start="20120222T000000Z" end="20120330T170000Z" work-start="20120222T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="3" name="First draft of report without results" note="" work="806400" start="20120222T000000Z" end="20120330T170000Z" work-start="20120222T080000Z" percent-complete="5" priority="0" type="normal" scheduling="fixed-work">
         <constraint type="must-start-on" time="20120222T000000Z"/>
         <predecessors>
           <predecessor id="1" predecessor-id="1" type="FS"/>
@@ -46,7 +46,7 @@
       </predecessors>
     </task>
     <task id="8" name="Trivial PF" note="" work="172800" start="20120216T170000Z" end="20120224T170000Z" work-start="20120217T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <task id="9" name="Working trivial PF" note="" work="115200" start="20120216T170000Z" end="20120222T170000Z" work-start="20120217T080000Z" percent-complete="40" priority="0" type="normal" scheduling="fixed-work">
+      <task id="9" name="Working trivial PF" note="" work="115200" start="20120216T170000Z" end="20120222T170000Z" work-start="20120217T080000Z" percent-complete="90" priority="0" type="normal" scheduling="fixed-work">
         <predecessors>
           <predecessor id="1" predecessor-id="6" type="FS"/>
           <predecessor id="1" predecessor-id="1" type="FS"/>
@@ -67,7 +67,7 @@
       <constraint type="start-no-earlier-than" time="20120221T000000Z"/>
     </task>
     <task id="13" name="PF" note="" work="1584000" start="20120220T000000Z" end="20120402T170000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
-      <task id="14" name="Working framework for statetransition db" note="" work="201600" start="20120221T000000Z" end="20120229T170000Z" work-start="20120221T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="14" name="Working framework for statetransition db" note="" work="201600" start="20120221T000000Z" end="20120229T170000Z" work-start="20120221T080000Z" percent-complete="10" priority="0" type="normal" scheduling="fixed-work">
         <constraint type="start-no-earlier-than" time="20120221T000000Z"/>
       </task>
       <task id="15" name="Working trivial PF with parameterspace Theta (p,theta,size)" note="" work="288000" start="20120229T170000Z" end="20120314T170000Z" work-start="20120301T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
@@ -102,7 +102,7 @@
           <predecessor id="1" predecessor-id="19" type="FS"/>
         </predecessors>
       </task>
-      <task id="21" name="Generate gwhisker video" note="" work="144000" start="20120220T000000Z" end="20120224T170000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="21" name="Generate gwhisker video" note="" work="144000" start="20120220T000000Z" end="20120224T170000Z" work-start="20120220T080000Z" percent-complete="65" priority="0" type="normal" scheduling="fixed-work">
         <constraint type="start-no-earlier-than" time="20120220T000000Z"/>
         <predecessors>
           <predecessor id="1" predecessor-id="1" type="FS"/>
@@ -123,7 +123,7 @@
           <predecessor id="1" predecessor-id="23" type="FS"/>
         </predecessors>
       </task>
-      <task id="25" name="Create tracking models (whiskers,snout, fitness functions...)" note="" work="288000" start="20120220T000000Z" end="20120302T170000Z" work-start="20120220T080000Z" percent-complete="0" priority="0" type="normal" scheduling="fixed-work">
+      <task id="25" name="Create tracking models (whiskers,snout, fitness functions...)" note="" work="288000" start="20120220T000000Z" end="20120302T170000Z" work-start="20120220T080000Z" percent-complete="10" priority="0" type="normal" scheduling="fixed-work">
         <constraint type="start-no-earlier-than" time="20120220T000000Z"/>
         <predecessors>
           <predecessor id="1" predecessor-id="1" type="FS"/>
