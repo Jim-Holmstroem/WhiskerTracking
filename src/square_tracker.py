@@ -16,9 +16,8 @@ def goodness(particle, image):
     else:
         return 0.1
 
-def sample(particles):
-#    return numpy.random.normal(scale=10, size=particles.size) + particles.mean(axis=0)
-    return particles + numpy.random.normal(loc=5, scale=2, size=particles.size)
+def sample(prev_particle):
+    return prev_particle + numpy.random.normal(loc=5, scale=2, size=prev_particle.size)
 
 v = video("data/square_simple.pngvin") # Dimensions: x, y, rgba
 
@@ -28,9 +27,6 @@ num_particles = 1000
 particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
 
 for frame in v:
-#    frame.get_copy_of_current_image().show()
-#    raw_input()
-#    continue
 
     img = frame.get_copy_of_current_image()
     draw = ImageDraw.Draw(img)

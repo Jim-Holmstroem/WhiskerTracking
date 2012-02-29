@@ -1,7 +1,6 @@
 import os
 import re
 from PIL import Image
-from numpy import array
 from wmedia import frame
 
 class video:
@@ -19,9 +18,9 @@ class video:
 
         @Param url_to_folder The url to the .pngvin file to load video from.
         """
-        if self.is_valid_pngvin.search(url_to_folder) is not None:
+        if self.is_valid_pngvin.search(url_to_folder):
             for img_path in os.listdir(url_to_folder): #NOTE possible bug the order of listing the frames might change.
-                if self.is_frame.search(img_path) is not None:
+                if self.is_frame.search(img_path):
                     self.vid.append(frame(Image.open(url_to_folder+'/'+img_path))) #NOTE not cross-platform since we use '/    '
         else:
             raise Exception('Not a .pngvin file')
