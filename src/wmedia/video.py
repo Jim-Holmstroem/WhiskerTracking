@@ -25,6 +25,9 @@ class video:
         else:
             raise Exception('Not a .pngvin file')
 
+    def __len__(self):
+        return len(vid)
+
     def __getitem__(self,i):
         """
         Get video-frame

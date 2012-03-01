@@ -6,8 +6,15 @@
     cd Demo
     make
 
+== Download latest chipmunk
+    http://chipmunk-physics.net/release/ChipmunkLatest.tgz
+
 == Install chipmunk (Ubuntu 11.10)
     sudo apt-get install chipmunk-dev
+    #in the downloaded source since somethings wrong with the include files
+    cd src
+    make
+    sudo cp include/chipmunk /usr/include
 
 == Get your own programs to work (Ubuntu 11.10)
     cd chipmunk/src
@@ -23,3 +30,9 @@ http://chipmunk-physics.net/release/ChipmunkLatest-Docs/
 
 == Reference to Chipmunk
 http://chipmunk-physics.net/release/ChipmunkLatest-API-Reference/
+
+== Cairo PNG
+http://cairographics.org/manual/cairo-PNG-Support.html
+
+== Cairo examples
+http://cairographics.org/samples/
