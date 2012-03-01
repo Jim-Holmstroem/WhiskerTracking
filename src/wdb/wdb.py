@@ -20,3 +20,6 @@ def createDatabase(database_path = "../../data/transition-db/wdb.db", number_of_
                 "FOREIGN KEY(toState) REFERENCES states(id));")
     
     print("Successfully created database " + database_path + ".")
+
+if __name__ == "__main__":
+    createDatabase()
