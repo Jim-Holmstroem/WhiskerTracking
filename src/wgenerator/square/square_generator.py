@@ -1,5 +1,6 @@
 import math
 import cairo
+from wmedia import left_align_videoformat
 
 """
 Only used to generate square test-data, nothing more.
@@ -7,16 +8,6 @@ Only used to generate square test-data, nothing more.
 
 IMAGE_WIDTH = 256
 IMAGE_HEIGHT = 256
-
-def left_align_videoformat(i):
-    """
-    To get the format for the frame-number
-
-    @Param i The number to get right format for
-    @Note Could use String.format instead but some functionality is missing in python 2.*
-    """
-    assert(len(str(i))<=5)
-    return ('0'*(5-len(str(i))))+str(i)
 
 def clear(ctx):
     """

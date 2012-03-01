@@ -1,7 +1,7 @@
 import numpy
 from PIL import ImageDraw
 from pf import pf
-from wmedia import video
+from wmedia import video, left_align_videoformat
 from itertools import product
 from time import sleep
 
@@ -26,6 +26,8 @@ num_particles = 1000
 #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
 particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
 
+save_img_dir = "../run"
+
 for frame in v:
 
     img = frame.get_copy_of_current_image()
@@ -37,5 +39,5 @@ for frame in v:
     
     pos = particles.mean(axis=0)
     draw.point(pos.tolist(), fill="#FF0000")
-    img.show()
+    img.save(save_img_dir + "/square_tracker.pngvin/frame-")
     sleep(0.2)
