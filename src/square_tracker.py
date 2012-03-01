@@ -1,4 +1,5 @@
 import numpy
+import os
 from PIL import ImageDraw
 from pf import pf
 from wmedia import video, left_align_videoformat
@@ -19,16 +20,20 @@ def goodness(particle, image):
 def sample(prev_particle):
     return prev_particle + numpy.random.normal(loc=5, scale=2, size=prev_particle.size)
 
-v = video("data/square_simple.pngvin") # Dimensions: x, y, rgba
+dataset = "square_simple"
+save_img_dir = "run/square_tracker-"+dataset+".pngvin"
+if(not os.path.exists(save_img_dir)):
+    os.makedirs(save_img_dir)
+
+print("Rendering tracking images to " + save_img_dir)
+    
+v = video("data/"+dataset+".pngvin") # Dimensions: x, y, rgba
 
 num_particles = 1000
-
 #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
 particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
 
-save_img_dir = "../run"
-
-for frame in v:
+for (i, frame) in enumerate(v):
 
     img = frame.get_copy_of_current_image()
     draw = ImageDraw.Draw(img)
@@ -39,5 +44,6 @@ for frame in v:
     
     pos = particles.mean(axis=0)
     draw.point(pos.tolist(), fill="#FF0000")
-    img.save(save_img_dir + "/square_tracker.pngvin/frame-")
+    img.save(save_img_dir + "/frame-" + left_align_videoformat(i) + ".png", "PNG")
+    print("Successfully rendered frame " + str(i))
     sleep(0.2)
