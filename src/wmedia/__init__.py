@@ -1,12 +1,14 @@
 from frame import frame
 from video import video
 
-def left_align_videoformat(i):
+def left_align_videoformat(i, num_digits=5):
     """
-    To get the format for the frame-number
+    Left-pads the given number with zeros
 
-    @Param i The number to get right format for
-    @Note Could use String.format instead but some functionality is missing in python 2.*
+    @param i: The number to get right format for
+    @param num_digits: The number of digits wanted in the result
+    @return: a string representing i, padded with zeros to the length num_digits. Example: If i=42 and num_digits=5, the result is "00042".
+    @note: Could use String.format instead but some functionality is missing in python 2.*
     """
-    assert(len(str(i))<=5)
-    return ('0'*(5-len(str(i))))+str(i)
+    assert(len(str(i))<=num_digits)
+    return ('0'*(num_digits-len(str(i))))+str(i)
