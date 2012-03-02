@@ -1,0 +1,14 @@
+Protocol for Monday Meeting, Wednesday 2012-02-29
+
+We realized our initial planning was a bit optimistic and therefore revised
+it. Everything was pushed forward a week or two.
+
+This week we will work on:
+- Finishing the trivial implementation of the particle
+filter
+- Building framework for the state transition database
+- Generating synthetic whisker videos
+
+Primarily, Jim will work on the third and Emil will work on the first two with
+Jim helping out.
+

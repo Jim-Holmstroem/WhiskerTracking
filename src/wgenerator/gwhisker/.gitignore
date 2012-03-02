@@ -2,5 +2,6 @@
 *.o
 *.so
 hello
+jointtest
 testoutput.pngvin
 Chipmunk-6.0.3
