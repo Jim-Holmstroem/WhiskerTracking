@@ -1,22 +1,40 @@
-'''
-Created on Feb 20, 2012
-
-@author: Emil Lundberg
-'''
-
 import numpy
 import pylab
 from wmath import distribution
 
-weights = numpy.arange(25)
-weights = weights/float(weights.sum())
+class Tester:
+    i=0
 
-num_samples = 100000
-d = distribution(weights)
-sample = d.sample(num_samples)
+    def test(self, weights, num_samples=10000):
+        pylab.figure(self.i)
+        self.i+=1
+        
+        weights = weights/float(weights.sum())
+    
+        d = distribution(weights)
+        sample = d.sample(num_samples)
+        
+        frequencies = numpy.array([sample.count(i) for i in xrange(weights.size)])
+        
+        pylab.plot(numpy.arange(weights.size), weights/float(sum(weights)))
+        pylab.plot(numpy.arange(weights.size), frequencies/float(sum(frequencies)), "b*")
 
-frequencies = numpy.array([sample.count(i) for i in xrange(weights.size)])
+t=Tester()
 
-pylab.plot(weights, weights/float(sum(weights)))
-pylab.plot(weights, frequencies/float(sum(frequencies)), "b*")
+def test(weights):
+    t.test(weights)
+
+### Linear function ###
+test(numpy.arange(50))
+
+### Step function ###
+test(numpy.array([0]*25+[1]*25))
+
+### Step function the other way ###
+test(numpy.array([1]*25+[0]*25))
+
+### Alternator ###
+test(numpy.array([0,1]*25))
+
+### Plot the results ###
 pylab.show()
