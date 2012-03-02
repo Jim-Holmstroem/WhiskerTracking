@@ -9,12 +9,8 @@ from wdb import create_database, StateTransitionDatabase
 Only used to generate square test-data, nothing more.
 """
 
-IMAGE_WIDTH = 256
-IMAGE_HEIGHT = 256
-
-movie_name = "square_obstacle"
-save_dir = "data/"+movie_name+".pngvin"
-db_file = "data/transition-db/"+movie_name+".db"
+IMAGE_WIDTH = 512
+IMAGE_HEIGHT = 512
 
 def clear(ctx):
     """
@@ -23,7 +19,14 @@ def clear(ctx):
     ctx.identity_matrix() 
     ctx.scale(IMAGE_WIDTH, IMAGE_HEIGHT) # Normalizing the canvas
 
-def render_movie():
+def render_online():
+    """
+    Renders a spinning square moving on a straight line.
+    """
+    movie_name = "square_online"
+    save_dir = "data/"+movie_name+".pngvin"
+    db_file = "data/transition-db/"+movie_name+".db"
+    
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     
@@ -76,4 +79,4 @@ def render_movie():
         prev_state = new_state
 
 if (__name__=='__main__'):
-    render_movie()
+    render_online()
