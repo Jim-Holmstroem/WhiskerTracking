@@ -40,12 +40,15 @@ class StateTransitionDatabase:
         insertQuery += ");"
         
         cur.execute(insertQuery, state)
+        self.__con.commit()
+        
         return cur.lastrowid
     
     def add_transition(self, from_state_id, to_state_id):
         cur = self.__con.cursor()
         
-        cur.execute("INSERT INTO transitions(fromState, toState) VALUES(?, ?);", from_state_id, to_state_id)
+        cur.execute("INSERT INTO transitions(fromState, toState) VALUES(?, ?);", (from_state_id, to_state_id))
+        self.__con.commit()
         
         return cur.lastrowid
 
