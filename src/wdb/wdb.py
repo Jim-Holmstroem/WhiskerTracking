@@ -1,6 +1,13 @@
 import os
 import sqlite3
 import numpy
+from wmath import distribution
+
+def euclidean_distance_inverse(a, b):
+    """
+    Takes two numpy vectors (1-dimensional arrays) and returns 1/(norm(a-b))
+    """
+    return 1.0/numpy.linalg.norm(a-b)
 
 def create_database(database_path = "data/transition-db/wdb.db", number_of_parameters = 2):
     con = sqlite3.connect(database_path)
@@ -74,5 +81,34 @@ class StateTransitionDatabase:
         """
         return numpy.hsplit(transition, 2)
     
-if __name__ == "__main__":
-    create_database()
+    def sample(self, prev_particle, weight_function=euclidean_distance_inverse):
+        from_states, to_states = self.split_transition(self.get_transitions())
+        
+        weights = numpy.zeros((from_states.shape[0], 1))
+        for i in xrange(from_states.shape[0]):
+            weights[i] = weight_function(prev_particle, from_states[i,:])
+        
+        if numpy.isinf(weights).any():
+            for i in xrange(weights.size):
+                if numpy.isinf(weights[i]):
+                    weights[i] = 1
+                else:
+                    weights[i] = 0
+        
+        weights = weights/sum(weights)
+        
+        dist = distribution(weights)
+        
+        return dist.sample(25, sample_set=to_states)
+    
+#    def sample(self, prev_particle, weight_function=euclidean_distance_inverse):
+#        weights = 
+
+#if __name__ == "__main__":
+#    create_database()
+    
+db=StateTransitionDatabase()
+from numpy import array
+a=array([1.,2.])
+b=array([3.,4.])
+print db.sample(a)
