@@ -18,3 +18,11 @@ pngvin
 
 === Copyright and License
 TODO
+
+
+=== How to Git
+==== Change branch
+    git checkout branchname #Will generate exception if unable to switch
+
+
+
