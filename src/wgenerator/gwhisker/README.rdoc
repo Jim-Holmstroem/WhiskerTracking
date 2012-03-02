@@ -7,7 +7,7 @@
     make
 
 == Download latest chipmunk
-    http://chipmunk-physics.net/release/ChipmunkLatest.tgz
+http://chipmunk-physics.net/release/ChipmunkLatest.tgz
 
 == Install chipmunk (Ubuntu 11.10)
     sudo apt-get install chipmunk-dev

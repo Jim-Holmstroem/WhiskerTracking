@@ -1,3 +1,8 @@
+2012-03-01
+Refactored the trivial PF implementation to save images to disk rather than show them on screen
+Some other refactoring
+Worked on state transition database
+
 2012-02-29
 Wrote function for creating SQLite database with tables, also worked on abstraction layer but didn't commit anything.
 Monday meeting (yes, today is Wednesday): see protocol.
