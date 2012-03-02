@@ -1,8 +1,9 @@
 import math
 import cairo
 import numpy
+import os
 from wmedia import left_align_videoformat
-from wdb import StateTransitionDatabase
+from wdb import create_database, StateTransitionDatabase
 
 """
 Only used to generate square test-data, nothing more.
@@ -13,6 +14,7 @@ IMAGE_HEIGHT = 256
 
 movie_name = "square_obstacle"
 save_dir = "data/"+movie_name+".pngvin"
+db_file = "data/transition-db/"+movie_name+".db"
 
 def clear(ctx):
     """
@@ -22,7 +24,12 @@ def clear(ctx):
     ctx.scale(IMAGE_WIDTH, IMAGE_HEIGHT) # Normalizing the canvas
 
 def render_movie():
-    db = StateTransitionDatabase("data/transition-db/"+movie_name+".db")
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
+    
+    if not os.path.exists(db_file):
+        create_database(db_file, 3)
+    db = StateTransitionDatabase(db_file)
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
     ctx = cairo.Context(surface)
@@ -38,7 +45,7 @@ def render_movie():
     dy=0.02
     width=0.1
     
-    prev_state = db.add_state(numpy.array([x0, y0]))
+    prev_state = db.add_state(numpy.array([x0, y0, 0.]))
 
     for i in xrange(num_frames):
         clear(ctx)
@@ -64,7 +71,7 @@ def render_movie():
         surface.write_to_png(save_dir+"/frame-"+left_align_videoformat(i)+".png")
 
         # Input the transition into the database
-        new_state = db.add_state(numpy.array([x0+dx*i, y0+dy*i]))
+        new_state = db.add_state(numpy.array([x0+dx*i, y0+dy*i, 2.0*math.pi/num_frames*i]))
         db.add_transition(prev_state, new_state)
         prev_state = new_state
 
