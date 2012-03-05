@@ -88,8 +88,6 @@ int main(void){
             "[%5.2f,(%5.2f,%5.2f),(%5.2f,%5.2f)]\n",
             time, pos.x, pos.y, vel.x, vel.y
         );
-        
-
 
         cpSpaceStep(space, timeStep);
     }
