@@ -15,7 +15,7 @@ methods to get reliable unsupervised rat whisker tracking in highspeed video.
 * cairo
 
 == Videoformat used
-pngvin file is basicly:
+pngvin file is basically:
 
     filename.pngvin/
         frame-00000.png
