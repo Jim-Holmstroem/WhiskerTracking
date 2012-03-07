@@ -40,9 +40,6 @@ int main(void){
     cpBody *staticBody = cpSpaceGetStaticBody(space);
 
 
-
-
-
     cpBody *body1,*body2; 
 
     cpVect offset=cpv( 10, 10);
@@ -75,8 +72,18 @@ int main(void){
 
 //=======RENDER LOOP===================
     int frame=0;
+
+    cpConstraint *constraint vart kommer denhar killen ifran, does one need the foreach loop;
+
     for(cpFloat time = 0; time < 4; time += timeStep,++frame){
-       
+        cpBody *body_a = constriant->a;
+        cpBody *body_b = constriant->b;
+        cpDampedRotarySpring *joint=(cpDampedRotarySpring*)
+
+        cpVect a = cpvadd(body_a->p,cpvrotate(joint->anchr1,body_a->rot));
+        cpVect b = cpvadd(body_b->p,cpvrotate(joint->anchr2,body_b->rot));
+
+        printf("[%5.2f,%5.2f,%5.2f,%5.2f]",a.x,a.y,b.x,b.y);
 
 
 /*
