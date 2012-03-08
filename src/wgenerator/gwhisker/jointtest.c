@@ -2,7 +2,8 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <chipmunk/chipmunk.h>
+
+#include "chipmunk/chipmunk.h" //<chipmunk/chipmunk.h>
 
 #include <cairo/cairo.h>
 
@@ -29,10 +30,11 @@ addBar(cpSpace* space, cpVect pos, cpVect boxOffset)
 static void 
 drawConstraint(cpConstraint *constraint,void* unused)
 {
-    cpBody *body_a = constriant->a;
-    cpBody *body_b = constriant->b;
+    cpBody *body_a = constraint->a;
+    cpBody *body_b = constraint->b;
     
-    if(constraint->klass!=cpDampedRotarySpringGetClass())
+    const cpConstraintClass klass = constraint->klass;
+    if( klass==cpDampedRotarySpringGetClass())
     {
         printf("not dampedrotarystpring :(");
         return;
