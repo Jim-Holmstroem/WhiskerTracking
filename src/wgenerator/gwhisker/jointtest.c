@@ -25,7 +25,32 @@ addBar(cpSpace* space, cpVect pos, cpVect boxOffset)
     return body;
 }
 
-int main(void){
+
+static void 
+drawConstraint(cpConstraint *constraint,void* unused)
+{
+    cpBody *body_a = constriant->a;
+    cpBody *body_b = constriant->b;
+    
+    if(constraint->klass!=cpDampedRotarySpringGetClass())
+    {
+        printf("not dampedrotarystpring :(");
+        return;
+    }    
+
+    cpDampedRotarySpring *joint=(cpDampedRotarySpring*)constraint;
+
+    cpVect a = cpvadd(body_a->p,cpvrotate(joint->anchr1,body_a->rot));
+    cpVect b = cpvadd(body_b->p,cpvrotate(joint->anchr2,body_b->rot));
+
+    printf("[%5.2f,%5.2f,%5.2f,%5.2f]",a.x,a.y,b.x,b.y);
+
+
+}
+
+
+int
+main(void){
     
 //=======SETUP SPACE===========
     cpVect gravity = cpv(0, -100);
@@ -73,19 +98,9 @@ int main(void){
 //=======RENDER LOOP===================
     int frame=0;
 
-    cpConstraint *constraint vart kommer denhar killen ifran, does one need the foreach loop;
 
     for(cpFloat time = 0; time < 4; time += timeStep,++frame){
-        cpBody *body_a = constriant->a;
-        cpBody *body_b = constriant->b;
-        cpDampedRotarySpring *joint=(cpDampedRotarySpring*)
-
-        cpVect a = cpvadd(body_a->p,cpvrotate(joint->anchr1,body_a->rot));
-        cpVect b = cpvadd(body_b->p,cpvrotate(joint->anchr2,body_b->rot));
-
-        printf("[%5.2f,%5.2f,%5.2f,%5.2f]",a.x,a.y,b.x,b.y);
-
-
+       cpSpaceEachConstraint(space,drawConstraint,NULL); // could one simple send the cairocontext instead of null and typeconvert "unused" accordingly  
 /*
         cpVect pos = cpBodyGetPos(ballBody);
         cpVect vel = cpBodyGetVel(ballBody);
