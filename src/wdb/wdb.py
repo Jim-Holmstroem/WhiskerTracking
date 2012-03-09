@@ -12,6 +12,16 @@ def euclidean_distance_inverse(a, b):
     """
     return 1.0/numpy.linalg.norm(a-b)
 
+def delete_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
+    db_file = os.path.join(database_dir, database_name + database_extension)
+    
+    if os.path.exists(db_file):
+        print "Deleting database", db_file
+        os.remove(db_file)
+        print "Database", db_file, "deleted."
+    else:
+        print "Nothing to do: Database", db_file, "does not exist."
+
 def create_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION, number_of_parameters=2):
     db_file = os.path.join(database_dir, database_name + database_extension)
     
@@ -120,15 +130,3 @@ class StateTransitionDatabase:
         dist = distribution(weights)
         
         return dist.sample(25, sample_set=to_states)
-    
-#    def sample(self, prev_particle, weight_function=euclidean_distance_inverse):
-#        weights = 
-
-#if __name__ == "__main__":
-#    create_database()
-    
-db=StateTransitionDatabase()
-from numpy import array
-a=array([1.,2.])
-b=array([3.,4.])
-print db.sample(a)
