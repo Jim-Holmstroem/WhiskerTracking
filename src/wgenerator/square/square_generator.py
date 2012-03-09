@@ -3,7 +3,7 @@ import cairo
 import numpy
 import os
 from wmedia import left_align_videoformat
-from wdb import create_database, StateTransitionDatabase
+from wdb import delete_database, StateTransitionDatabase
 
 """
 Only used to generate square test-data, nothing more.
@@ -25,30 +25,27 @@ def render_online():
     """
     movie_name = "square_online"
     save_dir = "data/"+movie_name+".pngvin"
-    db_file = "data/transition-db/"+movie_name+".db"
     
-    if not os.path.exists(save_dir):
-        os.makedirs(save_dir)
+    print "Rendering pngvin movie", movie_name
     
-    if not os.path.exists(db_file):
-        create_database(db_file, 3)
-    db = StateTransitionDatabase(db_file)
+    delete_database(movie_name)
+    db = StateTransitionDatabase(movie_name, 3)
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
     ctx = cairo.Context(surface)
-
-    raw_input("Press enter to continue rendering pngvin movie...")
-
+    
     num_frames=32
     
     x0 = 0.2
     y0 = 0.2
+    theta0 = 0.0
     
     dx=0.02
     dy=0.02
+    dtheta=2.0*math.pi/num_frames
     width=0.1
     
-    prev_state = db.add_state(numpy.array([x0, y0, 0.]))
+    prev_state = numpy.array([IMAGE_WIDTH*x0, IMAGE_WIDTH*y0, theta0])
 
     for i in xrange(num_frames):
         clear(ctx)
@@ -59,7 +56,7 @@ def render_online():
 
         ctx.set_source_rgb(1, 1, 1)
         ctx.translate(x0+dx*i, y0+dy*i)
-        ctx.rotate(2.0*math.pi/num_frames*i)
+        ctx.rotate(theta0+dtheta*i)
         ctx.rectangle(-width/2, -width/2, width, width)
         ctx.fill()
 
@@ -73,10 +70,15 @@ def render_online():
 
         surface.write_to_png(save_dir+"/frame-"+left_align_videoformat(i)+".png")
 
-        # Input the transition into the database
-        new_state = db.add_state(numpy.array([x0+dx*i, y0+dy*i, 2.0*math.pi/num_frames*i]))
-        db.add_transition(prev_state, new_state)
-        prev_state = new_state
+        if i>0:
+            # Input the transition into the database
+            new_state = numpy.array([IMAGE_WIDTH*(x0+dx*i), IMAGE_WIDTH*(y0+dy*i), theta0+dtheta*i])
+            db.add_transition(prev_state, new_state)
+            prev_state = new_state
+        
+        print "Rendered frame", i
+    
+    print "Done."
 
 if (__name__=='__main__'):
     render_online()
