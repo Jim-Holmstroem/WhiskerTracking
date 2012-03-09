@@ -6,11 +6,11 @@ from wmath import distribution
 DATABASE_DIR = "data/transition-db"
 DEFAULT_EXTENSION = ".sqlite3"
 
-def euclidean_distance_inverse(a, b):
+def euclidean_distance_inverse_squared(a, b):
     """
     Takes two numpy vectors (1-dimensional arrays) and returns 1/(norm(a-b))
     """
-    return 1.0/numpy.linalg.norm(a-b)
+    return 1.0/(1e-8 + (numpy.linalg.norm(a-b))**2)
 
 def delete_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
     db_file = os.path.join(database_dir, database_name + database_extension)
@@ -111,22 +111,26 @@ class StateTransitionDatabase:
         """
         return numpy.hsplit(transition, 2)
     
-    def sample(self, prev_particle, weight_function=euclidean_distance_inverse):
+    def sample_weighted_random(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
         from_states, to_states = self.split_transition(self.get_transitions())
         
         weights = numpy.zeros((from_states.shape[0], 1))
         for i in xrange(from_states.shape[0]):
             weights[i] = weight_function(prev_particle, from_states[i,:])
         
-        if numpy.isinf(weights).any():
-            for i in xrange(weights.size):
-                if numpy.isinf(weights[i]):
-                    weights[i] = 1
-                else:
-                    weights[i] = 0
-        
         weights = weights/sum(weights)
         
         dist = distribution(weights)
         
-        return dist.sample(25, sample_set=to_states)
+        return numpy.array(dist.sample(sample_set=to_states))
+    
+    def sample_weighted_average(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
+        from_states, to_states = self.split_transition(self.get_transitions())
+        
+        weights = numpy.zeros((from_states.shape[0]))
+        for i in xrange(from_states.shape[0]):
+            weights[i] = weight_function(prev_particle, from_states[i,:])
+
+        weights = weights/sum(weights)
+        
+        return numpy.average(to_states, axis=0, weights=weights)
