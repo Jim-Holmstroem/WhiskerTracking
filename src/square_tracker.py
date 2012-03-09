@@ -40,10 +40,9 @@ for (i, frame) in enumerate(v):
     for row in particles:
         draw.point(row.tolist(), fill="#FF0000")
     
-    particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
-    
     pos = particles.mean(axis=0)
-    draw.point(pos.tolist(), fill="#FF0000")
+    draw.point(pos.tolist(), fill="#0000FF")
     img.save(save_img_dir + "/frame-" + left_align_videoformat(i) + ".png", "PNG")
     print("Successfully rendered frame " + str(i))
-    sleep(0.2)
+    
+    particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
