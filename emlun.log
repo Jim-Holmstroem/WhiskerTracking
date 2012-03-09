@@ -1,3 +1,10 @@
+2012-03-09
+Continued work on the database:
+- Improved generation of database in the square generator
+- Added sampling functions to the database
+- Implemented a square tracker that uses the database and tried some different parameter values
+Eric Larsson stopped by to watch the tracker in action and offer some of his thoughts.
+
 2012-03-01
 Refactored the trivial PF implementation to save images to disk rather than show them on screen
 Some other refactoring
