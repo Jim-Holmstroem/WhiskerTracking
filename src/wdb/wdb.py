@@ -3,14 +3,26 @@ import sqlite3
 import numpy
 from wmath import distribution
 
+DATABASE_DIR = "data/transition-db"
+DEFAULT_EXTENSION = ".sqlite3"
+
 def euclidean_distance_inverse(a, b):
     """
     Takes two numpy vectors (1-dimensional arrays) and returns 1/(norm(a-b))
     """
     return 1.0/numpy.linalg.norm(a-b)
 
-def create_database(database_path = "data/transition-db/wdb.db", number_of_parameters = 2):
-    con = sqlite3.connect(database_path)
+def create_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION, number_of_parameters=2):
+    db_file = os.path.join(database_dir, database_name + database_extension)
+    
+    if os.path.exists(db_file):
+        print "Database", db_file, "already exists! Exiting."
+        return
+    
+    if not os.path.exists(database_dir):
+        os.makedirs(database_dir)
+    
+    con = sqlite3.connect(db_file)
     
     cur = con.cursor()
     
@@ -29,11 +41,19 @@ def create_database(database_path = "data/transition-db/wdb.db", number_of_param
     createTransitionsTableQuery += (");")
     cur.execute(createTransitionsTableQuery)
     
-    print("Successfully created database " + database_path + ".")
+    con.commit()
+    
+    print "Successfully created database " + db_file + "."
 
 class StateTransitionDatabase:
-    def __init__(self, database="data/transition-db/wdb.db"):
-        self.__con = sqlite3.connect(database)
+    def __init__(self, db_name="wdb", number_of_parameters=2):
+        
+        db_file = os.path.join(DATABASE_DIR, db_name + DEFAULT_EXTENSION)
+        if not os.path.exists(db_file):
+            create_database(db_name, number_of_parameters=number_of_parameters)
+        
+        self.__con = sqlite3.connect(db_file)
+        
         self.__con.execute("PRAGMA foreign_keys = ON;")
         
         cursor = self.__get_cursor()
