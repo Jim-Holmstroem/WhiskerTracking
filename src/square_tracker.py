@@ -18,7 +18,7 @@ def goodness(particle, image):
         return 0.1
 
 def sample(prev_particle):
-    return prev_particle + numpy.random.normal(loc=5, scale=2, size=prev_particle.size)
+    return prev_particle + numpy.random.normal(loc=0, scale=10, size=prev_particle.shape)
 
 dataset = "square_simple"
 save_img_dir = "run/square_tracker-"+dataset+".pngvin"
@@ -30,8 +30,7 @@ print("Rendering tracking images to " + save_img_dir)
 v = video("data/"+dataset+".pngvin") # Dimensions: x, y, rgba
 
 num_particles = 1000
-#particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
-particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
+particles = numpy.random.normal([102, 102], scale=10, size=(num_particles, 2))
 
 for (i, frame) in enumerate(v):
 
