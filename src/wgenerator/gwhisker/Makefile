@@ -1,6 +1,6 @@
 
-CPPFLAGS = -c -Wall -I${HOME}/Chipmunk-6.0.3/include `pkg-config --cflags cairo` # -pedantic                 
-LIBS = -L${HOME}/Chipmunk-6.0.3/src -lchipmunk `pkg-config --libs cairo`
+CPPFLAGS = -c -Wall  `pkg-config --cflags cairo` # -pedantic                 
+LIBS = `pkg-config --libs cairo`
 
 
 all:
