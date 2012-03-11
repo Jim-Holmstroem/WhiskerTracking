@@ -2,7 +2,6 @@ import pygame
 from pygame.locals import *
 import ode
 import math
-
 import itertools
 
 WIDTH=1024
@@ -14,41 +13,18 @@ def vadd(vi,vj):
 def coord(x,y):
     return int(WIDTH/2+WIDTH/10*x), int(HEIGHT/2-HEIGHT/10*y)
 
-# Initialize pygame
 pygame.init()
-
-# Open a display
 srf = pygame.display.set_mode((WIDTH,HEIGHT))
 
-# Create a world object
 world = ode.World()
-world.setGravity((10,1,0))
+world.setGravity((9,1,0))
 
-num_links=32
+num_links=16*2
 density=128
 
 bodies=[]
 
 width=1
-
-
-#
-# To get it stiff:
-#
-# AMotor between at each joint (also at the first)
-# Calculate the difference in angle between this joint and the next (first joint has a fixed angle)
-#
-# addTorques(t0,t1,t2) prop. to dphi (each angle, perpendicular?)
-# map(lambda i:amoto.getAngle(i),range(3)) # to get all them angles (is these according to worldcoordinate, can one simply diff them?)
-# 
-# setMode(mode), mode must be either AMotorUser or AMotorEuler (whats the difference?)
-#
-# how many axis this it control? i only count 2 when on the unit sphere, is this correct?
-#
-# AMotor inheritancs from joint (all good baby, can still keep them joints just making em motors thats all)
-#
-#
-#
 
 dw=5.0/num_links #dw is the distance between the joints
 for i in range(num_links):
@@ -62,84 +38,79 @@ for i in range(num_links):
     body.setPosition( (x+dw/2,2,0) )
     body.setFiniteRotationMode(1) #note important for accuracy (see doc)
         
-    print body.getMass().mass
-
     bodies.append(body)
 
 joints=[]
-motors=[]
 
 last_body=None
 for body in bodies:
-    joint=ode.BallJoint(world)
-    motor=ode.AMotor(world)
+    joint=ode.UniversalJoint(world)
 
     if last_body:
         joint.attach(last_body,body)
         joint.setAnchor( vadd(last_body.getPosition(),(dw/2,0,0)) )
-        motor.attach(last_body,body)
         
     else:
         joint.attach(ode.environment,body)
         joint.setAnchor( (0,2,0) )
-        motor.attach(ode.environment,body)
 
-    motor.setNumAxes(3)
-
+    joint.setAxis1((0,0,1))
+    joint.setAxis2((0,1,0))
     joints.append(joint)    
-    motors.append(motor)
 
     last_body=body
 
-
-# Simulation loop...
-
-
-fps = 300
+fps = 500
 dt = 1.0/fps
 loopFlag = True
-clk = pygame.time.Clock()
 
 w=0
+
+#
+# Methods used not listed in reference litterate:
+# 
+# Joint.getAngle1()
+# Joint.getAngle1Rate()
+#
+# remember to divide impulse (that is all) torques and forces by dt to get force dt independent
+#
+
+
+
+
+damping = 0.01
+stiffness=0.01
+
 
 while loopFlag:
     events = pygame.event.get()
     for e in events:
         if e.type==QUIT or e.type==KEYDOWN:
             print "EXIT"
-        #    loopFlag=False
 
-    # Clear the screen
     srf.fill((255,255,255))
-    
-    #====DRAW=======
 
     for body in bodies:
         x,y,z=body.getPosition()
-        #pygame.draw.circle(srf,(0,0,0),coord(x,y),2,0)
-        
         rot=body.getRotation()
         dx=dw*rot[0]/2.0
         dy=dw*rot[3]/2.0
         width=int(math.sqrt(body.getMass().mass/dw)/8)
         pygame.draw.line(srf,(0,0,0),coord(x-dx,y-dy),coord(x+dx,y+dy),width)
 
-        #a,b,c,d = body.getQuaternion()
-        #pygame.draw.line(srf,(0,0,0),coord(x,y),coord(x+a,y+d))
+    for joint in joints:
+        x,y,z=joint.getAnchor()
 
-    #for joint in joints:
-    #    x,y,z=joint.getAnchor()
-    #    pygame.draw.circle(srf,(255,0,0),coord(x,y),2,0)
+        joint.addTorques(-stiffness*joint.getAngle1()/dt,-stiffness*joint.getAngle2()/dt)
+        joint.addTorques(-damping*joint.getAngle1Rate()/dt,-damping*joint.getAngle2Rate()/dt)
+        
+        pygame.draw.circle(srf,(255,0,0),coord(x,y),2,0)
 
-    for motor in motors:
-        motor.addTorques(0.1,0.1,0.1)
-#        print map(lambda anum:motor.getAxis(anum),range(3))
-    #    print map(lambda anum:motor.getAngle(anum),range(3))
+        #debug output how much i am adding as torque and if it has descired effect
+        #can I some how make damping and stifness work together to get a fast shackdown as in mekaniken (whats it called?, the fastest possible stopping of distrubtion)
 
-
-
+        pygame.draw.line(srf,(0,255,0),coord(x,y),coord(x+1,y+1),1) 
 
     pygame.display.flip()
-    
     world.step(dt)
 
