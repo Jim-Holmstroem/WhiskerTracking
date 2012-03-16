@@ -60,7 +60,7 @@ for body in bodies:
 
     last_body=body
 
-fps = 500
+fps = 2000
 dt = 1.0/fps
 loopFlag = True
 
@@ -76,11 +76,11 @@ w=0
 #
 
 
+damping = 0.1
+stiffness=25
 
-
-damping = 0.01
-stiffness=0.01
-
+oldAngle1=joint.getAngle1()
+oldAngle2=joint.getAngle2()
 
 while loopFlag:
     events = pygame.event.get()
@@ -102,14 +102,19 @@ while loopFlag:
         x,y,z=joint.getAnchor()
 
         joint.addTorques(-stiffness*joint.getAngle1()/dt,-stiffness*joint.getAngle2()/dt)
-        joint.addTorques(-damping*joint.getAngle1Rate()/dt,-damping*joint.getAngle2Rate()/dt)
         
+        #joint.addTorques(-damping*joint.getAngle1Rate()/dt,-damping*joint.getAngle2Rate()/dt)
+         
+
+
+
+
         pygame.draw.circle(srf,(255,0,0),coord(x,y),2,0)
 
         #debug output how much i am adding as torque and if it has descired effect
         #can I some how make damping and stifness work together to get a fast shackdown as in mekaniken (whats it called?, the fastest possible stopping of distrubtion)
 
-        pygame.draw.line(srf,(0,255,0),coord(x,y),coord(x+1,y+1),1) 
+       # pygame.draw.line(srf,(0,255,0),coord(x,y),coord(x+1,y+1),1) 
 
     pygame.display.flip()
     world.step(dt)
