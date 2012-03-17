@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 import ode
 import math
+from math import cos,sin
 import itertools
 
 WIDTH=1024
@@ -13,13 +14,51 @@ def vadd(vi,vj):
 def coord(x,y):
     return int(WIDTH/2+WIDTH/10*x), int(HEIGHT/2-HEIGHT/10*y)
 
+def rotation_matrix(phi,theta,psi):
+    """
+        Returns a vector of 9 elements containing the rotation matrix (that is 3x3)
+    """
+    return [ cos(theta)*cos(psi) , -cos(phi)*sin(psi)+sin(phi)*sin(theta)*cos(psi) , sin(phi)*sin(psi)+cos(phi)*sin(theta)*cos(psi) , cos(theta)*sin(psi) , cos(phi)*cos(psi)+sin(phi)*sin(theta)*sin(psi) , -sin(phi)*cos(psi)+cos(phi)*sin(theta)*sin(psi) , -sin(theta) , sin(phi)*cos(theta) , cos(phi)*cos(theta) ]
+
+
+def interpolate(p):
+    """
+    Returns the points between the list p
+    """
+    pass
+
+
+class whisker:
+    bodies=[]
+    joints=[]
+
+    def __init__(self,world,pos=(0,0,0),direction=(1,0,0),length=5.0,width=1,num_links=32,density=128): 
+        dw=length/num_links
+        for i in range(num_links):
+            x=i*dw
+
+            body=ode.Body(world)
+            mass=ode.Mass()
+            mass.setCappedCylinder(density,1.1*width-width*float(i)/num_links,dw)
+            body.setMass(mass)
+          
+
+            body.
+            body.setFiniteRotationMode(1)
+
+            bodies.append(body)
+
+        
+
+
+
 pygame.init()
 srf = pygame.display.set_mode((WIDTH,HEIGHT))
 
 world = ode.World()
 world.setGravity((9,1,0))
 
-num_links=16*2
+num_links=32
 density=128
 
 bodies=[]
@@ -37,7 +76,7 @@ for i in range(num_links):
     body.setMass(mass)
     body.setPosition( (x+dw/2,2,0) )
     body.setFiniteRotationMode(1) #note important for accuracy (see doc)
-        
+
     bodies.append(body)
 
 joints=[]
@@ -60,7 +99,7 @@ for body in bodies:
 
     last_body=body
 
-fps = 2000
+fps = 2000.0
 dt = 1.0/fps
 loopFlag = True
 
@@ -70,16 +109,17 @@ w=0
 # Methods used not listed in reference litterate:
 # 
 # Joint.getAngle1()
-# Joint.getAngle1Rate()
+# Joint.getAngle1Rate() #BUGGY DONT USE
 #
 # remember to divide impulse (that is all) torques and forces by dt to get force dt independent
 #
 
 
-damping = 0.1
-stiffness=25
+#damping = 3.0
 
-oldAngle1=joint.getAngle1()
+stiffness=0.0
+
+oldAngle1=joint.getAngle1() #HACK to go around the need of joint.getAngle1Rate()
 oldAngle2=joint.getAngle2()
 
 while loopFlag:
@@ -95,19 +135,20 @@ while loopFlag:
         rot=body.getRotation()
         dx=dw*rot[0]/2.0
         dy=dw*rot[3]/2.0
-        width=int(math.sqrt(body.getMass().mass/dw)/8)
+        width=1+int(math.sqrt(body.getMass().mass/dw)/8)
         pygame.draw.line(srf,(0,0,0),coord(x-dx,y-dy),coord(x+dx,y+dy),width)
+        pygame.draw.circle(srf,(0,255,0),coord(x,y),2,0)
+
 
     for joint in joints:
         x,y,z=joint.getAnchor()
 
         joint.addTorques(-stiffness*joint.getAngle1()/dt,-stiffness*joint.getAngle2()/dt)
-        
-        #joint.addTorques(-damping*joint.getAngle1Rate()/dt,-damping*joint.getAngle2Rate()/dt)
-         
+#        joint.addTorques(-damping*(oldAngle1-joint.getAngle1())/dt,-damping*(oldAngle2-joint.getAngle2())/dt)
 
-
-
+        #update oldAngles
+        oldAngle1=joint.getAngle1()
+        oldAngle2=joint.getAngle2()
 
         pygame.draw.circle(srf,(255,0,0),coord(x,y),2,0)
 
