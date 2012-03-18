@@ -3,10 +3,17 @@ from pygame.locals import *
 import ode
 import math
 from math import cos,sin
-import itertools
+import itertools as itt
 
 WIDTH=1024
 HEIGHT=768
+
+class color:
+    gray=(128,128,128)
+    red=(255,0,0)
+    green=(0,255,0)
+    blue=(0,0,255)
+
 
 def vadd(vi,vj):
     return tuple(map(lambda (i,j):i+j,zip(tuple(vi),tuple(vj))))
@@ -20,6 +27,8 @@ def rotation_matrix(phi,theta,psi):
     """
     return [ cos(theta)*cos(psi) , -cos(phi)*sin(psi)+sin(phi)*sin(theta)*cos(psi) , sin(phi)*sin(psi)+cos(phi)*sin(theta)*cos(psi) , cos(theta)*sin(psi) , cos(phi)*cos(psi)+sin(phi)*sin(theta)*sin(psi) , -sin(phi)*cos(psi)+cos(phi)*sin(theta)*sin(psi) , -sin(theta) , sin(phi)*cos(theta) , cos(phi)*cos(theta) ]
 
+print rotation_matrix(0,0,0)
+
 
 def interpolate(p):
     """
@@ -32,7 +41,19 @@ class whisker:
     bodies=[]
     joints=[]
 
-    def __init__(self,world,pos=(0,0,0),direction=(1,0,0),length=5.0,width=1,num_links=32,density=128): 
+
+    def __init__(self,world,pos=(0,0,0),direction=(0,0,0),length=5.0,width=1,num_links=32,density=128): 
+        """
+            @param world - ode.World in which the whisker is created in
+            @param pos - the start position of the whisker
+            @param direction - the euler angle to define the direction of the whisker
+            @param length - the length of the whisker
+            @param width - almost the width att the root
+            @param num_links - the number of joints the whisker should be simulated with
+            @param density - the density of the  whisker, the mass will be calculated accordingly with the size of the whisker
+
+        """
+        
         dw=length/num_links
         for i in range(num_links):
             x=i*dw
@@ -43,7 +64,7 @@ class whisker:
             body.setMass(mass)
           
 
-            body.
+            #body.
             body.setFiniteRotationMode(1)
 
             bodies.append(body)
@@ -115,9 +136,13 @@ w=0
 #
 
 
-#damping = 3.0
+damping = 20.0
 
-stiffness=0.0
+#stiffness=10.0 works nicely
+
+stiffness=20.0
+
+
 
 oldAngle1=joint.getAngle1() #HACK to go around the need of joint.getAngle1Rate()
 oldAngle2=joint.getAngle2()
@@ -140,11 +165,15 @@ while loopFlag:
         pygame.draw.circle(srf,(0,255,0),coord(x,y),2,0)
 
 
+    first_joint=True
     for joint in joints:
         x,y,z=joint.getAnchor()
 
-        joint.addTorques(-stiffness*joint.getAngle1()/dt,-stiffness*joint.getAngle2()/dt)
-#        joint.addTorques(-damping*(oldAngle1-joint.getAngle1())/dt,-damping*(oldAngle2-joint.getAngle2())/dt)
+        if(first_joint):
+            first_joint=False
+        else:
+            joint.addTorques(-stiffness*joint.getAngle1()/dt,-stiffness*joint.getAngle2()/dt)
+            joint.addTorques(damping*(oldAngle1-joint.getAngle1())/dt,damping*(oldAngle2-joint.getAngle2())/dt)
 
         #update oldAngles
         oldAngle1=joint.getAngle1()
@@ -152,10 +181,18 @@ while loopFlag:
 
         pygame.draw.circle(srf,(255,0,0),coord(x,y),2,0)
 
-        #debug output how much i am adding as torque and if it has descired effect
-        #can I some how make damping and stifness work together to get a fast shackdown as in mekaniken (whats it called?, the fastest possible stopping of distrubtion)
+        #draw grid
+        M=5
+        for q in range(-M,M+1):
+            pygame.draw.line(srf,color.gray,coord(-M,q),coord(M,q),1) #x
+            pygame.draw.line(srf,color.gray,coord(q,-M),coord(q,M),1) #y
 
-       # pygame.draw.line(srf,(0,255,0),coord(x,y),coord(x+1,y+1),1) 
+        #draw the coordinate system
+        pygame.draw.line(srf,(0,128,128),coord(0,0),coord(1,0),2)
+        pygame.draw.line(srf,(0,128,128),coord(0,0),coord(0,1),2)
+
+        g=world.getGravity()
+        pygame.draw.line(srf,(128,128,0),coord(0,0),coord(g[0],g[1]),2)
 
     pygame.display.flip()
     world.step(dt)
