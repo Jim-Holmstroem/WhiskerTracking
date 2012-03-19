@@ -33,6 +33,11 @@ class edge_detector:
 
 class wip:
     """
+    
+    wip.function(img.array,argz...)
+
+    IMPORTANT QUeSTION, SHOULD IT RETURN A NEW MATRIX OR THE MODIFIED ONE?
+
 
     """
     def transform(img,function):
@@ -45,10 +50,18 @@ class wip:
         """
         Lineary transform input range onto [0,1]
         """
+        
         raise NotImplementedError()
 
     def histeqlocal(img,locality=5):
         raise NotImplementedError()
+
+    def histogram(img,bins,range=None):
+        """
+        Wrapper for:
+        http://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html  
+        """
+        pass
 
     def edge_response(img,detector):
         """
