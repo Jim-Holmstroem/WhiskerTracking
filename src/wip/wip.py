@@ -1,3 +1,5 @@
+import numpy
+
 """
 A little matlab code on realdata
 
@@ -33,24 +35,77 @@ class edge_detector:
 
 class wip:
     """
+    wip.function(img.array,argz...) #returns a copy with the result
     
-    wip.function(img.array,argz...)
-
-    IMPORTANT QUeSTION, SHOULD IT RETURN A NEW MATRIX OR THE MODIFIED ONE?
-
+    Try to return everything that is calculated that might be used later
 
     """
+
+    class wip_math:
+        def norm(X,Y,p=2):
+            """
+            Elementwise norm
+
+            Preferably X.shape=Y.shape but numpy 
+            handles others, see numpy broadcastable
+            
+            Note. The == operator with float("inf") is a little 
+            bit contriversial but it works in this case.
+
+            Returns c_ij=(x_ij^p+y_ij^p)^(1/p)
+            """
+            if(p==2): #Euclidian
+                return numpy.sqrt(numpy.add(numpy.square(X),numpy.square(Y)))
+            elif(p==1): #Manhattan
+                return numpy.add(numpy.absolute(X),numpy.absolute(Y))
+            elif(p==float("inf")): #Maximum norm (special case of: inf-norm)
+                return numpy.maximum(numpy.absolute(X),numpy.absolute(Y))
+            else:
+                return numpy.power(numpy.add(numpy.power(X,p),numpy.power(Y,p)),1./p)
+
+        def direction(X,Y):
+            """
+            Elementwise direction
+
+            Uses special function arctan2 used for this type of problems and
+            should handle specialcase
+            """
+            return numpy.arctan2(Y,X)
+
+    class differential:
+        kernel_diff_x=numpy.matrix("1 0 -1",dtype=numpy.float64)
+        kernel_diff_y=numpy.matrix("1;0;-1",dtype=numpy.float64)
+
+        class gradient:
+            #TODO make lazy grad-class (elementwise in matrix)
+            pass
+
+        def diff_x(self,img):
+            pass
+        def diff_y(self,img):
+            pass
+
+        def diff(self,img):
+            grad=gradient()
+            grad.x=self.diff_x(img)
+            grad.y=self.diff_y(img)
+            grad.mag=wip_math.norm(grad.x,grad.y,2)
+            grad.dir=wip_math.direction(grad.x,grad.y)
+            return grad
+
+
+
     def transform(img,function):
         """
         Transform image pixels according to the function
         """
         raise NotImplementedError()
 
-    def histeq(img):
+    def histeq(img,histogram=None):
         """
-        Lineary transform input range onto [0,1]
+        Lineary transform input range onto [0,1], to maximize contrast
         """
-        
+
         raise NotImplementedError()
 
     def histeqlocal(img,locality=5):
