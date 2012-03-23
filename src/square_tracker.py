@@ -3,8 +3,6 @@ import os
 from PIL import ImageDraw
 from pf import pf
 from wmedia import video, left_align_videoformat
-from itertools import product
-from time import sleep
 
 def goodness(particle, image):
     x, y = particle
