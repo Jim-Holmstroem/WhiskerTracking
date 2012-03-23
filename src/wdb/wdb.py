@@ -7,10 +7,9 @@ DATABASE_DIR = "data/transition-db"
 DEFAULT_EXTENSION = ".sqlite3"
 
 def euclidean_distance_inverse_squared(a, b):
-    """
-    Takes two numpy vectors (1-dimensional arrays) and returns 1/(norm(a-b))
-    """
-    return 1.0/(1e-8 + (numpy.linalg.norm(a-b))**2)
+    zero_division_defense = 1e-9 * min(numpy.linalg.norm(a), numpy.linalg.norm(b))
+    
+    return 1.0/(zero_division_defense + (numpy.linalg.norm(a-b))**2)
 
 def delete_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
     db_file = os.path.join(database_dir, database_name + database_extension)
