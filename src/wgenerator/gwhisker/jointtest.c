@@ -2,66 +2,108 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+
 #include <chipmunk/chipmunk.h>
 
 #include <cairo/cairo.h>
 
-int main(void){
-    //cpVect is a 2D vector and cpv() is a shortcut for initializing them.
+
+
+static cpBody *
+addBar(cpSpace* space, cpVect pos, cpVect boxOffset)
+{
+    cpFloat mass = 2.0f;
+    cpVect a = cpv(0,  30);
+    cpVect b = cpv(0, -30);
+
+    cpBody *body = cpSpaceAddBody(space, cpBodyNew(mass, cpMomentForSegment(mass, a, b)));
+    cpBodySetPos(body, cpvadd(pos, boxOffset));
+
+    cpShape *shape = cpSpaceAddShape(space, cpSegmentShapeNew(body, a, b, 5.0f));
+    cpShapeSetElasticity(shape, 0.0f);
+    cpShapeSetFriction(shape, 0.7f);
+
+    return body;
+}
+
+
+static void 
+drawConstraint(cpConstraint *constraint,void* unused)
+{
+    cpBody *body_a = constraint->a;
+    cpBody *body_b = constraint->b;
+    
+    const cpConstraintClass klass = constraint->klass;
+    if( klass==cpDampedRotarySpringGetClass())
+    {
+        printf("not dampedrotarystpring :(");
+        return;
+    }    
+
+    cpDampedRotarySpring *joint=(cpDampedRotarySpring*)constraint;
+
+    cpVect a = cpvadd(body_a->p,cpvrotate(joint->anchr1,body_a->rot));
+    cpVect b = cpvadd(body_b->p,cpvrotate(joint->anchr2,body_b->rot));
+
+    printf("[%5.2f,%5.2f,%5.2f,%5.2f]",a.x,a.y,b.x,b.y);
+
+
+}
+
+
+int
+main(void){
+    
+//=======SETUP SPACE===========
     cpVect gravity = cpv(0, -100);
      
-    // Create an empty space.
     cpSpace *space = cpSpaceNew();
     cpSpaceSetGravity(space, gravity);
-             
-    // Add a static line segment shape for the ground.
-    // We'll make it slightly tilted so the ball will roll off.
-    // We attach it to space->staticBody to tell Chipmunk it shouldn't be movable.
-    cpShape *ground = cpSegmentShapeNew(space->staticBody, cpv(-20, 5), cpv(20, -5), 0);
-    cpShapeSetFriction(ground, 1);
-    cpSpaceAddShape(space, ground);
-                   
-    // Now let's make a ball that falls onto the line and rolls off.
-    // First we need to make a cpBody to hold the physical properties of the object.
-    // These include the mass, position, velocity, angle, etc. of the object.
-    // Then we attach collision shapes to the cpBody to give it a size and shape.
-    cpFloat radius = 5;
-    cpFloat mass = 1;
-     
-    // The moment of inertia is like mass for rotation
-    // Use the cpMomentFor*() functions to help you approximate it.
-    cpFloat moment = cpMomentForCircle(mass, 0, radius, cpvzero);
-    
-    // The cpSpaceAdd*() functions return the thing that you are adding.
-    // It's convenient to create and add an object in one line.
-    cpBody *ballBody = cpSpaceAddBody(space, cpBodyNew(mass, moment));
-    cpBodySetPos(ballBody, cpv(0, 30));
-     
-    // Now we create the collision shape for the ball.
-    // You can create multiple collision shapes that point to the same body.
-    
-    cpShape *ballShape = cpSpaceAddShape(space, cpCircleShapeNew(ballBody, radius, cpvzero));
-    cpShapeSetFriction(ballShape, 0.7);
-    
-    // Now that it's all set up, we simulate all the objects in the space by
-    // stepping forward through time in small increments called steps.
-    // It is *highly* recommended to use a fixed size time step.
+    cpSpaceSetSleepTimeThreshold(space,0.5f);
+  
+
+//======BUILDING=================
+
+    cpBody *staticBody = cpSpaceGetStaticBody(space);
+
+
+    cpBody *body1,*body2; 
+
+    cpVect offset=cpv( 10, 10);
+    cpVect posA = cpv( 50, 60);
+    cpVect posB = cpv(110, 60);
+   
+
+    body1=addBar(space,posA,offset);
+    body2=addBar(space,posB,offset);
+
+    cpSpaceAddConstraint(space,cpPivotJointNew(body1,staticBody,cpvadd(offset,posA)));
+    cpSpaceAddConstraint(space,cpPivotJointNew(body2,staticBody,cpvadd(offset,posB)));
+    cpSpaceAddConstraint(space,cpDampedRotarySpringNew(body1,body2,0.0f,3000.0f,60.0f));
+
+
+//=======CONSTANTS=============
+
     cpFloat timeStep = 1.0/60.0;
 
     int WIDTH=512;
     int HEIGHT=512;
 
+//========CAIRO INIT===================
     cairo_surface_t *surface;
     cairo_t *cr;
-    
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,WIDTH,HEIGHT);
     cr=cairo_create(surface);
     cr = cairo_create(surface);
-    cairo_translate(cr,256,256);
-    
-    int frame = 0;
+    cairo_translate(cr,WIDTH/2,HEIGHT/2);
+
+//=======RENDER LOOP===================
+    int frame=0;
+
 
     for(cpFloat time = 0; time < 4; time += timeStep,++frame){
+       cpSpaceEachConstraint(space,drawConstraint,NULL); // could one simple send the cairocontext instead of null and typeconvert "unused" accordingly  
+/*
         cpVect pos = cpBodyGetPos(ballBody);
         cpVect vel = cpBodyGetVel(ballBody);
 
@@ -77,31 +119,35 @@ int main(void){
         cairo_rectangle(cr,-20,-5,2*20,2*5);
         cairo_set_line_width(cr,1);
         cairo_stroke(cr);
+*/
+
+
+//=========OUTPUT======================================
 
         std::stringstream ss;
         ss.fill('0');
         ss.width(5);
         ss << frame; 
-        cairo_surface_write_to_png(surface,("testoutput.pngvin/frame-"+ss.str()+".png").c_str());
+        cairo_surface_write_to_png(surface,("whiskeroutput.pngvin/frame-"+ss.str()+".png").c_str());
 
-        printf(
+//=========DEBUG OUTPUT=====================
+
+   /*     printf(
             "[%5.2f,(%5.2f,%5.2f),(%5.2f,%5.2f)]\n",
             time, pos.x, pos.y, vel.x, vel.y
         );
-        
-
+    */
+//=======STEP FORWARD=======================
 
         cpSpaceStep(space, timeStep);
     }
-    
+//=======CLEANUP=========================== 
     cairo_destroy(cr);
     cairo_surface_destroy(surface);
-
-    // Clean up our objects and exit!
-    cpShapeFree(ballShape);
-    cpBodyFree(ballBody);
-    cpShapeFree(ground);
+    
+    
     cpSpaceFree(space);
-         
+    
+
     return 0;
 }

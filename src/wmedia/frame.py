@@ -3,21 +3,15 @@ import numpy
 
 class frame:
     """
-    Dual for image as numpy.array and PIL.Image with lazy loading/constructing
+    Dual for image as numpy.array and PIL.Image
 
     @Example
         f=frame(Image.load('test.png'))
-        frame.get_image().show() #no converting
-        read_array(frame.get_array()) #convert img->arr internally since img updated (from None)
-        frame.get_image().show() #no converting since arr hash haven't changed
-        write_array(frame.get_array()) #no conversion
-        frame.get_image().show() #convert arr->img since arr has updated
-
-    @NOTE AVOID (Example)
-        arr=f.get_arr()
-        img=f.get_image()
-        write2(arr)
-        img.show() #will show the old image
+        frame.get_copy_of_image().show()
+        read_array(frame.get_array()) 
+        frame.get_image().show()
+        write_array(frame.get_array()) 
+        frame.get_copy_of_image().show() 
 
     @Note the dual could be generalized and perhaps used elsewhere
     """
@@ -25,7 +19,7 @@ class frame:
     array=None
 
     def __init__(self,image):
-        self.array=numpy.asarray(image).copy()
+        self.array=numpy.asarray(image,dtype=float).copy()
 
     def get_copy_of_current_image(self):
         """
@@ -33,7 +27,7 @@ class frame:
 
         @Return An PIL.Image from the current array
         """
-        return Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),self.array,'raw','RGBA',0,1)
+        return Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),numpy.uint8(self.array),'raw','RGBA',0,1)
 
     def get_array(self):
         """
@@ -45,6 +39,9 @@ class frame:
 
 
 if(__name__=='__main__'):
-    img=frame(Image.open("../../data/square_simple.pngvin/frame-00000.png"))
+    img=frame(Image.open("../../data/square_simple.pngvin/frame-00012.png"))
+    print img.get_array().dtype
     img.get_copy_of_current_image().show()
-   # Image.frombuffer('RGBA',(16,16),numpy.zeros((16,16,4)),'raw','RGBA',0,1).show()
+    img.get_array()[128:200,128:200,:]=128     
+    img.get_copy_of_current_image().show()
+

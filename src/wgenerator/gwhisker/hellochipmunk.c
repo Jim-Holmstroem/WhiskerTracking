@@ -57,7 +57,7 @@ int main(void){
     surface = cairo_image_surface_create(CAIRO_FORMAT_ARGB32,WIDTH,HEIGHT);
     cr=cairo_create(surface);
     cr = cairo_create(surface);
-    cairo_translate(cr,256,256);
+    cairo_translate(cr,WIDTH/2,HEIGHT/2);
     
     int frame = 0;
 
@@ -66,7 +66,7 @@ int main(void){
         cpVect vel = cpBodyGetVel(ballBody);
 
         cairo_set_source_rgba(cr,1,1,1,1);
-        cairo_rectangle(cr,-256,-256,512,512); 
+        cairo_rectangle(cr,-WIDTH/2,-HEIGHT/2,WIDTH,HEIGHT); 
         cairo_fill(cr);
 
         cairo_set_source_rgba(cr,0,0,0,0.7);

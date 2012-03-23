@@ -2,19 +2,16 @@ import numpy
 from random import random
 
 class distribution:
-    """
-    Distribution representation
-
-    """
+    """Distribution representation"""
 
     __p=None
     __cumsum=None
 
     def __init__(self,p):
-        """
-        Constructor for distribution
+        """Construct a discrete distribution function.
 
-        @Param p normalized numpy array representing a finite discrete probability function
+        @param p: a normalized numpy array representing a finite discrete
+            probability function
         """
         assert('cumsum' in dir(p))
         assert('searchsorted' in dir(p))
@@ -22,11 +19,13 @@ class distribution:
         self.__p=p
 
     def sample(self,n=1,sample_set=None):
-        """
-        Get n samples from the distribution
+        """Get n samples from the distribution.
 
-        @Param n the number of samples
-        @Return vector of samples
+        @param n: the number of samples to draw
+        @param sample_set: a list to sample from. sample_set[i] will be
+            selected with probability p[i]. Defaults to range(n) if
+            unspecified.
+        @return: a list of n samples
         """
         if self.__cumsum is None:
             self.__cumsum=self.__p.cumsum()
