@@ -1,17 +1,27 @@
 == WhiskerTracker
 Bachelordegree project in machinelearning. The goal is to use statistical 
 methods to get reliable unsupervised rat whisker tracking in highspeed video. 
-MORE TO COME
 
 == Project requirements:
 === WhiskerTracker
 * python >=2.6.5 <http://www.python.org>
 * numpy >=1.3.0 <http://www.numpy.org>
-=== DataGenerator
+* pygtk
+* pycairo
 
+=== DataGenerator
+* gcc
+* chipmunk
+* cairo
 
 == Videoformat used
-pngvin
+pngvin file is basically:
+
+    filename.pngvin/
+        frame-00000.png
+        frame-00001.png
+        ...
+        frame-00123.png
 
 === Example code
     Put some example code on how to run/use it here

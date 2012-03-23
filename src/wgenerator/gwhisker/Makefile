@@ -1,5 +1,5 @@
 
-CPPFLAGS = -c -Wall `pkg-config --cflags cairo` # -pedantic                 
+CPPFLAGS = -c -Wall  `pkg-config --cflags cairo` # -pedantic                 
 LIBS = `pkg-config --libs cairo`
 
 
