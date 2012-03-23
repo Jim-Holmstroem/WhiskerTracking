@@ -12,21 +12,22 @@ def goodness(particle, image):
         return 0
     
     if(image[x,y,0] == 255 and image[x,y,1] == 255 and image[x,y,2] == 255):
-        return 0.999
+        return 0.9
     else:
-        return 0.001
+        return 0.1
 
 def sample(prev_particle):
     
-    new_particle = db.sample_weighted_average(prev_particle)
+    new_particle_from_prev = prev_particle + numpy.random.normal(loc=0, scale=10, size=prev_particle.shape)
+    new_particle_from_db = db.sample_weighted_average(prev_particle)
+#    new_particle_from_db += numpy.random.normal(0, scale=[3, 3], size=new_particle_from_db.shape)
     
-    db_weight = 5
-    prev_weight = 0
+    db_weight = 10
+    prev_weight = 1
     
-    new_particle = new_particle*db_weight + prev_particle*prev_weight
+    new_particle = new_particle_from_prev*prev_weight + new_particle_from_db*db_weight
     new_particle /= db_weight + prev_weight
-    return new_particle + numpy.random.normal(0, scale=[3, 3], size=new_particle.shape)
-#    return prev_particle + numpy.random.normal(loc=5, scale=2, size=prev_particle.size)
+    return new_particle
 
 dataset = "square_simple"
 db = StateTransitionDatabase(dataset)
