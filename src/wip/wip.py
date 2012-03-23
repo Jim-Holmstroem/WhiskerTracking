@@ -93,8 +93,6 @@ class wip:
             grad.dir=wip_math.direction(grad.x,grad.y)
             return grad
 
-
-
     def transform(img,function):
         """
         Transform image pixels according to the function
