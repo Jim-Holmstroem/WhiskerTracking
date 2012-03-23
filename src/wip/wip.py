@@ -1,4 +1,5 @@
 import numpy
+import scipy.signal
 
 """
 A little matlab code on realdata
@@ -73,25 +74,75 @@ class wip:
             return numpy.arctan2(Y,X)
 
     class differential:
-        kernel_diff_x=numpy.matrix("1 0 -1",dtype=numpy.float64)
-        kernel_diff_y=numpy.matrix("1;0;-1",dtype=numpy.float64)
+
+        def convolve(img,kernel):
+            """
+            The method used to convolve
+            
+            TODO use specialfunction scipy.signal sepfir2d, since we have separated filter (remember to reverse the direction to make a filter instead) and mirror symmetric boundary cond.
+            """
+            return scipy.signal.convolve2d(img,kernel,boundary='symm')
+
+        def diff_x(img):
+            kernel_diff_x=numpy.matrix("1 0 -1",dtype=numpy.float64)
+            scipy.signal.convolve2d( 
+        
+        def diff_y(img):
+            kernel_diff_y=numpy.matrix("1;0;-1",dtype=numpy.float64)
+            make a map instead?
 
         class gradient:
-            #TODO make lazy grad-class (elementwise in matrix)
-            pass
+            """
+            Lazy gradient class that takes a reference to an image and calculates necassary parameters as they are called.
+            
+            Updating the image will invalidate all data, you can call renew (you might as well make a new instance)
 
-        def diff_x(self,img):
-            pass
-        def diff_y(self,img):
-            pass
+
+            """
+            # == HANDLING ==
+            self.diff_x=None #the differentation function 
+            self.diff_y=None
+            
+            # == DATA ==
+            self.dx=None #the image differantiated in one direction
+            self.dy=None
+            self.mag=None
+            self.dir=None
+            
+            def __init__(self,img,diff_x=differential.diff_x,diff_y=differential.diff_y):
+                self.img=img
+                self.diff_x=diff_x
+                self.diff_y=diff_y
+          
+            def renew(self,img):
+                self.img=img
+                self.dx=None 
+                self.dy=None
+                self.mag=None
+                self.dir=None
+
+            def dx(self):
+                if self.dx is None:
+                    self.dx=self.diff_x(self.img)    
+                return self.dx
+
+            def dy(self):
+                if self.dy is None:
+                    self.dy=self.diff_y(self.img)    
+                return self.dy
+
+            def mag(self):
+                if self.mag is None:
+                    self.mag = wip_math.norm(self.dx,self.dy,2)
+                return self.mag
+
+            def dir(self):
+                if self.dir is None:
+                    self.dir=wip_math.direction(grad.x,grad.y)
+                return self.dir
 
         def diff(self,img):
-            grad=gradient()
-            grad.x=self.diff_x(img)
-            grad.y=self.diff_y(img)
-            grad.mag=wip_math.norm(grad.x,grad.y,2)
-            grad.dir=wip_math.direction(grad.x,grad.y)
-            return grad
+            return gradient(img)
 
     def transform(img,function):
         """
