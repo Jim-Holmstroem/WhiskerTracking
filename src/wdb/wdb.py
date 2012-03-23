@@ -7,6 +7,12 @@ DATABASE_DIR = "data/transition-db"
 DEFAULT_EXTENSION = ".sqlite3"
 
 def euclidean_distance_inverse_squared(a, b):
+    """Calculate 1/(the norm of (a-b))^2.
+    
+    @param a: a numpy array
+    @param b: a numpy array of the same dimension as a
+    @return: 1/(norm(a-b)^2)
+    """
     zero_division_defense = 1e-9 * min(numpy.linalg.norm(a), numpy.linalg.norm(b))
     
     return 1.0/(zero_division_defense + (numpy.linalg.norm(a-b))**2)
@@ -80,7 +86,7 @@ class StateTransitionDatabase:
         return self.__con.cursor()
     
     def add_transition(self, from_state, to_state):
-        '''
+        '''Add a new transition to the database.
         @param from_state: A numpy array describing a state before transition. Must be of type float.
         @param from_state: A numpy array describing a state after transition. Must be of type float.
         '''
@@ -89,28 +95,41 @@ class StateTransitionDatabase:
         self.__con.commit()
     
     def get_transitions(self):
-        """
-        Returns all transitions in the database.
-        """
+        """Return all transitions in the database."""
         cur = self.__get_cursor()
         cur.execute("SELECT * FROM transitions;")
         
         return numpy.array(cur.fetchall())
     
     def combine_transition(self, from_state, to_state):
-        """
-        Combines the two given states into a transition row.
-        """
+        """Combine the two given states into a transition row."""
         return numpy.concatenate((from_state, to_state))
     
     def split_transition(self, transition):
-        """
-        Splits the given transition row into its two state parts.
+        """Split the given transition row into its two state parts.
+        
         If transition is a matrix, splits the rows of the matrix and returns the two ("left" and "right") parts of the matrix.
+        
+        @param transition: A numpy array to split
+        @return: The provided transition split in half as two numpy arrays
+        @see: function numpy.hsplit
         """
         return numpy.hsplit(transition, 2)
     
     def sample_weighted_random(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
+        """Generate a new particle by taking a random one from the database.
+        
+        For each transition t in the database, a weight w[t] is calculated
+        using the provided function as w[t] = weight_function(prev_particle,
+        t.from). The returned particle is a randomly chosen element of
+        {t.to for t in database}, weighted according to {w[t]}.
+        
+        @param prev_particle: the particle using which to create new particles
+        @param weight_function: a function to use for weighting database
+            entries. Will be called as weight_function(prev_particle, t) where
+            t is the "from" part of a transition in the database.
+        @return: A randomly chosen "to" part of a transition in the database.
+        """
         from_states, to_states = self.split_transition(self.get_transitions())
         
         weights = numpy.zeros((from_states.shape[0], 1))
@@ -124,6 +143,19 @@ class StateTransitionDatabase:
         return numpy.array(dist.sample(sample_set=to_states))
     
     def sample_weighted_average(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
+        """Generate a particle by taking the average of the database.
+        
+        For each transition t in the database, a weight w[t] is calculated
+        using the provided function as w[t] = weight_function(prev_particle,
+        t.from). The returned particle is the average of {t.from for t in
+        database} with the weights {w[t]}.
+        
+        @param prev_particle: the particle using which to create new particles
+        @param weight_function: a function to use for weighting database
+            entries. Will be called as weight_function(prev_particle, t) where
+            t is the "from" part of a transition in the database.
+        @return: A weighted average of the database as a new particle 
+        """
         from_states, to_states = self.split_transition(self.get_transitions())
         
         weights = numpy.zeros((from_states.shape[0]))
