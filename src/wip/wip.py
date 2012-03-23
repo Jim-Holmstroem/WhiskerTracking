@@ -1,5 +1,6 @@
 import numpy
 import scipy.signal
+import itertools 
 
 """
 A little matlab code on realdata
@@ -42,10 +43,22 @@ class wip:
 
     """
 
+    class wip_iter:
+
+        def pair_neighbours_inner(v):
+            """
+           
+            Note. the same idea can be made to handle different boundary conditions (copy, ignore, rotation) [izip([v[],v+[v[-1]])]
+            
+            Returns all the inner neighbouring elements as pairs (v_i,v_{i+1})
+
+            """
+            return itertools.izip(v[:-1],v[1:]])
+
     class wip_math:
         def norm(X,Y,p=2):
             """
-            Elementwise norm
+            Elementwise norm |(x_ij,y_ij)|_p
 
             Preferably X.shape=Y.shape but numpy 
             handles others, see numpy broadcastable
@@ -73,76 +86,117 @@ class wip:
             """
             return numpy.arctan2(Y,X)
 
-    class differential:
+        class point:
+            """
+            point is a container that has a x and y value
 
-        def convolve(img,kernel):
+            """
+            def __init__(self,x=None,y=None,p=None):
+                """
+                Either takes x,y or a 2-vector p
+                """
+                if not p is None and (not x is None or not y is None):
+                    return ValueError("Cant spec (x,y) AND p")
+                
+                if p is None:
+                    self.x=x
+                    self.y=y
+                else:
+                    self.x=p[0]
+                    self.y=p[1]
+
+    class differential:
+        """
+        Toolbox of methods used for differanting an image
+        """
+        def convolve(img,kernel,boundary='symm'):
             """
             The method used to convolve
-            
-            TODO use specialfunction scipy.signal sepfir2d, since we have separated filter (remember to reverse the direction to make a filter instead) and mirror symmetric boundary cond.
             """
-            return scipy.signal.convolve2d(img,kernel,boundary='symm')
+            return scipy.signal.convolve2d(img,kernel,boundary)
 
-        def diff_x(img):
-            kernel_diff_x=numpy.matrix("1 0 -1",dtype=numpy.float64)
-            scipy.signal.convolve2d( 
+        def convolve_decomopisited(img,kernel):
+            """
+            TODO use specialfunction scipy.signal sepfir2d, since we have separated filter (remember to reverse the direction to make a filter instead) and mirror symmetric boundary cond.
+            AND use this for 
+            """
+            pass
         
-        def diff_y(img):
-            kernel_diff_y=numpy.matrix("1;0;-1",dtype=numpy.float64)
-            make a map instead?
+        #TODO write about pros/cons in these filters
 
-        class gradient:
+        def central_diff(img):
+            kernel_central_x=numpy.matrix("1 0 -1",dtype=numpy.float64)
+            kernel_central_y=numpy.matrix("1;0;-1",dtype=numpy.float64)
+            return map(lambda kernel:convolve(img,kernel),[kernel_central_x,kernel_central_y])
+
+        def sobel_diff(img):
+            kernel_sobel_x=numpy.matrix("-1 0 -1;-2 0 2;-1 0 1",dtype=numpy.float64)
+            kernel_sobel_y=numpy.matrix("-1 -2 -1;0 0 0;1 2 1",dtype=numpy.float64)
+            return map(lambda kernel:convolve(img,kernel),[kernel_sobel_x,kernel_sobel_y])
+
+        def prewitt_diff(img):
+            kernel_prewitt_x=numpy.matrix("-1 0 1;-1 0 1;-1 0 1",dtype=numpy.float64)
+            kernel_prewitt_y=numpy.matrix("-1 -1 -1;0 0 0;1 1 1",dtype=numpy.float64)
+            return map(lambda kernel:convolve(img,kernel),[kernel_prewitt_x,kernel_prewitt_y])
+
+        def roberts_diff(img):
+            kernel_roberts_x=numpy.matrix("1 0;0 -1",dtype=numpy.float64)
+            kernel_roberts_y=numpy.matrix("0 1;-1 0",dtype=numpy.float64)
+            return map(lambda kernel:convolve(img,kernel),[kernel_roberts_x,kernel_roberts_y])
+
+        def magic_diff(img):
+            #Implement: http://assassinationscience.com/johncostella/edgedetect/
+            pass
+
+        class image_gradient:
             """
             Lazy gradient class that takes a reference to an image and calculates necassary parameters as they are called.
             
             Updating the image will invalidate all data, you can call renew (you might as well make a new instance)
 
-
             """
-            # == HANDLING ==
-            self.diff_x=None #the differentation function 
-            self.diff_y=None
+            self.diffs_data=None
+            self.mag_data=None
+            self.dir_data=None
             
-            # == DATA ==
-            self.dx=None #the image differantiated in one direction
-            self.dy=None
-            self.mag=None
-            self.dir=None
-            
-            def __init__(self,img,diff_x=differential.diff_x,diff_y=differential.diff_y):
+            def __init__(self,img,diff_method=differential.central_diff):
+                """
+
+                Argument img the image to take the gradient of
+                Argument diff_method takes image and returns [diff_x,diff_y]
+                """
                 self.img=img
-                self.diff_x=diff_x
-                self.diff_y=diff_y
+                self.diff_method=diff_method
           
             def renew(self,img):
                 self.img=img
-                self.dx=None 
-                self.dy=None
-                self.mag=None
-                self.dir=None
+                self.diffs_data=None
+                self.mag_data=None
+                self.dir_data=None
 
-            def dx(self):
-                if self.dx is None:
-                    self.dx=self.diff_x(self.img)    
-                return self.dx
-
-            def dy(self):
-                if self.dy is None:
-                    self.dy=self.diff_y(self.img)    
-                return self.dy
+            def diffs(self):
+                """
+                Returns a point containing the diff in x and y 
+                """
+                if self.diffs_data is None:
+                    self.diffs_data = point(self.diff_method(self.img))
+                return self.diffs_data
 
             def mag(self):
-                if self.mag is None:
-                    self.mag = wip_math.norm(self.dx,self.dy,2)
-                return self.mag
+                if self.mag_data is None:
+                    self.mag_data = wip_math.norm(self.diffs().x,self.diffs().y,self.diffs(),2)
+                return self.mag_data
 
             def dir(self):
-                if self.dir is None:
-                    self.dir=wip_math.direction(grad.x,grad.y)
-                return self.dir
+                if self.dir_data is None:
+                    self.dir_data=wip_math.direction(self.diffs().x,self.diffs().y)
+                return self.dir_data
 
-        def diff(self,img):
-            return gradient(img)
+        def central_diff(self,img):
+            return image_gradient(img)
+
+        
+
 
     def transform(img,function):
         """
@@ -154,7 +208,6 @@ class wip:
         """
         Lineary transform input range onto [0,1], to maximize contrast
         """
-
         raise NotImplementedError()
 
     def histeqlocal(img,locality=5):
@@ -162,19 +215,23 @@ class wip:
 
     def histogram(img,bins,range=None):
         """
-        Wrapper for:
+        Basically just a wrapper for:
         http://docs.scipy.org/doc/numpy/reference/generated/numpy.histogram.html  
         """
-        pass
+        return numpy.histogram(img,bins,range)
 
     def edge_response(img,detector):
         """
         """
+        
         pass
 
-    def gauss(img,delta):
+    def blur_gauss(img,delta,delta_clip=5):
         """
+         
+        Argument delta_clip where to clip the gauss kernel
         """
+        
         raise NotImplementedError()
 
     def dog(img,deltas):
@@ -183,7 +240,10 @@ class wip:
 
         @Returns difference of gauss as a list of images
         """
-        raise NotImplementedError()
+
+        gauss_imgs = map(lambda delta:blur_gauss(img,delta), deltas)
+
+        return map(lambda f:numpy.subtract([1],f[0]),wip_iter.pair_neighbours_inner(gauss_imags))
         
     def find_features(img,detector,threshold):
         """
