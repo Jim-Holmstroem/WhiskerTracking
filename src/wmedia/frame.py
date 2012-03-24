@@ -3,7 +3,7 @@ import numpy
 
 class frame:
     """
-    Dual for image as numpy.array and PIL.Image
+    Dual for image as numpy.array and (PIL.Image, Cairo.ImageSurface)
 
     @Example
         f=frame(Image.load('test.png'))
@@ -28,6 +28,8 @@ class frame:
         @Return An PIL.Image from the current array
         """
         return Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),numpy.uint8(self.array),'raw','RGBA',0,1)
+
+
 
     def get_array(self):
         """
