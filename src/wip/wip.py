@@ -115,7 +115,7 @@ class wip:
             """
             return scipy.signal.convolve2d(img,kernel,boundary)
 
-        def convolve_decomopisited(img,kernel):
+        def convolve_decompsited(img,kernel):
             """
             TODO use specialfunction scipy.signal sepfir2d, since we have separated filter (remember to reverse the direction to make a filter instead) and mirror symmetric boundary cond.
             AND use this for 
