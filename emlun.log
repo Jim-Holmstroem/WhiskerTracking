@@ -1,3 +1,11 @@
+2012-03-26
+Wrote a bit on the report together with Jim.
+Generated falling, bouncing squares and ran the DB tracker on them. Horribly bad results and time performance.
+
+2012-03-23
+(Log written 2012-03-26)
+Improved some docstrings. Fiddled a bit with the square trackers. Talked with Jim a bit about the project in general.
+
 2012-03-09
 Continued work on the database:
 - Improved generation of database in the square generator
