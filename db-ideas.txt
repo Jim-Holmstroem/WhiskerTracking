@@ -3,3 +3,4 @@ Ideas for sampling from database:
 - Get a particle from database
 - Get some weighted mean of the particles in the database
 - Get a displacement from the database
+- Sample different parameters independently, depending on the model
