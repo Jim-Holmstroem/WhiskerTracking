@@ -1,3 +1,4 @@
+from .. import wanimation
 
 class squareanimation(wanimation):
     
@@ -8,4 +9,5 @@ class squareanimation(wanimation):
     def __init__(self,data,alpha=1.0)
         super(squareanimation,self).__init__(data,self.render_square,alpha)
 
-    
+    def __len__(self):
+        return len(data)

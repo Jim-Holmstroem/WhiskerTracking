@@ -19,4 +19,6 @@ class wanimation(wlayer):
         else:
             raise Exception("Data is not sequence nor callable")
 
+    def __len__(self):
+        raise Exception("must define __len__ in child to wanimation")
 

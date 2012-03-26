@@ -11,4 +11,5 @@ class wlayer:
     def set_alpha(self,alpha=1.0):
         self.alpha=alpha
 
-
+    def __len__(self):
+        return 1
