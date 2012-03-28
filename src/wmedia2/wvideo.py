@@ -1,13 +1,16 @@
 import os
 import re
 
+from wlayer import *
+from wimage import *
+
 class wvideo(wlayer):
     """
     Opens a PNGVIN-file
     """
     imgs=[] #list of type wimage
    
-    num=digits=5
+    num_digits=5
     is_frame=re.compile(r'^frame-[0-9]{'+str(num_digits)+r'}\.png$')
     is_valid_pingvin=re.compile(r'\.pngvin')
 
@@ -17,9 +20,9 @@ class wvideo(wlayer):
 
         @Param input_data, can be string or ordered vector with elements valid wimage.input_data
         """
-        if(isinstance(input_data,basestring)):
+        if isinstance(input_data,basestring):
             self.init_with_filename(input_data)
-        elif(isinstance(input_data,()):
+        elif isinstance(input_data,(list)):
             imgs=map(lambda data:wimage(data),input_data)
         else:
             raise Exception("input_data has incorrect type")
@@ -28,11 +31,10 @@ class wvideo(wlayer):
         """
         load PNGVIN file from filename
         """
-        if not self.is_valid_pingvin.search(url_to_folder):
+        if not self.is_valid_pingvin.search(filename):
             raise Exception('\''+filename+'\' is not a .pngvin file')
         img_names=filter(lambda filename:self.is_frame.search(filename),os.listdir(filename))
-        imgs=map(lambda img_name:wimage(filename+'/'+img_img_name),img_names)
-
+        imgs=map(lambda img_name:wimage(filename+'/'+img_name),img_names)
 
     def __len(self):
         return len(self.imgs)

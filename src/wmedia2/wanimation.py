@@ -4,7 +4,6 @@ class wanimation(wlayer):
     """
     def __init__(self,data,data_renderer,alpha=1.0):
         """
-        
         Argument data needs to have __getitem__ defined OR being callable (function)
         Argument data_renderer(context,data_point) and renderers it
         """

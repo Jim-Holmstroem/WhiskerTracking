@@ -2,6 +2,8 @@ from PIL import Image
 import numpy
 import cairo
 
+from wlayer import *
+
 class wimage(wlayer):
     """
 
@@ -9,18 +11,18 @@ class wimage(wlayer):
     Has a numpy array as basis 
     """
     data=None
-    def __init__(self,input_data)
+    def __init__(self,input_data):
         """
         The input data can be a filename,numpy array or cairo.ImageSurface
         If numpy.array it connects the data else is just copied at __init__
         """
         
         #Handles different argument types
-        if(isinstance(input_data,numpy.ndarray)):
+        if isinstance(input_data,numpy.ndarray):
             self.init_with_array(input_data)
-        elif(isinstance(input_data,basestring):
+        elif isinstance(input_data,basestring):
             self.init_with_filename(input_data)
-        elif(isinstance(input_data,cairo.ImageSurface):
+        elif isinstance(input_data,cairo.ImageSurface):
             self.init_with_imagesurface(input_data)
         else:
             raise Exception("Invalid input type; not (ndarray/basestring/imagesurface")

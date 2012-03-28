@@ -37,7 +37,7 @@ class wlayermanager(gtk.DrawingArea):
         """
         Renders all the layers with frame i on context     
         """
-        map(lambda layer:self.render_layer(context,layer,i),self.layers))
+        map(lambda layer:self.render_layer(context,layer,i),self.layers)
     
     def add_layer(self,layer,i=None):
         if i is None:
@@ -56,6 +56,8 @@ class wlayermanager(gtk.DrawingArea):
         """
         The maximum number of frames needed to render this.
         """
+        if len(self.layers)==0:
+            return 0
         return max(map(lambda layer:len(layer),self.layers))
 
     def exportPNGVIN(self,filename=None):
