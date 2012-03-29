@@ -33,7 +33,7 @@ class frame:
 
         @Return An PIL.Image from the current array
         """
-        return Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),self.array,'raw','RGBA',0,1)
+        return Image.frombuffer('RGBA',self.array.shape[0:2], self.array, 'raw', 'RGBA', 0, 1)
 
     def get_array(self):
         """

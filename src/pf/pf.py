@@ -58,6 +58,6 @@ def pf(X_prev, observation, importance_function, sampling_function=default_sampl
     if weights.sum() == 0:
         weights += 1.0/weights.size
     else:
-        weights = weights/float(weights.sum())
+        weights /= float(weights.sum())
     
     return resampling_function(X_bar, weights)
