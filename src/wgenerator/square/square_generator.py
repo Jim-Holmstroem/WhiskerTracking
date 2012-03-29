@@ -148,6 +148,7 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     num_frames = 128
     dt = 0.1
     square_side = 50.
+    half_square_side = square_side/2
     
     # State: [x, y, x', y']
     if start_state is None:
@@ -157,7 +158,7 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
         render_bounce(1, numpy.array([IMAGE_WIDTH/2, 0, 10., 0.]))
         render_bounce(2, numpy.array([IMAGE_WIDTH*2/3, IMAGE_HEIGHT/2, -25., -45.]))
         render_bounce(3, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT-square_side, 0., 0.]))
-        render_bounce(4, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT-square_side, 0., 100]))
+        render_bounce(4, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT-square_side, 0., 150]))
         render_bounce(5, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT-square_side, 20., 50.]))
         render_bounce(6, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT/2, 300., 0.]))
         render_bounce(7, numpy.array([0, 0, 50., 0.]))
@@ -178,43 +179,42 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     ctx = cairo.Context(surface)
     
     state = start_state
+    state[:2] += half_square_side
+    
     print "Initial values:", state
+    
+    X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
+    Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
     
     for i in xrange(num_frames):
         next_state = state + numpy.concatenate([state[2:4], gravity])*dt
-        
-        # X collision
-        if next_state[0] <= 0:
-            next_state[2] *= -bounce_factor
-            next_state[0] = 0 - next_state[0]
-        elif next_state[0] >= IMAGE_WIDTH - square_side:
-            next_state[2] *= -bounce_factor
-            next_state[0] = (IMAGE_WIDTH-square_side)  - (next_state[0] - (IMAGE_WIDTH-square_side))
-        
-        # Y collision
-        if next_state[1] >= IMAGE_HEIGHT - square_side:
-            next_state[3] *= -bounce_factor
-            next_state[1] = (IMAGE_HEIGHT-square_side)  - (next_state[1] - (IMAGE_HEIGHT-square_side))
+
+        # Collisions        
+        for axis, limits in enumerate((X_LIMITS, Y_LIMITS)):
+            if next_state[axis] < limits[0]:
+                next_state[axis+2] *= -bounce_factor
+                next_state[axis] = 2*limits[0] - next_state[axis]
+            elif next_state[axis] > limits[1]:
+                next_state[axis+2] *= -bounce_factor
+                next_state[axis] = 2*limits[1] - next_state[axis]
             
         if i>0:
             # Input the transition into the database
             db.add_transition(state, next_state)
         
         state = next_state
-#        print state
         
-        x = state[0]/IMAGE_WIDTH
-        y = state[1]/IMAGE_HEIGHT
+        x = (state[0]-half_square_side)/IMAGE_WIDTH
+        y = (state[1]-half_square_side)/IMAGE_HEIGHT
         
+
         clear(ctx)
-
-        ctx.set_source_rgb(0,0,0)
         ctx.rectangle(0, 0, 1, 1)
+        ctx.set_source_rgb(0,0,0)
         ctx.fill()
-
+        
         ctx.set_source_rgb(1, 1, 1)
-        ctx.translate(x, y)
-        ctx.rectangle(0, 0, square_side/IMAGE_WIDTH, square_side/IMAGE_WIDTH)
+        ctx.rectangle(x, y, square_side/IMAGE_WIDTH, square_side/IMAGE_WIDTH)
         ctx.fill()
 
         surface.write_to_png(save_dir+"/frame-"+left_align_videoformat(i)+".png")
@@ -222,6 +222,6 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     print "Completed rendering", movie_name
 
 if (__name__=='__main__'):
-#    render_simple()
-#    render_online()
+    render_simple()
+    render_online()
     render_bounce()
