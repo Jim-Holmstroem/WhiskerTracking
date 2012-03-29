@@ -103,6 +103,23 @@ class StateTransitionDatabase:
         
         return numpy.array(cur.fetchall())
     
+    def get_close_transitions(self, origin, thresholds):
+        """Return all transitions in the database sufficiently close to origin.
+        """
+        
+        query = "SELECT * FROM transitions WHERE from_theta_2 BETWEEN ? AND ? AND from_theta_3 BETWEEN ? and ?;"
+        cur = self.__get_cursor()
+
+        lower = origin - thresholds
+        upper = origin + thresholds
+#        print "Origin: %s, Lower bounds: %s, Upper bounds: %s"%(origin, lower, upper)
+
+        cur.execute(query, [lower[2], upper[2], lower[3], upper[3]])
+#        result = cur.fetchall()
+#        print len(result)
+#        return numpy.array(result)
+        return numpy.array(cur.fetchall())
+    
     def combine_transition(self, from_state, to_state):
         """Combine the two given states into a transition row."""
         return numpy.concatenate((from_state, to_state))
@@ -158,7 +175,15 @@ class StateTransitionDatabase:
             t is the "from" part of a transition in the database.
         @return: A weighted average of the database as a new particle 
         """
-        from_states, to_states = self.split_transition(self.get_transitions())
+        from_states, to_states = [[], []]
+        vel_threshold = 15
+        while len(from_states) == 0 or len(to_states) == 0: 
+            from_states, to_states = self.split_transition(self.get_close_transitions(prev_particle, numpy.array((0, 0, vel_threshold, vel_threshold))))
+            vel_threshold += 15
+        
+#        print "Found %d close states"%len(from_states)
+#        print from_states
+#        print to_states
         
         weights = numpy.zeros((from_states.shape[0]))
         for i in xrange(from_states.shape[0]):
