@@ -26,7 +26,7 @@ class video:
             raise Exception('Not a .pngvin file')
 
     def __len__(self):
-        return len(vid)
+        return len(self.vid)
 
     def __getitem__(self,i):
         """
