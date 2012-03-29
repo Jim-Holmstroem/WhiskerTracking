@@ -3,7 +3,7 @@ import cairo
 import numpy
 import os
 from wmedia import left_align_videoformat
-from wdb import delete_database, StateTransitionDatabase
+from wdb import create_database, delete_database, StateTransitionDatabase
 
 """
 Only used to generate square test-data, nothing more.
@@ -25,11 +25,14 @@ def render_simple():
     """
     movie_name = "square_simple"
     save_dir = "data/"+movie_name+".pngvin"
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
     
     print "Rendering pngvin movie", movie_name
     
     delete_database(movie_name)
-    db = StateTransitionDatabase(movie_name, 2)
+    create_database(movie_name, number_of_parameters=2)
+    db = StateTransitionDatabase(movie_name)
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
     ctx = cairo.Context(surface)
@@ -78,11 +81,14 @@ def render_online():
     """
     movie_name = "square_online"
     save_dir = "data/"+movie_name+".pngvin"
+    if not os.path.exists(save_dir):
+        os.makedirs(save_dir)
     
     print "Rendering pngvin movie", movie_name
     
     delete_database(movie_name)
-    db = StateTransitionDatabase(movie_name, 2)
+    create_database(movie_name, number_of_parameters=2)
+    db = StateTransitionDatabase(movie_name)
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
     ctx = cairo.Context(surface)
@@ -146,6 +152,7 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     # State: [x, y, x', y']
     if start_state is None:
         delete_database(dataset)
+        create_database(dataset, number_of_parameters=4)
         render_bounce(0, numpy.array([IMAGE_WIDTH/2, 0, 0., 0.]))
         render_bounce(1, numpy.array([IMAGE_WIDTH/2, 0, 10., 0.]))
         render_bounce(2, numpy.array([IMAGE_WIDTH*2/3, IMAGE_HEIGHT/2, -25., -45.]))
@@ -161,11 +168,11 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     movie_name = dataset + "_" + str(movie_id)
     save_dir = "data/" + movie_name + ".pngvin"
     if not os.path.exists(save_dir):
-        os.mkdir(save_dir)
+        os.makedirs(save_dir)
     
     print "Rendering pngvin movie", movie_name
     
-    db = StateTransitionDatabase(dataset, 4)
+    db = StateTransitionDatabase(dataset)
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
     ctx = cairo.Context(surface)

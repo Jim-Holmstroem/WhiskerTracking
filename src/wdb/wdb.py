@@ -17,22 +17,11 @@ def euclidean_distance_inverse_squared(a, b):
     
     return 1.0/(zero_division_defense + (numpy.linalg.norm(a-b))**2)
 
-def delete_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
-    db_file = os.path.join(database_dir, database_name + database_extension)
-    
-    if os.path.exists(db_file):
-        print "Deleting database", db_file
-        os.remove(db_file)
-        print "Database", db_file, "deleted."
-    else:
-        print "Nothing to do: Database", db_file, "does not exist."
-
 def create_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION, number_of_parameters=2):
     db_file = os.path.join(database_dir, database_name + database_extension)
     
     if os.path.exists(db_file):
-        print "Database", db_file, "already exists! Exiting."
-        return
+        raise IOError("File already exists: %s" % db_file)
     
     if not os.path.exists(database_dir):
         os.makedirs(database_dir)
@@ -60,13 +49,26 @@ def create_database(database_name, database_dir=DATABASE_DIR, database_extension
     
     print "Successfully created database " + db_file + "."
 
+def create_database_if_not_exists(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION, number_of_parameters=2):
+    db_file = os.path.join(database_dir, database_name + database_extension)
+
+    if not os.path.exists(db_file):
+        create_database(database_name, number_of_parameters=number_of_parameters)
+
+def delete_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
+    db_file = os.path.join(database_dir, database_name + database_extension)
+    
+    if os.path.exists(db_file):
+        print "Deleting database", db_file
+        os.remove(db_file)
+        print "Database", db_file, "deleted."
+    else:
+        print "Did not delete database: file %s does not exist." % db_file
+
 class StateTransitionDatabase:
-    def __init__(self, db_name="wdb", number_of_parameters=2):
+    def __init__(self, db_name):
         
         db_file = os.path.join(DATABASE_DIR, db_name + DEFAULT_EXTENSION)
-        if not os.path.exists(db_file):
-            create_database(db_name, number_of_parameters=number_of_parameters)
-        
         self.__con = sqlite3.connect(db_file)
         
         self.__con.execute("PRAGMA foreign_keys = ON;")
