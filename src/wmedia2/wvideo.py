@@ -36,7 +36,7 @@ class wvideo(wlayer):
         img_names=filter(lambda filename:self.is_frame.search(filename),os.listdir(filename))
         self.imgs=map(lambda img_name:wimage(filename+'/'+img_name),img_names)
 
-    def __len(self):
+    def __len__(self):
         return len(self.imgs)
 
     def __getitem__(self,i):

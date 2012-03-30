@@ -12,13 +12,13 @@ class wlayermanager(gtk.DrawingArea):
 
     def __init__(self,layers=None):
         """
-
         Arguments: layers either one layer or multiple
         """
         super(wlayermanager,self).__init__()
         self.connect("expose-event",self.expose)
         self.connect("motion-notify-event",self.motion)
-    
+        self.set_size_request(512,512)
+
     def set_current_frame(self,i):
         self.current_frame=i
     def next_frame(self):
@@ -45,6 +45,10 @@ class wlayermanager(gtk.DrawingArea):
         else:
             self.layers.insert(i,layer)
 
+    def set_current_frame(self,i):
+        self.current_frame=i
+        self.queue_draw() #queue the redrawing of this drawingarea
+    
     def expose(self,widget,event):
         """
 
@@ -74,6 +78,6 @@ class wlayermanager(gtk.DrawingArea):
         """
         Gets the mousemovement inside the drawingarea
         """
-        pass
+        print "motion"
 
         
