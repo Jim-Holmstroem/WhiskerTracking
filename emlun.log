@@ -1,3 +1,8 @@
+2012-03-29
+(Log written 2012-03-30)
+Tweaked bouncing squares generator.
+Started working on optimizing database queries and implementing the PF on the bouncing squares.
+
 2012-03-26
 Wrote a bit on the report together with Jim.
 Generated falling, bouncing squares and ran the DB tracker on them. Horribly bad results and time performance.
