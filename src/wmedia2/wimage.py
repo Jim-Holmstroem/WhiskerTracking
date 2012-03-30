@@ -30,9 +30,13 @@ class wimage(wlayer):
     def init_with_array(self,input_data):
         self.data=input_data
     def init_with_filename(self,input_data):
-        self.init_with_imagesurface(cairo.ImageSurface.create_from_png(input_data))
+        img=cairo.ImageSurface.create_from_png(input_data)
+        print img
+        self.init_with_imagesurface(img)
     def init_with_imagesurface(self,input_data):
-        self.data=numpy.array(input_data.get_data().reshape(input_data.get_width(),input_data.get_height()))
+        print input_data.get_width(),input_data.get_height()
+        self.data=numpy.array(input_data.get_data(),dtype=float).copy()
+        #self.data.reshape(input_data.get_width(),input_data.get_height())
 
     def debug_show(self):
         """
@@ -42,7 +46,7 @@ class wimage(wlayer):
         Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),numpy.uint8(self.array),'raw',0,1).show()
 
     def shape(self):
-        return self.array.shape
+        return self.data.shape
 
     def render(self,context,i=None):
         """
@@ -51,7 +55,11 @@ class wimage(wlayer):
         """
         #http://stackoverflow.com/questions/7610159/convert-pil-image-to-cairo-imagesurface
 
-        height,width,channels=self.shape()
+        #height,width,channels= 
+        print self.data
+        print self.data.shape
+        pause
+
         img=cairo.ImageSurface.create_for_data(self.data, cairo.FORMAT_ARGB32,width,height)
         context.set_source_surface(img)
 

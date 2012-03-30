@@ -23,7 +23,7 @@ class wvideo(wlayer):
         if isinstance(input_data,basestring):
             self.init_with_filename(input_data)
         elif isinstance(input_data,(list)):
-            imgs=map(lambda data:wimage(data),input_data)
+            self.imgs=map(lambda data:wimage(data),input_data)
         else:
             raise Exception("input_data has incorrect type")
 
@@ -34,7 +34,7 @@ class wvideo(wlayer):
         if not self.is_valid_pingvin.search(filename):
             raise Exception('\''+filename+'\' is not a .pngvin file')
         img_names=filter(lambda filename:self.is_frame.search(filename),os.listdir(filename))
-        imgs=map(lambda img_name:wimage(filename+'/'+img_name),img_names)
+        self.imgs=map(lambda img_name:wimage(filename+'/'+img_name),img_names)
 
     def __len(self):
         return len(self.imgs)
@@ -43,5 +43,5 @@ class wvideo(wlayer):
         return self.imgs[i]
     
     def render(self,context,i):
-        imgs[i].render(context)
+        self.imgs[i].render(context)
 
