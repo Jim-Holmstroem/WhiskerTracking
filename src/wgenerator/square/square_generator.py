@@ -24,7 +24,7 @@ def render_simple():
     Renders a spinning square moving in a straight line.
     """
     movie_name = "square_simple"
-    save_dir = "data/"+movie_name+".pngvin"
+    save_dir = os.path.join("video", movie_name+".pngvin")
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     
@@ -63,7 +63,7 @@ def render_simple():
         ctx.rectangle(-width/2, -width/2, width, width)
         ctx.fill()
 
-        surface.write_to_png(save_dir+"/frame-"+left_align_videoformat(i)+".png")
+        surface.write_to_png(os.path.join(save_dir, "frame-"+left_align_videoformat(i)+".png"))
 
         if i>0:
             # Input the transition into the database
@@ -80,7 +80,7 @@ def render_online():
     Renders a spinning square moving on a straight line.
     """
     movie_name = "square_online"
-    save_dir = "data/"+movie_name+".pngvin"
+    save_dir = os.path.join("video", movie_name+".pngvin")
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     
@@ -127,7 +127,7 @@ def render_online():
         ctx.set_line_width(0.02)
         ctx.stroke()
 
-        surface.write_to_png(save_dir+"/frame-"+left_align_videoformat(i)+".png")
+        surface.write_to_png(os.path.join(save_dir, "frame-"+left_align_videoformat(i)+".png"))
 
         if i>0:
             # Input the transition into the database
@@ -167,7 +167,7 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
         return
     
     movie_name = dataset + "_" + str(movie_id)
-    save_dir = "data/" + movie_name + ".pngvin"
+    save_dir = os.path.join("video", movie_name + ".pngvin")
     if not os.path.exists(save_dir):
         os.makedirs(save_dir)
     
@@ -217,7 +217,7 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
         ctx.rectangle(x, y, square_side/IMAGE_WIDTH, square_side/IMAGE_WIDTH)
         ctx.fill()
 
-        surface.write_to_png(save_dir+"/frame-"+left_align_videoformat(i)+".png")
+        surface.write_to_png(os.path.join(save_dir, "frame-"+left_align_videoformat(i)+".png"))
 
     print "Completed rendering", movie_name
 

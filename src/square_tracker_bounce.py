@@ -38,13 +38,13 @@ square_side = 50
 movie_id = 8
 movie = dataset + "_" + str(movie_id)
 db = StateTransitionDatabase(dataset)
-save_img_dir = "run/square_tracker_bounce-" + movie + ".pngvin"
+save_img_dir = os.path.join("run", "square_tracker_bounce-" + movie + ".pngvin")
 if(not os.path.exists(save_img_dir)):
     os.makedirs(save_img_dir)
 
 print("Rendering tracking images to " + save_img_dir)
 
-v = video("data/"+movie+".pngvin") # Dimensions: x, y, rgba
+v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
 
 num_particles = 100
 #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
@@ -71,7 +71,7 @@ for (i, frame) in enumerate(v):
     
     pos = particles.mean(axis=0)[:2]
     draw.point(pos.tolist(), fill="#00FF00")
-    img.save(save_img_dir + "/frame-" + left_align_videoformat(i) + ".png", "PNG")
+    img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
     print("Successfully rendered frame " + str(i))
     
     particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
