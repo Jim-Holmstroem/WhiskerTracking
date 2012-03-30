@@ -1,32 +1,30 @@
-import numpy
-import os
 from PIL import ImageDraw
 from pf import pf
-from wmedia import video, left_align_videoformat
-from wdb import StateTransitionDatabase
 from time import time
+from wdb import StateTransitionDatabase
+from wmedia import video, left_align_videoformat
+import numpy
+import os
 
 def goodness(particle, image):
     x, y = particle[0:2]
     
-    if x < 0 or y < 0 or x >= image.shape[0] or y >= image.shape[1]:
+    if x < 0 or y < 0 or y >= image.shape[0] or x >= image.shape[1]:
         return 0
     
     # FIXME: Image is always black!
-    if(image[x,y,0] == 255 and image[x,y,1] == 255 and image[x,y,2] == 255):
-        print "White", image[x,y,:]
-        return 10000
+    if not False in (image[y,x,:3] == 255):
+        return 1000
     else:
-        print "Not white", image[x,y,:]
         return 1
 
 def sample(prev_particle):
     
-    new_particle_from_prev = prev_particle + numpy.random.normal(loc=0, scale=5, size=prev_particle.shape)
+    new_particle_from_prev = prev_particle + numpy.random.normal(loc=0, scale=10, size=prev_particle.shape)
     new_particle_from_db = db.sample_weighted_average(prev_particle)
 #    new_particle_from_db += numpy.random.normal(0, scale=[3, 3], size=new_particle_from_db.shape)
     
-    db_weight = 5
+    db_weight = 1
     prev_weight = 1
     
     new_particle = new_particle_from_prev*prev_weight + new_particle_from_db*db_weight
@@ -35,7 +33,7 @@ def sample(prev_particle):
 
 dataset = "square_bounce"
 square_side = 50
-movie_id = 8
+movie_id = 7
 movie = dataset + "_" + str(movie_id)
 db = StateTransitionDatabase(dataset)
 save_img_dir = os.path.join("run", "square_tracker_bounce-" + movie + ".pngvin")
