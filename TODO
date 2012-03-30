@@ -1,0 +1,21 @@
+
+
+Classify our algorithm (lazy/eager) see bik12
+
+rename goodness to "closeness" since its more widely used in ML
+
+Minkowski metric - L_p norm (L_1(more resistant to noise) and L_inf(noisy))
+Our distance functions must be metric, prove this for all.
+
+Feature selection: (100D noise,1D disc. information) - with unweighted euclidian distance the 100D will always dominate \sum(x_i-mu_i)^2
+solution: We want large variation in the class labels to be more significant (for example, PCA assumes label variation is proportional to variation, which is some times generally true)
+
+test different combinations of algorithms fitnesses=lambda (func1,func2,...) :[(func1,func2,..),fitness(func1,func2,...)], prod(FuncSpace1,FuncSpace2,...)
+best = max(fitnesses)
+where fitness is how well the algorithm performes on validatiot-data
+
+
+bayes optimal as in bik12, is this applicable ?
+
+
+
