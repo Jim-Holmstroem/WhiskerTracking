@@ -1,6 +1,6 @@
-from .. import wanimation
+import wanimation
 
-class skeleton(wanimation):
+class testscreen(wanimation):
     def render_function(context,data_point):
         """
         Must be defined
@@ -11,12 +11,12 @@ class skeleton(wanimation):
 
         context.restore()
 
-    def __init__(self,alpha=1.0):
+    def __init__(self,b=5,alpha=1.0):
         """
         You should call parent-constructor
         """
-        data =  lambda x:5*x
-        super(skeleton,self).__init__(data,self.render_function,alpha)
+        data = lambda x:b*x
+        super(testscreen,self).__init__(None,self.render_function,alpha)
 
     def __len__(self):
         """

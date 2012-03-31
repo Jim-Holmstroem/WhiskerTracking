@@ -1,4 +1,3 @@
-
 class wlayer:
     """
     Acts as base for all the different types of layers

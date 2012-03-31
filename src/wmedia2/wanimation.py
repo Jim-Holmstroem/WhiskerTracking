@@ -1,3 +1,5 @@
+import wlayer
+
 class wanimation(wlayer):
     """
     Acts as a base for moving layers, has some helping hands; one can either inherit from it and override the __init__ or just send in data and data_renderer
@@ -9,6 +11,7 @@ class wanimation(wlayer):
         """
         self.data=data
         self.data_renderer=data_renderer
+        self.alpha=alpha
 
     def render(context,i):
         if isinstance(data,collections.Sequence):
