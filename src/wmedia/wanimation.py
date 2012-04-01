@@ -1,7 +1,7 @@
 
 __all__ = ['wanimation']
 
-from wmedia2.wlayer import wlayer
+from wmedia.wlayer import wlayer
 
 class wanimation(wlayer):
     """

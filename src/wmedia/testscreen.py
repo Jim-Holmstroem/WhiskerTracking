@@ -1,7 +1,7 @@
 
 __all__=['testscreen']
 
-from wmedia2.wanimation import wanimation
+from wmedia.wanimation import wanimation
 
 class testscreen(wanimation):
     def render_function(context,data_point):

@@ -4,8 +4,8 @@ __all__ = ['wvideo']
 import os
 import re
 
-from wmedia2.wlayer import wlayer 
-from wmedia2.wimage import wimage
+from wmedia.wlayer import wlayer 
+from wmedia.wimage import wimage
 
 class wvideo(wlayer):
     """

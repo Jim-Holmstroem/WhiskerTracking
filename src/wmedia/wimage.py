@@ -5,7 +5,7 @@ from PIL import Image
 import numpy
 import cairo
 
-from wmedia2.wlayer import wlayer
+from wmedia.wlayer import wlayer
 
 
 class wimage(wlayer):

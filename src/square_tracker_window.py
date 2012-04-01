@@ -1,8 +1,8 @@
 
 import gtk
 
-from wgui2 import wwindow,wlayermanager
-from wmedia2 import wvideo,testscreen
+from wgui import wwindow,wlayermanager
+from wmedia import wvideo,testscreen
 
 
 #selftest
