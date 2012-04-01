@@ -52,5 +52,6 @@ class wvideo(wlayer):
         return self.imgs[i]
     
     def render(self,context,i):
-        self.imgs[i].render(context)
+        if len(self)>i:
+            self.imgs[i].render(context)
 

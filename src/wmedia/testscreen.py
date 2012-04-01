@@ -9,9 +9,13 @@ class testscreen(wanimation):
         Must be defined
         """
         context.save() #TODO move these suckers outside so one can guarantee the same transformations and stuff
-        context.move_to(0,0)
-        context.line_to(data_point,data_point)
-        print data_point
+
+        context.scale(512,512)
+        context.rectangle(0,0,1,0.5-data_point/(5.0*50))
+        
+        context.set_source_rgba(1,1,1,1)
+        context.fill()
+
         context.restore()
 
     def __init__(self,b=5,alpha=1.0):
