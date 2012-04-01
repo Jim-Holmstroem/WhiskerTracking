@@ -4,14 +4,14 @@ __all__=['testscreen']
 from wmedia.wanimation import wanimation
 
 class testscreen(wanimation):
-    def render_function(context,data_point):
+    def render_function(self,context,data_point):
         """
         Must be defined
         """
         context.save() #TODO move these suckers outside so one can guarantee the same transformations and stuff
         context.move_to(0,0)
         context.line_to(data_point,data_point)
-
+        print data_point
         context.restore()
 
     def __init__(self,b=5,alpha=1.0):

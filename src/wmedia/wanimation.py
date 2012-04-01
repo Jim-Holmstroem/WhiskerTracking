@@ -1,6 +1,8 @@
 
 __all__ = ['wanimation']
 
+import collections
+
 from wmedia.wlayer import wlayer
 
 class wanimation(wlayer):
@@ -16,11 +18,11 @@ class wanimation(wlayer):
         self.data=data
         self.data_renderer=data_renderer
 
-    def render(context,i):
-        if isinstance(data,collections.Sequence):
-            self.data_renderer(context,data[i])
-        elif callable(data):
-            self.data_renderer(context,data(i))
+    def render(self,context,i):
+        if isinstance(self.data,collections.Sequence):
+            self.data_renderer(context,self.ata[i])
+        elif callable(self.data):
+            self.data_renderer(context,self.data(i))
         else:
             raise Exception("Data is not sequence nor callable")
 

@@ -10,7 +10,7 @@ if __name__=="__main__":
     layermanager = wlayermanager()
     layermanager.add_layer(wvideo("../video/square_simple.pngvin")) #load video from file
     
-    #layermanager.add_layer(testscreen(5))
+    layermanager.add_layer(testscreen(5))
 
     win=wwindow(layermanager)
 
