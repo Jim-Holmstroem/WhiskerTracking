@@ -1,8 +1,11 @@
+
+__all__ = ['wvideo']
+
 import os
 import re
 
-from wlayer import *
-from wimage import *
+from wmedia2.wlayer import wlayer 
+from wmedia2.wimage import wimage
 
 class wvideo(wlayer):
     """
@@ -14,21 +17,23 @@ class wvideo(wlayer):
     is_frame=re.compile(r'^frame-[0-9]{'+str(num_digits)+r'}\.png$')
     is_valid_pingvin=re.compile(r'\.pngvin')
 
-    def __init__(self,input_data):
+    def __init__(self,input_data,alpha=1.0):
         """
         Constructor for video
 
         @Param input_data, can be string or ordered vector with elements valid wimage.input_data
         """
-        print "Loading video..."
+        wlayer.__init__(self,alpha) 
+        print "wvideo("
         if isinstance(input_data,basestring):
             print "filename=",input_data
             self.init_with_filename(input_data)
         elif isinstance(input_data,(list)):
             print "input_data={data}"
-            self.imgs=map(lambda data:wimage(data),input_data)
+            self.imgs=map(lambda data:wimage(data,self.alpha),input_data)
         else:
             raise Exception("input_data has incorrect type")
+        print ")"
 
     def init_with_filename(self,filename):
         """

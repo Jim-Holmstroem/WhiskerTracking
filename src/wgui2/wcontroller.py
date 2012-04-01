@@ -1,3 +1,6 @@
+
+__all__ = ['wcontroller']
+
 import gtk
 import pygtk
 

@@ -1,4 +1,7 @@
-import wanimation
+
+__all__=['testscreen']
+
+from wmedia2.wanimation import wanimation
 
 class testscreen(wanimation):
     def render_function(context,data_point):
@@ -15,8 +18,7 @@ class testscreen(wanimation):
         """
         You should call parent-constructor
         """
-        data = lambda x:b*x
-        super(testscreen,self).__init__(None,self.render_function,alpha)
+        wanimation.__init__(self,lambda x:b*x,self.render_function,alpha)
 
     def __len__(self):
         """

@@ -1,3 +1,6 @@
+
+__all__ = ['wlayermanager']
+
 import gtk
 import pygtk
 import cairo
@@ -14,7 +17,7 @@ class wlayermanager(gtk.DrawingArea):
         """
         Arguments: layers either one layer or multiple
         """
-        super(wlayermanager,self).__init__()
+        gtk.DrawingArea.__init__(self)
         self.connect("expose-event",self.expose)
         self.connect("motion-notify-event",self.motion)
         self.set_size_request(512,512)

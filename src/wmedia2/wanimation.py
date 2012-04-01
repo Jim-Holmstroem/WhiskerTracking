@@ -1,4 +1,7 @@
-import wlayer
+
+__all__ = ['wanimation']
+
+from wmedia2.wlayer import wlayer
 
 class wanimation(wlayer):
     """
@@ -9,9 +12,9 @@ class wanimation(wlayer):
         Argument data needs to have __getitem__ defined OR being callable (function)
         Argument data_renderer(context,data_point) and renderers it
         """
+        wlayer.__init__(self,alpha)
         self.data=data
         self.data_renderer=data_renderer
-        self.alpha=alpha
 
     def render(context,i):
         if isinstance(data,collections.Sequence):
