@@ -40,7 +40,8 @@ class wimage(wlayer):
         self.init_with_imagesurface(img)
     def init_with_imagesurface(self,input_data):
         self.data=numpy.frombuffer(input_data.get_data(),dtype=numpy.uint8)
-        self.data=self.data.reshape(input_data.get_width(),input_data.get_height(),len("RGBA"))
+        self.data=numpy.cast['float64'](self.data) 
+        self.data=self.data.reshape(input_data.get_width(),input_data.get_height(),len("RGBA")) 
 
     def debug_show(self):
         """
@@ -59,7 +60,6 @@ class wimage(wlayer):
         #http://stackoverflow.com/questions/7610159/convert-pil-image-to-cairo-imagesurface
 
         height,width,channels=self.data.shape
-
-        img=cairo.ImageSurface.create_for_data(self.data, cairo.FORMAT_ARGB32,width,height)
+        img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](self.data), cairo.FORMAT_ARGB32,width,height)
         context.set_source_surface(img)
 
