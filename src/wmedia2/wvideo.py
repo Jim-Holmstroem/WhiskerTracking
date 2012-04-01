@@ -20,9 +20,12 @@ class wvideo(wlayer):
 
         @Param input_data, can be string or ordered vector with elements valid wimage.input_data
         """
+        print "Loading video..."
         if isinstance(input_data,basestring):
+            print "filename=",input_data
             self.init_with_filename(input_data)
         elif isinstance(input_data,(list)):
+            print "input_data={data}"
             self.imgs=map(lambda data:wimage(data),input_data)
         else:
             raise Exception("input_data has incorrect type")
@@ -34,6 +37,7 @@ class wvideo(wlayer):
         if not self.is_valid_pingvin.search(filename):
             raise Exception('\''+filename+'\' is not a .pngvin file')
         img_names=filter(lambda filename:self.is_frame.search(filename),os.listdir(filename))
+        img_names.sort() #to make sure it's sorted
         self.imgs=map(lambda img_name:wimage(filename+'/'+img_name),img_names)
 
     def __len__(self):
