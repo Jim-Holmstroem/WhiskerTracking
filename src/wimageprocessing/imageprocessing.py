@@ -22,7 +22,14 @@ overlaycurves(im,njetedge(im,1,3,'valid'));
 """
 
 def gray(img):
+    print img.shape
     return numpy.divide(numpy.add.reduce(img,2),img.shape[2])
+
+def replace_with_color(img,from_color,to_color):
+    i...
+
+def replace_with_alpha(img,from_color):
+    return replace_
 
 def transform(img,function):
     """

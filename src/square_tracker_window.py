@@ -4,7 +4,7 @@ import gtk
 from wgui import wwindow,wlayermanager
 from wmedia import wvideo,testscreen
 
-from wimageprocessing import central_diff,filter_video
+from wimageprocessing import gray,central_diff,filter_video
 
 #selftest
 if __name__=="__main__":
@@ -14,7 +14,8 @@ if __name__=="__main__":
     
     bounce=wvideo("../video/square_simple.pngvin/",0.5)
     layermanager.add_layer(bounce) #load video from file
-    diffbounce=filter_video(bounce,lambda img:central_diff(img)[0]) 
+    
+#    diffbounce=filter_video(bounce,lambda img:central_diff(img)[0]) 
     
 
 
