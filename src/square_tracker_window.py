@@ -11,13 +11,17 @@ if __name__=="__main__":
     layermanager = wlayermanager()
 #    layermanager.add_layer(wvideo("../video/square_simple.pngvin",0.5)) #load video from file
     
-    
-    bounce=wvideo("../video/square_simple.pngvin/",0.5)
-    layermanager.add_layer(bounce) #load video from file
-    
+    bounce=wvideo("../video/square_simple.pngvin/",0.5)    
+
+#    layermanager.add_layer(bounce) #load video from file
+
+
+
 #    diffbounce=filter_video(bounce,lambda img:central_diff(img)[0]) 
     
+    graybounce=filter_video(bounce,gray)
 
+    layermanager.add_layer(graybounce)
 
     layermanager.add_layer(testscreen(5,0.4))
 
