@@ -43,6 +43,12 @@ class wimage(wlayer):
         self.data=numpy.cast['float64'](self.data) 
         self.data=self.data.reshape(input_data.get_width(),input_data.get_height(),len("RGBA")) 
 
+    def transform(self,f):
+        """
+        transforms the image with the function f:img->img
+        """
+        self.data=f(self.data)
+    
     def debug_show(self):
         """
         DEBUGGING

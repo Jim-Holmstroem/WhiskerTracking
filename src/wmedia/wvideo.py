@@ -7,6 +7,7 @@ import re
 from wmedia.wlayer import wlayer 
 from wmedia.wimage import wimage
 
+
 class wvideo(wlayer):
     """
     Opens a PNGVIN-file
@@ -44,6 +45,12 @@ class wvideo(wlayer):
         img_names=filter(lambda filename:self.is_frame.search(filename),os.listdir(filename))
         img_names.sort() #to make sure it's sorted
         self.imgs=map(lambda img_name:wimage(filename+'/'+img_name),img_names)
+
+    def transform(self,f):
+        """
+        transform the entire video with the function f:img->img
+        """
+        self.imgs=map(f,self.imgs)         
 
     def __len__(self):
         return len(self.imgs)
