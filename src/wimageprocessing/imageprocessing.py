@@ -3,7 +3,7 @@ __all__= ['gray','transform','histeq','histeqlocal','histogram','blur_gauss','do
 
 import numpy
 
-from ipmath import image_iterator
+from ipmath import image_iterators
 
 """
 wip.function(img.array,argz...) #returns a copy with the result

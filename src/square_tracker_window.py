@@ -4,7 +4,7 @@ import gtk
 from wgui import wwindow,wlayermanager
 from wmedia import wvideo,testscreen
 
-from wip import central_diff,filter_video
+from wimageprocessing import central_diff,filter_video
 
 #selftest
 if __name__=="__main__":
