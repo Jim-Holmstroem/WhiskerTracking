@@ -7,7 +7,7 @@ DATABASE_DIR = "data/transition-db"
 DEFAULT_EXTENSION = ".sqlite3"
 
 def euclidean_distance_inverse_squared(a, b):
-    """Calculate 1/(the norm of (a-b))^2.
+    """UNTESTED Calculate 1/(the norm of (a-b))^2.
     
     @param a: a numpy array
     @param b: a numpy array of the same dimension as a
