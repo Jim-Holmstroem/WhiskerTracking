@@ -7,7 +7,6 @@ import cairo
 
 from wmedia.wlayer import wlayer
 
-
 class wimage(wlayer):
     """
 
@@ -64,8 +63,8 @@ class wimage(wlayer):
         Argument i not used by wvideo but needed to be a wlayer
         """
         #http://stackoverflow.com/questions/7610159/convert-pil-image-to-cairo-imagesurface
-
-        height,width,channels=self.data.shape
+        
+        width,height=map(lambda i: self.data.shape[i],[0,1])
         img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](self.data), cairo.FORMAT_ARGB32,width,height)
         context.set_source_surface(img)
 

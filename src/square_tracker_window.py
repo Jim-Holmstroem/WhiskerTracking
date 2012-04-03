@@ -19,9 +19,9 @@ if __name__=="__main__":
 
 #    diffbounce=filter_video(bounce,lambda img:central_diff(img)[0]) 
     
-    graybounce=filter_video(bounce,gray)
+#    graybounce=filter_video(bounce,gray)
 
-    layermanager.add_layer(graybounce)
+    layermanager.add_layer(bounce)
 
     layermanager.add_layer(testscreen(5,0.4))
 

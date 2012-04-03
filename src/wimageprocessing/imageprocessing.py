@@ -21,11 +21,16 @@ overlaycurves(im,njetedge(im,1,3,'valid'));
 
 """
 
+def split_colors(img):
+    return map(lambda comp:img[:,:,comp], img.shape[2])
+
 def gray(img):
-    print img.shape()
-    print img
-    #return numpy.divide(numpy.add.reduce(img,2),img.shape[2])
-    return numpy.add.reduce(img,2)
+    R,G,B,A=map(lambda comp:img[:,:,comp],range(4))
+    #TODO not as general as I would wish 
+    gray=(R+G+B)/3
+    gray=gray.reshape(512,512,1)
+    A=A.reshape(512,512,1)
+    return numpy.concatenate((gray,gray,gray,A),2) 
 
 def replace_with_color(img,from_color,to_color):
     pass

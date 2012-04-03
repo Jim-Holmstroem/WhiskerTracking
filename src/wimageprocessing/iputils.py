@@ -16,9 +16,5 @@ def filter_video(video,f=None):
     @param video the video in which to filter all the frames in 
     @param f function f:img->img
     """
-    return wvideo(map(f,video))
-
-
-
-
+    return wvideo(map(lambda img:f(img.data),video))
 
