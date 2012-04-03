@@ -50,7 +50,7 @@ class wvideo(wlayer):
         """
         transform the entire video with the function f:img->img
         """
-        self.imgs=map(f,self.imgs)         
+        map(lambda img:img.transform(f),self.imgs)         
 
     def __len__(self):
         return len(self.imgs)
