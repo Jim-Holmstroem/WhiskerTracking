@@ -146,7 +146,6 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     
     dataset = "square_bounce"
     num_frames = 128
-    dt = 0.1
     square_side = 50.
     half_square_side = square_side/2
     
@@ -156,14 +155,14 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
         create_database(dataset, number_of_parameters=4)
         render_bounce(0, numpy.array([IMAGE_WIDTH/2, 0, 0., 0.]))
         render_bounce(1, numpy.array([IMAGE_WIDTH/2, 0, 10., 0.]))
-        render_bounce(2, numpy.array([IMAGE_WIDTH*2/3, IMAGE_HEIGHT/2, -25., -45.]))
+        render_bounce(2, numpy.array([IMAGE_WIDTH*2/3, IMAGE_HEIGHT/2, -2.5, -4.5]))
         render_bounce(3, numpy.array([IMAGE_WIDTH/4, IMAGE_HEIGHT-square_side, 0., 0.]))
-        render_bounce(4, numpy.array([IMAGE_WIDTH*3/4, IMAGE_HEIGHT-square_side, 0., 150]))
-        render_bounce(5, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT-square_side, 20., 50.]))
-        render_bounce(6, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT/2, 300., 0.]))
+        render_bounce(4, numpy.array([IMAGE_WIDTH*3/4, IMAGE_HEIGHT-square_side, 0., 15]))
+        render_bounce(5, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT-square_side, 2., 5.]))
+        render_bounce(6, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT/2, 30., 0.]))
         render_bounce(7, numpy.array([0, 0, 50., 0.]))
-        render_bounce(8, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT*3/4, -30., 85.]))
-        render_bounce(9, numpy.array([IMAGE_WIDTH/5, IMAGE_HEIGHT/3, 5., 17.]))
+        render_bounce(8, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT*3/4, -3., 8.5]))
+        render_bounce(9, numpy.array([IMAGE_WIDTH/5, IMAGE_HEIGHT/3, 0.5, 1.7]))
         return
     
     movie_name = dataset + "_" + str(movie_id)
@@ -186,9 +185,9 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
     Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
     
-    state -= numpy.concatenate([state[2:4], gravity])*dt
+    state -= numpy.concatenate([state[2:4], gravity])
     for i in xrange(num_frames):
-        next_state = state + numpy.concatenate([state[2:4], gravity])*dt
+        next_state = state + numpy.concatenate([state[2:4], gravity])
 
         # Collisions        
         for axis, limits in enumerate((X_LIMITS, Y_LIMITS)):
