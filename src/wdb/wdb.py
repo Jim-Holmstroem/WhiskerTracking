@@ -17,8 +17,11 @@ def euclidean_distance_inverse_squared(a, b):
     
     return 1.0/(zero_division_defense + (numpy.linalg.norm(a-b))**2)
 
-def create_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION, number_of_parameters=2):
+def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
     db_file = os.path.join(database_dir, database_name + database_extension)
+    
+    if not isinstance(parameter_groups, (list, tuple)):
+        parameter_groups = (parameter_groups,)
     
     if os.path.exists(db_file):
         raise IOError("File already exists: %s" % db_file)
@@ -30,30 +33,35 @@ def create_database(database_name, database_dir=DATABASE_DIR, database_extension
     
     cur = con.cursor()
     
-    cur.execute("CREATE TABLE metadata(number_of_parameters INTEGER NOT NULL);")
-    cur.execute("INSERT INTO metadata VALUES(?);", [number_of_parameters])
+    cur.execute("CREATE TABLE metadata(total_number_of_parameters INTEGER NOT NULL, parameter_groups INTEGER NOT NULL);")
+    cur.execute("INSERT INTO metadata VALUES(?, ?);", [sum(parameter_groups), len(parameter_groups)])
+    
+    cur.execute("CREATE TABLE parameter_group_definitions(id PRIMARY KEY, number_of_parameters INTEGER NOT NULL);")
+    cur.executemany("INSERT INTO parameter_group_definitions VALUES(?, ?);", enumerate(parameter_groups))
     
     parameter_name = "theta_"
     column_type = " FLOAT NOT NULL"
-    createTransitionsTableQuery = "CREATE TABLE transitions("
     
-    for prefix in ("from_", "to_"):
-        for i in xrange(number_of_parameters):
-            createTransitionsTableQuery += (prefix + parameter_name + str(i) + column_type + ", ")
-    
-    createTransitionsTableQuery = createTransitionsTableQuery[:-2] # Remove the trailing ", "
-    createTransitionsTableQuery += (");")
-    cur.execute(createTransitionsTableQuery)
+    for group_i, number_in_group in enumerate(parameter_groups):
+        createTransitionsTableQuery = "CREATE TABLE transitions_group_" + str(group_i) + "("
+        
+        for i in xrange(number_in_group):
+            for prefix in ("from_", "to_"):
+                createTransitionsTableQuery += (prefix + parameter_name + str(i) + column_type + ", ")
+        
+        createTransitionsTableQuery = createTransitionsTableQuery[:-2] # Remove the trailing ", "
+        createTransitionsTableQuery += (");")
+        cur.execute(createTransitionsTableQuery)
     
     con.commit()
     
     print "Successfully created database " + db_file + "."
 
-def create_database_if_not_exists(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION, number_of_parameters=2):
+def create_database_if_not_exists(database_name, parameter_groups, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
     db_file = os.path.join(database_dir, database_name + database_extension)
 
     if not os.path.exists(db_file):
-        create_database(database_name, number_of_parameters=number_of_parameters)
+        create_database(database_name, parameter_groups, database_dir, database_extension)
 
 def delete_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
     db_file = os.path.join(database_dir, database_name + database_extension)
@@ -73,19 +81,31 @@ class StateTransitionDatabase:
         
         self.__con.execute("PRAGMA foreign_keys = ON;")
         
-        cursor = self.__get_cursor()
-        cursor.execute("SELECT number_of_parameters FROM metadata;")
-        metadata_row = cursor.fetchone()
-        self.__num_params = metadata_row[0]
+        self.__param_groups = numpy.array([row[0] for row in self.__con.execute("SELECT number_of_parameters FROM parameter_group_definitions ORDER BY id ASC;").fetchall()])
+        self.__num_params = sum(self.__param_groups)
         
-        self.__insert_query = "INSERT INTO transitions VALUES("
-        for i in xrange(self.__num_params*2):
-            self.__insert_query += ("?, ")
-        self.__insert_query = self.__insert_query[:-2] # Remove the trailing ", "
-        self.__insert_query += (");")
+        insert_query_parts = ["BEGIN TRANSACTION;"]
+        
+        for group, num_params in enumerate(self.__param_groups):
+            insert_query_parts.append("INSERT INTO transitions_group_")
+            insert_query_parts.append(str(group))
+            insert_query_parts.append(" VALUES(")
+            for i in xrange(num_params*2):
+                insert_query_parts.append("?, ")
+            insert_query_parts[-1] = insert_query_parts[-1][:-2] # Remove the trailing ", "
+            insert_query_parts.append(");\n")
+        
+        insert_query_parts.append("END TRANSACTION;")
+        self.__insert_query = "".join(insert_query_parts)
+        
+        self.__select_query = ""
     
-    def __get_cursor(self):
-        return self.__con.cursor()
+    def __format_states_for_database(self, states):
+        split_indices = numpy.cumsum(self.__param_groups)
+        return states.hsplit(split_indices)
+    
+    def __format_states_for_use(self, states_components_list):
+        return numpy.concatenate(states_components_list, axis=1)
     
     def add_transition(self, from_state, to_state):
         '''Add a new transition to the database.
