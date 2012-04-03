@@ -9,9 +9,9 @@ from wimageprocessing import gray,central_diff,filter_video
 #selftest
 if __name__=="__main__":
     layermanager = wlayermanager()
-#    layermanager.add_layer(wvideo("../video/square_simple.pngvin",0.5)) #load video from file
+    #layermanager.add_layer(wvideo("../video/square_simple.pngvin",0.5)) #load video from file
     
-    bounce=wvideo("../video/square_simple.pngvin/",0.5)    
+    bounce=wvideo("../video/square_simple.pngvin/",1.0)    
 
 #    layermanager.add_layer(bounce) #load video from file
 
@@ -23,7 +23,7 @@ if __name__=="__main__":
 
     layermanager.add_layer(bounce)
 
-    layermanager.add_layer(testscreen(5,0.4))
+    #layermanager.add_layer(testscreen(5,0.4))
 
     win=wwindow(layermanager)
 

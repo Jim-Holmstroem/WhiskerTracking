@@ -5,6 +5,8 @@ from PIL import Image
 import numpy
 import cairo
 
+import pylab #TODO remove for debugging only
+
 from wmedia.wlayer import wlayer
 
 class wimage(wlayer):
@@ -32,15 +34,18 @@ class wimage(wlayer):
     
     def init_with_array(self,input_data):
         print "wimage(numpy.ndarray[",id(input_data),"])"
+        assert(input_data.ndim==3 and input_data.shape[2]==1) #must be grayscale image (and have rank 3) (MxNx1)
         self.data=input_data
     def init_with_filename(self,input_data):
         print "wimage(",input_data,")"
-        img=cairo.ImageSurface.create_from_png(input_data)
+        img=cairo.ImageSurface.create_from_png(input_data) #RGBA
         self.init_with_imagesurface(img)
     def init_with_imagesurface(self,input_data):
-        self.data=numpy.frombuffer(input_data.get_data(),dtype=numpy.uint8)
+        self.data=numpy.frombuffer(input_data.get_data(),dtype=numpy.uint8) #RGBA
         self.data=numpy.cast['float64'](self.data) 
         self.data=self.data.reshape(input_data.get_width(),input_data.get_height(),len("RGBA")) 
+        self.data=numpy.add.reduce(self.data[:,:,0:3],axis=2)/3 #RGBA->GRAY
+        self.data=self.data.reshape(self.data.shape+(1,)) #Make it (MxNx1) (in newer version of numpy on can do reduce(keepdims=True))
 
     def transform(self,f):
         """
@@ -65,6 +70,20 @@ class wimage(wlayer):
         #http://stackoverflow.com/questions/7610159/convert-pil-image-to-cairo-imagesurface
         
         width,height=map(lambda i: self.data.shape[i],[0,1])
-        img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](self.data), cairo.FORMAT_ARGB32,width,height)
+    
+        alpha=255.0*numpy.ones_like(self.data)
+       
+        rgba_data=numpy.concatenate((self.data,)*3+(alpha,),2)
+
+        #TODO remove debugging only
+        #nonzero=numpy.nonzero(imgdata[:,:,3])
+        #pylab.plot(nonzero[0],nonzero[1],'*')
+        #pylab.xlim([0,511])
+        #pylab.ylim([0,511])
+
+        #pylab.grid(True)
+        #pylab.show()
+
+        img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](rgba_data.copy()), cairo.FORMAT_ARGB32,width,height) #NOTE .copy() because of bug in numpy
         context.set_source_surface(img)
 
