@@ -5,8 +5,6 @@ from PIL import Image
 import numpy
 import cairo
 
-import pylab #TODO remove for debugging only
-
 from wmedia.wlayer import wlayer
 
 class wimage(wlayer):
@@ -74,16 +72,6 @@ class wimage(wlayer):
         alpha=255.0*numpy.ones_like(self.data)
        
         rgba_data=numpy.concatenate((self.data,)*3+(alpha,),2)
-
-        #TODO remove debugging only
-        #nonzero=numpy.nonzero(imgdata[:,:,3])
-        #pylab.plot(nonzero[0],nonzero[1],'*')
-        #pylab.xlim([0,511])
-        #pylab.ylim([0,511])
-
-        #pylab.grid(True)
-        #pylab.show()
-
         img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](rgba_data.copy()), cairo.FORMAT_ARGB32,width,height) #NOTE .copy() because of bug in numpy
         context.set_source_surface(img)
 

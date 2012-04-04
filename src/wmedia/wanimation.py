@@ -20,7 +20,7 @@ class wanimation(wlayer):
 
     def render(self,context,i):
         if isinstance(self.data,collections.Sequence):
-            self.data_renderer(context,self.ata[i])
+            self.data_renderer(context,self.data[i])
         elif callable(self.data):
             self.data_renderer(context,self.data(i))
         else:
