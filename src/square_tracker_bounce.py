@@ -7,12 +7,11 @@ import numpy
 import os
 
 def goodness(particle, image):
-    x, y = particle[0:2]
+    x, y = (particle[0], particle[2])
     
     if x < 0 or y < 0 or y >= image.shape[0] or x >= image.shape[1]:
         return 0
     
-    # FIXME: Image is always black!
     if not False in (image[y,x,:3] == 255):
         return 1000
     else:
@@ -20,58 +19,74 @@ def goodness(particle, image):
 
 def sample(prev_particle):
     
-    new_particle_from_prev = prev_particle + numpy.random.normal(loc=0, scale=10, size=prev_particle.shape)
-    new_particle_from_db = db.sample_weighted_average(prev_particle)
+    next_pos = prev_particle + numpy.array((prev_particle[1], prev_particle[3], 9.81, 9.81))
+    new_particle_from_prev = next_pos + numpy.random.normal(loc=0, scale=10, size=prev_particle.shape)
+    new_particle_from_db = db.sample_weighted_average(numpy.array((0, prev_particle[1], 0, prev_particle[3])))
 #    new_particle_from_db += numpy.random.normal(0, scale=[3, 3], size=new_particle_from_db.shape)
     
     db_weight = 1
     prev_weight = 1
     
-    new_particle = new_particle_from_prev*prev_weight + new_particle_from_db*db_weight
+    new_particle = new_particle_from_prev*prev_weight + (prev_particle+new_particle_from_db)*db_weight
     new_particle /= db_weight + prev_weight
     return new_particle
 
+IMAGE_WIDTH = 512
+IMAGE_HEIGHT = 512
+
 dataset = "square_bounce"
-square_side = 50
-movie_id = 7
-movie = dataset + "_" + str(movie_id)
 db = StateTransitionDatabase(dataset)
-save_img_dir = os.path.join("run", "square_tracker_bounce-" + movie + ".pngvin")
-if(not os.path.exists(save_img_dir)):
-    os.makedirs(save_img_dir)
+square_side = 50
+half_square_side = square_side/2.0
 
-print("Rendering tracking images to " + save_img_dir)
+X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
+Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
 
-v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
+def run(movie_id):
+    movie = dataset + "_" + str(movie_id)
+    save_img_dir = os.path.join("run", "square_tracker_bounce-" + movie + ".pngvin")
+    if(not os.path.exists(save_img_dir)):
+        os.makedirs(save_img_dir)
+    
+    print("Rendering tracking images to " + save_img_dir)
+    
+    v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
+    
+    num_particles = 10
+    #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
+    #particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
+    #start_state = numpy.array([102, 102, 0])
+    
+    start_states = {
+            7:numpy.array([X_LIMITS[0], 25., Y_LIMITS[0], 0.]),
+            8:numpy.array([IMAGE_WIDTH/2., -5, IMAGE_HEIGHT*3./4, 3]),
+            9:numpy.array([IMAGE_WIDTH/5., 10, IMAGE_HEIGHT/3., 2])}
+    #for state in start_states.values():
+    #    state[:2] += square_side/2
+    
+    particles = numpy.array([start_states[movie_id]]*num_particles)
+    #particles = numpy.random.normal(start_state, scale=[3, 3, pi/18], size=[num_particles, start_state.size])
+    
+    start_time = time()
+    
+    for (i, frame) in enumerate(v):
+    
+        img = frame.get_copy_of_current_image()
+        draw = ImageDraw.Draw(img)
+        for row in particles:
+            draw.point((row[0], row[2]), fill="#FF0000")
 
-num_particles = 100
-#particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
-#particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
-#start_state = numpy.array([102, 102, 0])
-
-start_states = {7:numpy.array([0+square_side/2, 0+square_side/2, 50., 0.]),
-                8:numpy.array([512/2+square_side/2, 512*3/4+square_side/2, -30., 85.]),
-                9:numpy.array([512/5+square_side/2, 512/3+square_side/2, 5., 17.])}
-#for state in start_states.values():
-#    state[:2] += square_side/2
         
-particles = numpy.array([start_states[movie_id]]*num_particles)
-#particles = numpy.random.normal(start_state, scale=[3, 3, pi/18], size=[num_particles, start_state.size])
+        pos = particles[:,0:3:2].mean(axis=0)
+        
+#        draw.rectangle(((pos-half_square_side).tolist(), (pos+half_square_side).tolist()), outline=0x00FF00)
+        draw.point(pos.tolist(), fill="#00FF00")
+        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
+        print("Successfully rendered frame " + str(i))
+        
+        particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
+        
+    print "Finished in %f seconds." % (time()-start_time)
 
-start_time = time()
-
-for (i, frame) in enumerate(v):
-
-    img = frame.get_copy_of_current_image()
-    draw = ImageDraw.Draw(img)
-    for row in particles:
-        draw.point(row[:2].tolist(), fill="#FF0000")
-    
-    pos = particles.mean(axis=0)[:2]
-    draw.point(pos.tolist(), fill="#00FF00")
-    img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
-    print("Successfully rendered frame " + str(i))
-    
-    particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
-    
-print "Finished in %f seconds." % (time()-start_time)
+import cProfile
+cProfile.run("run(7)")

@@ -1,9 +1,10 @@
-import math
+from itertools import izip
+from wdb import create_database, delete_database, StateTransitionDatabase
+from wmedia import left_align_videoformat
 import cairo
+import math
 import numpy
 import os
-from wmedia import left_align_videoformat
-from wdb import create_database, delete_database, StateTransitionDatabase
 
 """
 Only used to generate square test-data, nothing more.
@@ -31,7 +32,7 @@ def render_simple():
     print "Rendering pngvin movie", movie_name
     
     delete_database(movie_name)
-    create_database(movie_name, number_of_parameters=2)
+    create_database(movie_name, [2])
     db = StateTransitionDatabase(movie_name)
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
@@ -68,7 +69,7 @@ def render_simple():
         if i>0:
             # Input the transition into the database
             new_state = numpy.array([IMAGE_WIDTH*(x0+dx*i), IMAGE_WIDTH*(y0+dy*i), theta0+dtheta*i])
-            db.add_transition(prev_state[:2], new_state[:2])
+            db.add_transitions(prev_state[:2], new_state[:2])
             prev_state = new_state
         
         print "Rendered frame", i
@@ -87,7 +88,7 @@ def render_online():
     print "Rendering pngvin movie", movie_name
     
     delete_database(movie_name)
-    create_database(movie_name, number_of_parameters=2)
+    create_database(movie_name, [2])
     db = StateTransitionDatabase(movie_name)
     
     surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
@@ -132,7 +133,7 @@ def render_online():
         if i>0:
             # Input the transition into the database
             new_state = numpy.array([IMAGE_WIDTH*(x0+dx*i), IMAGE_WIDTH*(y0+dy*i), theta0+dtheta*i])
-            db.add_transition(prev_state[:2], new_state[:2])
+            db.add_transitions(prev_state[:2], new_state[:2])
             prev_state = new_state
         
         print "Rendered frame", i
@@ -147,22 +148,25 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     dataset = "square_bounce"
     num_frames = 128
     square_side = 50.
-    half_square_side = square_side/2
+    half_square_side = square_side/2.0
+    
+    X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
+    Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
     
     # State: [x, y, x', y']
     if start_state is None:
         delete_database(dataset)
-        create_database(dataset, number_of_parameters=4)
-        render_bounce(0, numpy.array([IMAGE_WIDTH/2, 0, 0., 0.]))
-        render_bounce(1, numpy.array([IMAGE_WIDTH/2, 0, 10., 0.]))
-        render_bounce(2, numpy.array([IMAGE_WIDTH*2/3, IMAGE_HEIGHT/2, -2.5, -4.5]))
-        render_bounce(3, numpy.array([IMAGE_WIDTH/4, IMAGE_HEIGHT-square_side, 0., 0.]))
-        render_bounce(4, numpy.array([IMAGE_WIDTH*3/4, IMAGE_HEIGHT-square_side, 0., 15]))
-        render_bounce(5, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT-square_side, 2., 5.]))
-        render_bounce(6, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT/2, 30., 0.]))
-        render_bounce(7, numpy.array([0, 0, 50., 0.]))
-        render_bounce(8, numpy.array([IMAGE_WIDTH/2, IMAGE_HEIGHT*3/4, -3., 8.5]))
-        render_bounce(9, numpy.array([IMAGE_WIDTH/5, IMAGE_HEIGHT/3, 0.5, 1.7]))
+        create_database(dataset, [2, 2])
+        render_bounce(0, numpy.array([IMAGE_WIDTH/2., 0., Y_LIMITS[0], 0.]))
+        render_bounce(1, numpy.array([IMAGE_WIDTH/2., 10., Y_LIMITS[0], 0.]))
+        render_bounce(2, numpy.array([IMAGE_WIDTH*2./3, -5, IMAGE_HEIGHT/2., -2]))
+        render_bounce(3, numpy.array([IMAGE_WIDTH/4., 0., Y_LIMITS[1], 0.]))
+        render_bounce(4, numpy.array([IMAGE_WIDTH*3./4, 0., Y_LIMITS[1], 10]))
+        render_bounce(5, numpy.array([IMAGE_WIDTH/2., 4, Y_LIMITS[1], 3.]))
+        render_bounce(6, numpy.array([IMAGE_WIDTH/2., 20., IMAGE_HEIGHT/2., 0.]))
+        render_bounce(7, numpy.array([X_LIMITS[0], 25., Y_LIMITS[0], 0.]))
+        render_bounce(8, numpy.array([IMAGE_WIDTH/2., -5, IMAGE_HEIGHT*3./4, 3]))
+        render_bounce(9, numpy.array([IMAGE_WIDTH/5., 10, IMAGE_HEIGHT/3., 2]))
         return
     
     movie_name = dataset + "_" + str(movie_id)
@@ -178,36 +182,41 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     ctx = cairo.Context(surface)
     
     state = start_state
-    state[:2] += half_square_side
+#    state[:2] += half_square_side
     
     print "Initial values:", state
     
-    X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
-    Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
+    def timestep(state, fixpoint_iterations=10):
+        next_state = state
+        d0 = numpy.array((state[1], gravity[0], state[3], gravity[1]))
+        for i in xrange(fixpoint_iterations):
+            d = numpy.array((next_state[1], gravity[0], next_state[3], gravity[1]))
+            next_state = state + 0.5 * (d0 + d)
+        return next_state
     
-    state -= numpy.concatenate([state[2:4], gravity])
     for i in xrange(num_frames):
-        next_state = state + numpy.concatenate([state[2:4], gravity])
-
-        # Collisions        
-        for axis, limits in enumerate((X_LIMITS, Y_LIMITS)):
-            if next_state[axis] < limits[0]:
-                next_state[axis+2] *= -bounce_factor
-                next_state[axis] = 2*limits[0] - next_state[axis]
-            elif next_state[axis] > limits[1]:
-                next_state[axis+2] *= -bounce_factor
-                next_state[axis] = 2*limits[1] - next_state[axis]
-            
-        if i>0:
-            # Input the transition into the database
-            db.add_transition(state, next_state)
         
-        state = next_state
+        if i>0:
+            next_state = timestep(state)
+
+            # Collisions with edges
+            for axis, limits in ((0, X_LIMITS), (2, Y_LIMITS)):
+                if next_state[axis] < limits[0]:
+                    next_state[axis+1] *= -bounce_factor
+                    next_state[axis] = 2*limits[0] - next_state[axis]
+                elif next_state[axis] > limits[1]:
+                    next_state[axis+1] *= -bounce_factor
+                    next_state[axis] = 2*limits[1] - next_state[axis]
+            
+            # Input the transition into the database
+            normalizer = numpy.array((state[0], 0, state[2], 0))
+            db.add_transitions(state - normalizer, next_state - normalizer)
+        
+            state = next_state
         
         x = (state[0]-half_square_side)/IMAGE_WIDTH
-        y = (state[1]-half_square_side)/IMAGE_HEIGHT
+        y = (state[2]-half_square_side)/IMAGE_HEIGHT
         
-
         clear(ctx)
         ctx.rectangle(0, 0, 1, 1)
         ctx.set_source_rgb(0,0,0)
@@ -222,6 +231,6 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
     print "Completed rendering", movie_name
 
 if (__name__=='__main__'):
-    render_simple()
-    render_online()
+#    render_simple()
+#    render_online()
     render_bounce()
