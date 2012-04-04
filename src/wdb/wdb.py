@@ -41,6 +41,10 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
     con.execute("CREATE TABLE parameter_group_definitions(id PRIMARY KEY, number_of_parameters INTEGER NOT NULL);")
     con.executemany("INSERT INTO parameter_group_definitions VALUES(?, ?);", enumerate(parameter_groups))
     
+#    cur.execute("CREATE TABLE transitions_group_?(group INTEGER NOT NULL, parameter INTEGER NOT NULL);")
+#    cur.executemany("INSERT INTO parameter_groups VALUES(?, ?);", [(i, )])
+        
+    
     for group_i, number_in_group in enumerate(parameter_groups):
         createTransitionsTableQuery = "CREATE TABLE transitions_group_" + str(group_i) + "("
         
@@ -51,6 +55,8 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
         createTransitionsTableQuery = createTransitionsTableQuery[:-2] # Remove the trailing ", "
         createTransitionsTableQuery += (");")
         con.execute(createTransitionsTableQuery)
+        
+        # Create indexes. Sample query resulting from this expression: CREATE INDEX index_g0 ON transitions_group_0(from_theta_0 ASC, from_theta_1 ASC);
         con.execute("CREATE INDEX index_g%i ON transitions_group_%i(%s);"%(group_i, group_i, ", ".join(["%s%s%i ASC"%(PREFIXES[0], PARAMETER_NAME, i) for i in xrange(number_in_group)])))
     
     con.commit()
@@ -144,9 +150,15 @@ class StateTransitionDatabase:
         """Return all transitions in the database sufficiently close to origin.
         """
         
+#        from time import time
+#        t = time()
+        
         # This statement weaves origin and max_diffs into one long array, where query_args[i] = {origin[i/2] if i%2==0, otherwise max_diffs[(i-1)/2]}.
         query_args = numpy.hstack(zip(origin, -max_diffs, max_diffs))
         
+#        result = numpy.array(self.__con.execute(self.__select_rectangle_query, query_args).fetchall())
+#        print "Found %i close particles in %f milliseconds around %s with maxdiffs %s"%(len(result), ((time()-t)*1000), origin, max_diffs)
+#        return result
         return numpy.array(self.__con.execute(self.__select_rectangle_query, query_args).fetchall())
         
 
@@ -154,7 +166,8 @@ class StateTransitionDatabase:
         return numpy.hsplit(transition, 2)
     
     def sample_weighted_random(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
-        """Generate a new particle by taking a random one from the database.
+        """OLD AND BROKEN
+        Generate a new particle by taking a random one from the database.
         
         For each transition t in the database, a weight w[t] is calculated
         using the provided function as w[t] = weight_function(prev_particle,
@@ -193,20 +206,37 @@ class StateTransitionDatabase:
             t is the "from" part of a transition in the database.
         @return: A weighted average of the database as a new particle 
         """
+        MIN_PARTICLES = 10
         from_states, to_states = [[], []]
-        vel_threshold = 15
-        while len(from_states) == 0 or len(to_states) == 0: 
-            from_states, to_states = self.split_transition(self.get_close_transitions(prev_particle, numpy.array((0, 0, vel_threshold, vel_threshold))))
-            vel_threshold += 15
+        pos_threshold = 1
+        vel_threshold = 1
+        max_diffs = numpy.array((pos_threshold, pos_threshold, vel_threshold, vel_threshold))
+        while len(from_states) < MIN_PARTICLES:
+            from_states, to_states = self.__split_transition(self.get_transitions_in_rectangle(prev_particle, max_diffs))
+            max_diffs += 1
+#        print "Found", len(from_states), "close particles"
         
 #        print "Found %d close states"%len(from_states)
 #        print from_states
 #        print to_states
         
-        weights = numpy.zeros((from_states.shape[0]))
-        for i in xrange(from_states.shape[0]):
-            weights[i] = weight_function(prev_particle, from_states[i,:])
-
-        weights = weights/sum(weights)
+        #TODO: this is HORRIBLY slow!
+#        weights = numpy.zeros((from_states.shape[0]))
+#        for i in xrange(from_states.shape[0]):
+#            weights[i] = weight_function(prev_particle, from_states[i,:])
+#
+#        weights = weights/sum(weights)
+        """
+        Calculate weights as 1/(Euclidean distance to prev_particle, squared)
+        """
+        weights = ((from_states-prev_particle)**2).sum(axis=1)
+        weights += numpy.min(weights[numpy.nonzero(weights)])*1e-6 # HACK: Prevent division by zero
+        weights = 1.0/weights
+        weights /= sum(weights)
         
         return numpy.average(to_states, axis=0, weights=weights)
+
+if __name__ == "__main__":
+    delete_database("lol")
+    create_database("lol", [2,3,4])
+    db = StateTransitionDatabase("square_bounce")
