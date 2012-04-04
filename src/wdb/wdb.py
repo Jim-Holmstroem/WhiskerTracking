@@ -5,6 +5,9 @@ from wmath import distribution
 
 DATABASE_DIR = "data/transition-db"
 DEFAULT_EXTENSION = ".sqlite3"
+PARAMETER_NAME = "theta_"
+PARAMETER_TYPE = "FLOAT NOT NULL"
+PREFIXES = ("from_", "to_")
 
 def euclidean_distance_inverse_squared(a, b):
     """UNTESTED Calculate 1/(the norm of (a-b))^2.
@@ -37,15 +40,12 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
     con.execute("CREATE TABLE parameter_group_definitions(id PRIMARY KEY, number_of_parameters INTEGER NOT NULL);")
     con.executemany("INSERT INTO parameter_group_definitions VALUES(?, ?);", enumerate(parameter_groups))
     
-    parameter_name = "theta_"
-    column_type = " FLOAT NOT NULL"
-    
     for group_i, number_in_group in enumerate(parameter_groups):
         createTransitionsTableQuery = "CREATE TABLE transitions_group_" + str(group_i) + "("
         
-        for i in xrange(number_in_group):
-            for prefix in ("from_", "to_"):
-                createTransitionsTableQuery += (prefix + parameter_name + str(i) + column_type + ", ")
+        for prefix in PREFIXES:
+            for i in xrange(number_in_group):
+                createTransitionsTableQuery += (prefix + PARAMETER_NAME + str(i) + " " + PARAMETER_TYPE + ", ")
         
         createTransitionsTableQuery = createTransitionsTableQuery[:-2] # Remove the trailing ", "
         createTransitionsTableQuery += (");")
@@ -72,12 +72,10 @@ def delete_database(database_name, database_dir=DATABASE_DIR, database_extension
         print "Did not delete database: file %s does not exist." % db_file
 
 class StateTransitionDatabase:
-    def __init__(self, db_name):
+    def __init__(self, db_name, db_dir=DATABASE_DIR, extension=DEFAULT_EXTENSION):
         
-        db_file = os.path.join(DATABASE_DIR, db_name + DEFAULT_EXTENSION)
+        db_file = os.path.join(db_dir, db_name + extension)
         self.__con = sqlite3.connect(db_file)
-        
-        self.__con.execute("PRAGMA foreign_keys = ON;")
         
         self.__param_groups = numpy.array([row[0] for row in self.__con.execute("SELECT number_of_parameters FROM parameter_group_definitions ORDER BY id ASC;").fetchall()])
         self.__num_params = sum(self.__param_groups)
