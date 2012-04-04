@@ -14,17 +14,12 @@ if __name__=="__main__":
     #layermanager.add_layer(wvideo("../video/square_simple.pngvin",0.5)) #load video from file
     
     bounce=wvideo("../video/square_simple.pngvin/",0.5)    
-
     layermanager.add_layer(bounce) 
 
-
-
-    blurbounce=wvideo("../video/square_simple.pngvin/",0.5)
-    blurbounce.transform(lambda img: filters.gaussian_filter(img,10))
-    print blurbounce
+    blurbounce=bounce.transform(lambda img: filters.gaussian_filter(img,10))
     layermanager.add_layer(blurbounce)
 
-    #layermanager.add_layer(testscreen(5,0.4))
+    layermanager.add_layer(testscreen(5,0.4))
 
     win=wwindow(layermanager)
 

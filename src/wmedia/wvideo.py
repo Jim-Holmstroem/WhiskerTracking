@@ -30,8 +30,15 @@ class wvideo(wlayer):
             print "filename=",input_data
             self.init_with_filename(input_data)
         elif isinstance(input_data,(list)):
-            print "input_data={data}"
-            self.imgs=map(lambda data:wimage(data,self.alpha),input_data)
+            print "input_data="
+            if len(input_data)!=0:
+                if isinstance(input_data[0],wimage):
+                    print "{wimage}"
+                    self.imgs=input_data
+                else:
+                    print "{data}"
+                    self.imgs=map(lambda data:wimage(data,self.alpha),input_data)
+        
         else:
             raise Exception("input_data has incorrect type")
         print ")"
@@ -50,7 +57,7 @@ class wvideo(wlayer):
         """
         transform the entire video with the function f:img->img
         """
-        map(lambda img:img.transform(f),self.imgs)         
+        return wvideo(map(lambda img:img.transform(f),self.imgs),alpha=self.alpha)         
 
     def __len__(self):
         return len(self.imgs)
