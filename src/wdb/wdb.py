@@ -1,7 +1,8 @@
+from itertools import imap, izip
+from wmath import distribution
+import numpy
 import os
 import sqlite3
-import numpy
-from wmath import distribution
 
 DATABASE_DIR = "data/transition-db"
 DEFAULT_EXTENSION = ".sqlite3"
@@ -50,6 +51,7 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
         createTransitionsTableQuery = createTransitionsTableQuery[:-2] # Remove the trailing ", "
         createTransitionsTableQuery += (");")
         con.execute(createTransitionsTableQuery)
+        con.execute("CREATE INDEX index_g%i ON transitions_group_%i(%s);"%(group_i, group_i, ", ".join(["%s%s%i ASC"%(PREFIXES[0], PARAMETER_NAME, i) for i in xrange(number_in_group)])))
     
     con.commit()
     
@@ -79,70 +81,76 @@ class StateTransitionDatabase:
         
         self.__param_groups = numpy.array([row[0] for row in self.__con.execute("SELECT number_of_parameters FROM parameter_group_definitions ORDER BY id ASC;").fetchall()])
         self.__num_params = sum(self.__param_groups)
-        
-        insert_query_parts = ["BEGIN TRANSACTION;"]
+
+        ### Build insert query string ###
+        self.__insert_queries = []        
         
         for group, num_params in enumerate(self.__param_groups):
-            insert_query_parts.append("INSERT INTO transitions_group_")
-            insert_query_parts.append(str(group))
-            insert_query_parts.append(" VALUES(")
-            for i in xrange(num_params*2):
-                insert_query_parts.append("?, ")
-            insert_query_parts[-1] = insert_query_parts[-1][:-2] # Remove the trailing ", "
-            insert_query_parts.append(");\n")
+            insert_query_parts = ["INSERT INTO transitions_group_" + str(group) + " VALUES("]
+            insert_query_parts.append(("?, "*(num_params*2))[:-2]) # Remove the trailing ", "
+            insert_query_parts.append(");")
+            self.__insert_queries.append("".join(insert_query_parts))
         
-        insert_query_parts.append("END TRANSACTION;")
-        self.__insert_query = "".join(insert_query_parts)
+        """
+        ###Build select query string###
+        Build a select query string that selects particles in a high-dimension rectangle around a given point.
         
-        self.__select_query = ""
-    
-    def __format_states_for_database(self, states):
-        split_indices = numpy.cumsum(self.__param_groups)
-        return states.hsplit(split_indices)
-    
-    def __format_states_for_use(self, states_components_list):
-        return numpy.concatenate(states_components_list, axis=1)
-    
-    def add_transition(self, from_state, to_state):
-        '''Add a new transition to the database.
-        @param from_state: A numpy array describing a state before transition. Must be of type float.
-        @param from_state: A numpy array describing a state after transition. Must be of type float.
+        The query will need three arguments (the ?'s in the query) for each
+        parameter. The first will be called "origin", the second "min" and the
+        third "max". The query returns all particles such that
+            min <= parameter - origin <= max
+        is true for all parameters.
+        """
+        select_square_rectangle_parts = ["SELECT "]
+        for prefix in PREFIXES:
+            for group, num_params in enumerate(self.__param_groups):
+                for param in xrange(num_params):
+                    select_square_rectangle_parts.append("g%i.%s%s%i, "%(group, prefix, PARAMETER_NAME, param))
+        select_square_rectangle_parts[-1] = select_square_rectangle_parts[-1][:-2] # Remove the trailing ", "
+        
+        select_square_rectangle_parts.append(" FROM ")
+        for group in xrange(len(self.__param_groups)):
+            select_square_rectangle_parts.append("transitions_group_%i AS g%i, "%(group, group))
+        select_square_rectangle_parts[-1] = select_square_rectangle_parts[-1][:-2] # Remove the trailing ", "
+        
+        select_square_rectangle_parts.append(" WHERE ")
+        for group, num_params in enumerate(self.__param_groups):
+            for param in xrange(num_params):
+                select_square_rectangle_parts.append("g%i.%s%s%i - ? BETWEEN ? AND ? AND "%(group, PREFIXES[0], PARAMETER_NAME, param))
+        select_square_rectangle_parts[-1] = select_square_rectangle_parts[-1][:-5] # Remove the trailing " AND "
+        
+        select_square_rectangle_parts.append(";")
+        self.__select_rectangle_query = "".join(select_square_rectangle_parts)
+        
+    def add_transitions(self, from_states, to_states):
+        '''Add new transitions to the database.
+        @param from_state: A numpy array where each row is a state before transition. Must be of type float.
+        @param to_state: A numpy array where each row is a state after transition. Must be of type float.
         '''
-        self.__con.execute(self.__insert_query, self.combine_transition(from_state, to_state))
+        
+        split_indices = numpy.cumsum(self.__param_groups)[:-1] # Don't create an empty split from the last index
+        
+        # This statement "weaves" from_states and to_states together into a list of big matrices with the same structure as the database tables
+        args_list = imap(numpy.hstack, izip(numpy.hsplit(from_states, split_indices), numpy.hsplit(to_states, split_indices)))
+        
+        for query, args in izip(self.__insert_queries, args_list):
+            if len(args.shape) == 1:
+                args = [args]
+            self.__con.executemany(query, args)
+        
         self.__con.commit()
     
-    def get_transitions(self):
-        """Return all transitions in the database."""
-        return numpy.array(self.__con.execute("SELECT * FROM transitions;").fetchall())
-    
-    def get_close_transitions(self, origin, thresholds):
+    def get_transitions_in_rectangle(self, origin, max_diffs):
         """Return all transitions in the database sufficiently close to origin.
         """
         
-        query = "SELECT * FROM transitions WHERE from_theta_2 BETWEEN ? AND ? AND from_theta_3 BETWEEN ? and ?;"
-
-        lower = origin - thresholds
-        upper = origin + thresholds
-#        print "Origin: %s, Lower bounds: %s, Upper bounds: %s"%(origin, lower, upper)
-
-        return numpy.array(self.__con.execute(query, [lower[2], upper[2], lower[3], upper[3]]).fetchall())
-#        result = cur.fetchall()
-#        print len(result)
-#        return numpy.array(result)
-    
-    def combine_transition(self, from_state, to_state):
-        """Combine the two given states into a transition row."""
-        return numpy.concatenate((from_state, to_state))
-    
-    def split_transition(self, transition):
-        """Split the given transition row into its two state parts.
+        # This statement weaves origin and max_diffs into one long array, where query_args[i] = {origin[i/2] if i%2==0, otherwise max_diffs[(i-1)/2]}.
+        query_args = numpy.hstack(zip(origin, -max_diffs, max_diffs))
         
-        If transition is a matrix, splits the rows of the matrix and returns the two ("left" and "right") parts of the matrix.
+        return numpy.array(self.__con.execute(self.__select_rectangle_query, query_args).fetchall())
         
-        @param transition: A numpy array to split
-        @return: The provided transition split in half as two numpy arrays
-        @see: function numpy.hsplit
-        """
+
+    def __split_transition(self, transition):
         return numpy.hsplit(transition, 2)
     
     def sample_weighted_random(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
