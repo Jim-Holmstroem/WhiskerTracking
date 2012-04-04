@@ -31,13 +31,11 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
     
     con = sqlite3.connect(db_file)
     
-    cur = con.cursor()
+    con.execute("CREATE TABLE metadata(total_number_of_parameters INTEGER NOT NULL, parameter_groups INTEGER NOT NULL);")
+    con.execute("INSERT INTO metadata VALUES(?, ?);", [sum(parameter_groups), len(parameter_groups)])
     
-    cur.execute("CREATE TABLE metadata(total_number_of_parameters INTEGER NOT NULL, parameter_groups INTEGER NOT NULL);")
-    cur.execute("INSERT INTO metadata VALUES(?, ?);", [sum(parameter_groups), len(parameter_groups)])
-    
-    cur.execute("CREATE TABLE parameter_group_definitions(id PRIMARY KEY, number_of_parameters INTEGER NOT NULL);")
-    cur.executemany("INSERT INTO parameter_group_definitions VALUES(?, ?);", enumerate(parameter_groups))
+    con.execute("CREATE TABLE parameter_group_definitions(id PRIMARY KEY, number_of_parameters INTEGER NOT NULL);")
+    con.executemany("INSERT INTO parameter_group_definitions VALUES(?, ?);", enumerate(parameter_groups))
     
     parameter_name = "theta_"
     column_type = " FLOAT NOT NULL"
@@ -51,7 +49,7 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
         
         createTransitionsTableQuery = createTransitionsTableQuery[:-2] # Remove the trailing ", "
         createTransitionsTableQuery += (");")
-        cur.execute(createTransitionsTableQuery)
+        con.execute(createTransitionsTableQuery)
     
     con.commit()
     
@@ -112,33 +110,27 @@ class StateTransitionDatabase:
         @param from_state: A numpy array describing a state before transition. Must be of type float.
         @param from_state: A numpy array describing a state after transition. Must be of type float.
         '''
-        cur = self.__get_cursor()
-        cur.execute(self.__insert_query, self.combine_transition(from_state, to_state))
+        self.__con.execute(self.__insert_query, self.combine_transition(from_state, to_state))
         self.__con.commit()
     
     def get_transitions(self):
         """Return all transitions in the database."""
-        cur = self.__get_cursor()
-        cur.execute("SELECT * FROM transitions;")
-        
-        return numpy.array(cur.fetchall())
+        return numpy.array(self.__con.execute("SELECT * FROM transitions;").fetchall())
     
     def get_close_transitions(self, origin, thresholds):
         """Return all transitions in the database sufficiently close to origin.
         """
         
         query = "SELECT * FROM transitions WHERE from_theta_2 BETWEEN ? AND ? AND from_theta_3 BETWEEN ? and ?;"
-        cur = self.__get_cursor()
 
         lower = origin - thresholds
         upper = origin + thresholds
 #        print "Origin: %s, Lower bounds: %s, Upper bounds: %s"%(origin, lower, upper)
 
-        cur.execute(query, [lower[2], upper[2], lower[3], upper[3]])
+        return numpy.array(self.__con.execute(query, [lower[2], upper[2], lower[3], upper[3]]).fetchall())
 #        result = cur.fetchall()
 #        print len(result)
 #        return numpy.array(result)
-        return numpy.array(cur.fetchall())
     
     def combine_transition(self, from_state, to_state):
         """Combine the two given states into a transition row."""
