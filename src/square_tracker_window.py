@@ -9,7 +9,6 @@ from scipy.ndimage import filters
 import math
 import numpy
 
-from wimageprocessing import gray,central_diff,filter_video,
 
 #selftest
 if __name__=="__main__":

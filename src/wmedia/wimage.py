@@ -32,7 +32,8 @@ class wimage(wlayer):
     
     def init_with_array(self,input_data):
         print "wimage(numpy.ndarray[",id(input_data),"])"
-        assert(input_data.ndim==3 and input_data.shape[2]==1) #must be grayscale image (and have rank 3) (MxNx1)
+        input_data=numpy.atleast_3d(input_data)
+        assert(input_data.shape[2]==1) #must be grayscale image (MxNx1)
         self.data=input_data
     def init_with_filename(self,input_data):
         print "wimage(",input_data,")"
@@ -43,7 +44,7 @@ class wimage(wlayer):
         self.data=numpy.cast['float64'](self.data) 
         self.data=self.data.reshape(input_data.get_width(),input_data.get_height(),len("RGBA")) 
         self.data=numpy.add.reduce(self.data[:,:,0:3],axis=2)/3 #RGBA->GRAY
-        self.data=self.data.reshape(self.data.shape+(1,)) #Make it (MxNx1) (in newer version of numpy on can do reduce(keepdims=True))
+        self.data=numpy.atleast_3d(self.data) #Make it (MxNx1) (in newer version of numpy on can do reduce(keepdims=True))
 
     def transform(self,f):
         """
