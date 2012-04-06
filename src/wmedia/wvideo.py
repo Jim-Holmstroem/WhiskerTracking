@@ -7,6 +7,8 @@ import re
 from wmedia.wlayer import wlayer 
 from wmedia.wimage import wimage
 
+from multiprocessing import Pool
+
 
 class wvideo(wlayer):
     """

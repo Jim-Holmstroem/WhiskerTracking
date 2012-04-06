@@ -20,7 +20,7 @@ if __name__=="__main__":
 
     blurbounce=bounce.transform(lambda img: filters.gaussian_filter(img,3))
     edgebounce=blurbounce.transform(lambda img:numpy.sqrt(filters.prewitt(img,axis=0)**2+filters.prewitt(img,axis=1)**2))
-   # layermanager.add_layer(blurbounce)
+    layermanager.add_layer(blurbounce)
     layermanager.add_layer(edgebounce)
 
     layermanager.add_layer(testscreen(5,0.4))
