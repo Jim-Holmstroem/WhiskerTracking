@@ -48,5 +48,6 @@ One method that uses prior knowledge of the models PDF and a pretrained database
 
 
 
+Searching in this m-dimensional featurespace can be done in O(log(n^m))=O(mlog(n)) but filling it addicitly still requeres O(n^m)
 
 
