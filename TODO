@@ -53,4 +53,4 @@ Searching in this m-dimensional featurespace can be done in O(log(n^m))=O(mlog(n
 
 Considering configurations of the model that are impropable is totally unncesasairy<image of whale and flower>
 
-
+Borrow the word reduce from complexity theory and use it as: reducing the problem to an innerstate of an dynamicsystem
