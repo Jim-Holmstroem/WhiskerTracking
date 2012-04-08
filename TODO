@@ -47,6 +47,9 @@ One method that uses prior knowledge of the models PDF and a pretrained database
 
 
 
+"partikelfiltrering: approximativ slutledning i dynamiska bayesianska nätverk"
+Point out the connection between physical kinematic system (present the main formulaes that governs the motions of objects and show that they are infact a dynamic system, then adding uncertaintis we get bayesian network)
+
 
 Searching in this m-dimensional featurespace can be done in O(log(n^m))=O(mlog(n)) but filling it addicitly still requeres O(n^m)
 
