@@ -23,9 +23,15 @@ bayes optimal as in bik12, is this applicable ?
 
 
 
-Add to report:
+=============== Goal =====================
 
-Explain: Hypotesis, sample, DOF?, 
+(Mockup?)
+
+
+
+
+
+Explain: Hypotesis (in the context of PF), sample, DOF?, 
 
 ==Curse of dimensinallity
 {problem}
@@ -57,3 +63,71 @@ Searching in this m-dimensional featurespace can be done in O(log(n^m))=O(mlog(n
 Considering configurations of the model that are impropable is totally unncesasairy<image of whale and flower>
 
 Borrow the word reduce from complexity theory and use it as: reducing the problem to an innerstate of an dynamicsystem
+
+
+
+[Scope:]
+<<>>
+
+
+
+
+<teh structure comes from:http://en.wikipedia.org/wiki/Video_tracking, find better references>
+[Tracking Methods:]
+Among many different approaches to tracking, the most widely used ones are:
+
+[TODO, is this both localization and tracking enlisted?]
+
+= Blob tracking
+
+= Contour tracking
+== Recursive bayesian estimator [is this the correct term?]
+=== Particle filter
+
+Particle filter: useful for sampling the underlying state-space distribution of nonlinear and non-Gaussian processes."
+
+Monte carlo method
+
+{ASSUMPTIONS:}
+{PROS: Can deal with multinomial data}
+{CONS:}
+{WURTH NOTING: there are many variants of particle filters; we are only considering the most basic one. }
+
+=== Kalman filter
+[TODO, what function is linear in this case ?]
+"Kalman filter: an optimal recursive Bayesian filter for linear functions subjected to Gaussian noise" -Wiki
+{ASSUMPTIONS: normal-distrubuted data, linear functions}
+{PROS: [faster?]}
+{CONS: cant deal with multinomal dists.}
+
+= Visual feature  matching 
+
+= Kernel-based tracking
+
+
+!!!!!!!!!!!!!!!!!!!
+under tracking methods
+Seperate into: localization and tracking 
+tracking(localization) , that is the tracking algorithm still needs a localization algorithm to get some kind of measure
+!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
+
+
+
+
+
+
+
+
+=============== WRAPUP ===================
+
+(Mockup?)
+
+
+
+
+
