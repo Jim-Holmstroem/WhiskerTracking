@@ -21,11 +21,42 @@ KD-tree
 bayes optimal as in bik12, is this applicable ?
 
 
+=============== Invariances ==============
+Section about invariances and why they are needed.
+
+
+
+============== Definitions ===============
+
+= Image
+In a computer an image is represented as an array of 
+numbers, mostly 8bit numbers ranging between [0,255] 
+
+[should one use N or [0,255] instead of Z?]
+== RGB image is a function;
+image: ZxZ=pos->ZxZxZ=color (mapping each position into an RGBcolor)
+that is foreach pixel a value for Red,Green,Blue is defined.
+But one might as well see it as a list of pixels Z^5=<pos,color>
+
+== Grayscale image is in the same way as an RGB image but without the RGB part
+just a function;
+image: ZxZ->Z
+
+== Video
+Ordered list of images
+
+
+Images are a sampling of a continous (disregarding quantum effects) view of the reality
+img=\sum\dirac{}
+
+Artifacts from encoding the video.
+
+Whiskers are mostly subpixel objects.
 
 
 =============== Goal =====================
 
-(Mockup?)
+(Mockup?) Standalone application
 
 
 
@@ -69,6 +100,8 @@ Borrow the word reduce from complexity theory and use it as: reducing the proble
 [Scope:]
 <<>>
 
+
+Since the video-sequences we are intending to run on is grayscale only we simply transform it down 
 
 
 
@@ -120,14 +153,14 @@ tracking(localization) , that is the tracking algorithm still needs a localizati
 
 
 
-
-
-
 =============== WRAPUP ===================
 
 (Mockup?)
 
-
+Having the goal to make it an standalone application had some challanges 
+compared to do a simple muckup in MATLAB(R) or such since some builtin
+functionallity is missing and also having problems like missaligned buffers 
+or having to write an adapter between images and matrices as an example.
 
 
 
