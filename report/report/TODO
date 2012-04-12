@@ -41,9 +41,9 @@ PF vs condensation
 
 PF is simply a directed search
 
-Searching in this m-dimensional featurespace can be done in O(log(n^m))=O(mlog(n)) but filling it addicitly still requeres O(n^m)
+Searching in this m-dimensional featurespace can be done in O(log(n^m))=O(mlog(n)) but filling it adequately still requires O(n^m)
 
-Considering configurations of the model that are impropable is totally unncesasairy<image of whale and flower>
+Considering configurations of the model that are improbable is totally unnecessary<image of whale and flower>
 
 
 
@@ -62,7 +62,7 @@ But one might as well see it as a list of pixels Z^5=<pos,color>
 == Grayscale image is in the same way as an RGB image but without the RGB part
 just a function;
 image: ZxZ->Z
-or alternativly list of Z^3=<pos,value>
+or alternatively list of Z^3=<pos,value>
 == Video
 Ordered list of images
 
@@ -74,7 +74,7 @@ One configuration of the object corresponds to one point in the featurespace
 <example with a plot>
 
 
-== Hypotesis
+== Hypothesis
 
 == Prop. function as a collection of points with attached weight.
 
