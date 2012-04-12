@@ -60,6 +60,10 @@ class wimage(wlayer):
 
     def shape(self):
         return self.data.shape
+    
+    def get_array(self):
+        return self.data
+
 
     def render(self,context,i=None):
         """
