@@ -7,6 +7,7 @@ import re
 from wmedia.wlayer import wlayer 
 from wmedia.wimage import wimage
 
+from parallel.parallel_map import parallel_map
 
 class wvideo(wlayer):
     """
