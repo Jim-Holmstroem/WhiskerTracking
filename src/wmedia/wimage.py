@@ -31,12 +31,12 @@ class wimage(wlayer):
             raise Exception("Invalid input type; not (ndarray/basestring/imagesurface")
     
     def init_with_array(self,input_data):
-        print "wimage(numpy.ndarray[",id(input_data),"])"
+#        print "wimage(numpy.ndarray[",id(input_data),"])"
         input_data=numpy.atleast_3d(input_data)
         assert(input_data.shape[2]==1) #must be grayscale image (MxNx1)
         self.data=input_data
     def init_with_filename(self,input_data):
-        print "wimage(",input_data,")"
+#        print "wimage(",input_data,")"
         img=cairo.ImageSurface.create_from_png(input_data) #RGBA
         self.init_with_imagesurface(img)
     def init_with_imagesurface(self,input_data):
@@ -62,6 +62,10 @@ class wimage(wlayer):
 
     def shape(self):
         return self.data.shape
+    
+    def get_array(self):
+        return self.data
+
 
     def render(self,context,i=None):
         """

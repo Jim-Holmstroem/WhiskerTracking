@@ -26,23 +26,23 @@ class wvideo(wlayer):
         @Param input_data, can be string or ordered vector with elements valid wimage.input_data
         """
         wlayer.__init__(self,alpha) 
-        print "wvideo("
+#        print "wvideo("
         if isinstance(input_data,basestring):
-            print "filename=",input_data
+#            print "filename=",input_data
             self.init_with_filename(input_data)
         elif isinstance(input_data,(list)):
-            print "input_data="
+#            print "input_data="
             if len(input_data)!=0:
                 if isinstance(input_data[0],wimage):
-                    print "{wimage}"
+#                    print "{wimage}"
                     self.imgs=input_data
                 else:
-                    print "{data}"
+#                    print "{data}"
                     self.imgs=map(lambda data:wimage(data,self.alpha),input_data)
         
         else:
             raise Exception("input_data has incorrect type")
-        print ")"
+#        print ")"
 
     def init_with_filename(self,filename):
         """
