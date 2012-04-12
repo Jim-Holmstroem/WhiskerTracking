@@ -5,6 +5,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[swedish,english]{babel}
 \usepackage{modifications}
+
+\usepackage{clrscode}
+\newcommand{\ForEach}{\textbf{foreach} }
+\newcommand{\In}{\textbf{in} }
+
+
 \title{
     Probabilistic Tracking of Multiple Rodent Whiskers in Video Sequences
     \\WORK IN PROGRESS
@@ -48,9 +54,22 @@
     \label{sec:introduction}
     \input{introduction}
 
+\chapter{Related Work}
+    \label{sec:related_work}
+    \input{related_work}
+
+\chapter{Definitions}
+    \label{sec:definitions}
+    \input{definitions}
+
+\chapter{Background}
+    \label{sec:Background}
+    \input{background}
+
 \chapter{Theory}
     \label{sec:theory}
     \input{theory}
+
 
 %TODO impl.. or Impl..?
 \chapter{Algorithms \& Implementations}
@@ -71,10 +90,10 @@
 
 
 %\input{appendixA} howto?
-\appendix
-\addappheadtotoc
+%\appendix
+%\addappheadtotoc
 
-\chapter{RDF}\label{appA}
+%\chapter{RDF}\label{appA}
 
 
 \begin{figure}[ht]

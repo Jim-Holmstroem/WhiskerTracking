@@ -34,6 +34,41 @@ In the next section, we state the particle filter algorithm. Implementing the fi
 
 \subsubsection{Formal description of the particle filter}
 Here we state the particle filter algorithm. Below we elaborate on what this actually does and why.
+%TODO pseudo algorithm for the 
+%Sample instead of draw
+
+\begin{codebox}
+\Procname{$\proc{Distribution-Sample}(X_t,p)$}
+\li \ForEach $\id{x_t}$ \In $\id{X_t}$
+\li     \Do
+            $sample \id{x_{t+1}} \sim p\left(x_{t+1}|x_t\right)$
+        \End
+\li \Return $\id{X_{t+1}}$
+\end{codebox}
+\begin{codebox}
+\Procname{$\proc{Importance}(X,q,z)$}
+\li \ForEach $\id{x}$ \In $\id{X}$ 
+\li     \Do
+            $w \gets q\left(z|x\right)$
+        \End
+\li \Return $W$
+\end{codebox}
+\begin{codebox}
+\Procname{$\proc{Weighted-Sample}(X,W)$}
+\li \ForEach $x$ \In $X$
+\li     \Do
+            $sample ~ x' \propto W$   
+        \End
+\li \Return $X'$
+\end{codebox}
+\begin{codebox}
+\Procname{$\proc{Particle-Filter} (X_{t-1},z_t)$}
+\li $X_t \gets \proc{Distribution-Sample}(X_{t-1},p)$
+\li $W_t \gets \proc{Importance}(X_{t-1},q,z_t)$
+\li $X_t \gets \proc{Weighted-Sample}(X_t,W_t)$
+\li \Return $X_t$
+\end{codebox}
+
 \begin{enumerate}
 \item ParticleFilter($X_{t-1}, z_t$):
 \item Let $\bar{X_t} = \emptyset$.
@@ -57,8 +92,61 @@ We draw a set $\bar{X}_t = \xtmN{x}{m}{t}{N}$ of samples from $p_t$. These sampl
 
 In our case, we do not really know $x_{t-1}$, rather we have an estimate $X_{t-1}$ of $N$ particles. In this case, we sample $x_t^m$ with probability $p_t\left(x_t^m | x_{t-1}^m\right)$.
 
+
+
+==Curse of dimensinallity
+{problem}
+The 8 DOF in our model produces vast amounts of space in our featurespace and this has the consequence that we need \proportianal n^8 datapoints to fill it to an specified density c.
+As an example, we would need 4^8=65536 samples just to make a grid with 4 samples in each DOF which in many cases (aspecially for hand labeled data). 
+{classification}
+This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionallity" http://en.wikipedia.org/wiki/Curse_of_dimensionality
+{solution}
+One way to somewhat overcome this emptyness in space is to have a dynamic (active?) algorithm that adopts the sample density 
+according to the models relative frequency in that area and this results in, for a given amount of samples, its more likely 
+for an sampled model to occure in a more densly pre-sampled (pre-sampled?) area, in fact this method when doing it right (ideally) 
+gives: given a set of samples the overall density for all the samples in the sampledatabase would be optimal) [proof for this will be given in <blabla>]
+... (use the world hypotesis instead of sample, or perhaps sampled-hypotesis)
+(below is perhaps somewhat redudant, but one can pick bits and pieces from both)
+So having a bias towards trying out more plausible hypotesis for the models innerstate is better than 
+doing a naive exhausted search tru the entire featurespace, this could only be used if you have \le 3 DOF as in for example finding straight edges with houghtransformation[ref].
+...
+One method that uses prior knowledge of the models PDF and a pretrained database containing knowledge on how to approximate the models PDF in the next timestep is particle filter which is an (instance?) of the ideal bayesian filter.
+
+
+
+
+
+
 \subsection{Particle filtering whisker movements}
 Here we propose a way to model whiskers as a dynamic system.
 
 \subsection{Kinematic whisker models}
-What are our kinematic models?
+
+In all our models we have separated the head from the whiskers since they have
+such different kinematic properties and actually are attached to each other.
+
+==The first model
+Assumptions:
+>Material is linear elastic
+>Small deformations (probably the biggest assumption, which dont actually hold
+in our case)
+
+The equation of elastic line ... [Grundläggande Hållfasthetslära - Hans Lundh
+p94 (7.6)]
+
+The force that comes from the head moving on the base of the whisker is just 
+sucked up by the Boundaryvalues and it will still be valid assumptions for the
+elasticline to hold.
+
+Under just a few assumptions that the material is linear elastic and the
+deformations are small we have the ...
+
+
+============== MODELS =================
+
+One possible model is to borrow the model for beam under small 
+deformations from the theory of strength of materials,
+after all the whisker is a beam but we dont have small 
+deformations at all but we assume that the model will approximatly hold ony way.
+
+

@@ -24,13 +24,6 @@ Can something be considered to ba an heuristic?
 
 
 
-=============== Invariances ==============
-Section about invariances and why they are needed in localization.
-
-The "filter" must give the same response invariant of the position in the image 
-and its often wanted to have it rotational and scale invariant (if your not 
-intending to measure things like angles or size that is)
-
 
 
 ==========================================
@@ -46,50 +39,6 @@ Searching in this m-dimensional featurespace can be done in O(log(n^m))=O(mlog(n
 Considering configurations of the model that are improbable is totally unnecessary<image of whale and flower>
 
 
-
-============== Definitions ===============
-
-= Image
-In a computer an image is represented as an array of 
-numbers, mostly 8bit numbers ranging between [0,255] 
-
-[should one use N or [0,255] instead of Z?]
-== RGB image is a function;
-image: ZxZ=pos->ZxZxZ=color (mapping each position into an RGBcolor)
-that is foreach pixel a value for Red,Green,Blue is defined.
-But one might as well see it as a list of pixels Z^5=<pos,color>
-
-== Grayscale image is in the same way as an RGB image but without the RGB part
-just a function;
-image: ZxZ->Z
-or alternatively list of Z^3=<pos,value>
-== Video
-Ordered list of images
-
-
-== Feature
-
-== Featurespace
-One configuration of the object corresponds to one point in the featurespace
-<example with a plot>
-
-
-== Hypothesis
-
-== Prop. function as a collection of points with attached weight.
-
-
-== Dynamic system
-    It's a tuple <space,update,time>
-    Any mechanical system following newton physics (or relativistic for that matter) can be considered to be an dynamic system
-    in our case the tuple whould be <feature_space,update_rule (the one we are trying to preprocess data to approximate),time>
-
-
-==============================================================
-
-Images are a sampling of a continous (disregarding quantum effects) view of the reality
-img=\sum\dirac{}
-
 ============= Problems ========================
 
 
@@ -97,34 +46,13 @@ Artifacts from encoding the video.
 
 Whiskers are mostly subpixel objects.
 
+Images are a sampling of a continous (disregarding quantum effects) view of the reality
+img=\sum\dirac{}
 
 =============== Goal =====================
 
 (Mockup?) Standalone application
 
-
-
-
-
-Explain: Hypotesis (in the context of PF), sample, DOF?, 
-
-==Curse of dimensinallity
-{problem}
-The 8 DOF in our model produces vast amounts of space in our featurespace and this has the consequence that we need \proportianal n^8 datapoints to fill it to an specified density c.
-As an example, we would need 4^8=65536 samples just to make a grid with 4 samples in each DOF which in many cases (aspecially for hand labeled data). 
-{classification}
-This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionallity" http://en.wikipedia.org/wiki/Curse_of_dimensionality
-{solution}
-One way to somewhat overcome this emptyness in space is to have a dynamic (active?) algorithm that adopts the sample density 
-according to the models relative frequency in that area and this results in, for a given amount of samples, its more likely 
-for an sampled model to occure in a more densly pre-sampled (pre-sampled?) area, in fact this method when doing it right (ideally) 
-gives: given a set of samples the overall density for all the samples in the sampledatabase would be optimal) [proof for this will be given in <blabla>]
-... (use the world hypotesis instead of sample, or perhaps sampled-hypotesis)
-(below is perhaps somewhat redudant, but one can pick bits and pieces from both)
-So having a bias towards trying out more plausible hypotesis for the models innerstate is better than 
-doing a naive exhausted search tru the entire featurespace, this could only be used if you have \le 3 DOF as in for example finding straight edges with houghtransformation[ref].
-...
-One method that uses prior knowledge of the models PDF and a pretrained database containing knowledge on how to approximate the models PDF in the next timestep is particle filter which is an (instance?) of the ideal bayesian filter.
 
 
 
@@ -137,6 +65,8 @@ Borrow the word reduce from complexity theory and use it as: reducing the proble
 
 
 ================= Own Contributions =============
+<<Vart ska dethär in?>>
+
 
 Given PF a model of whiskers ...
 
@@ -145,61 +75,13 @@ Given PF a model of whiskers ...
 ================== Scope ==================
 <<>>
 
-
 Since the video-sequences we are intending to run on is grayscale-only we simply 
 transform all the images down to grayscale which wont affect the results even if
 the image happens to be in color.
 
 
-<teh structure comes from:http://en.wikipedia.org/wiki/Video_tracking, find better references>
-[Tracking Methods:]
-Among many different approaches to tracking, the most widely used ones are:
-
-[TODO, is this both localization and tracking enlisted?]
-
-= Blob tracking
-
-= Contour tracking
-== Recursive bayesian estimator [is this the correct term?]
-=== Particle filter
-
-Particle filter: useful for sampling the underlying state-space distribution of nonlinear and non-Gaussian processes."
-
-Monte carlo method
-
-{ASSUMPTIONS:}
-{PROS: Can deal with multinomial data}
-{CONS:}
-{WURTH NOTING: there are many variants of particle filters; we are only considering the most basic one. }
-
-=== Kalman filter
-[TODO, what function is linear in this case ?]
-"Kalman filter: an optimal recursive Bayesian filter for linear functions subjected to Gaussian noise" -Wiki
-{ASSUMPTIONS: normal-distrubuted data, linear functions}
-{PROS: [faster?]}
-{CONS: cant deal with multinomal dists.}
-
-= Visual feature  matching 
-
-= Kernel-based tracking
 
 
-!!!!!!!!!!!!!!!!!!!
-under tracking methods
-Seperate into: localization and tracking 
-tracking(localization) , that is the tracking algorithm still needs a localization algorithm to get some kind of measure
-!!!!!!!!!!!!!!!!!!!
-
-
-
-
-
-============== MODELS =================
-
-One possible model is to borrow the model for beam under small 
-deformations from the theory of strength of materials,
-after all the whisker is a beam but we dont have small 
-deformations at all but we assume that the model will approximatly hold ony way.
 
 
 

@@ -5,5 +5,8 @@ clean:
 
 force: clean all
 
+run:
+	evince report.pdf
+
 %.pdf: *.tex
 	pdflatex $*.tex
