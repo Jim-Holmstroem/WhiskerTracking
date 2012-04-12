@@ -29,6 +29,8 @@ The particle filter works recursively in two steps:
 \item The \emph{resampling step} is the final selection of the most probable particles. After resampling the set $\bar{X_t} := \xtmN{\bar{x}}{t}{m}{N}$ we get the \emph{belief} $\bel{x_t}$, which often includes multiple copies of the most probable particles. This set is used as an estimate for $x_t$, and is used to estimate $x_{t+1}$.
 \end{enumerate}
 
+In the next section, we state the particle filter algorithm. Implementing the filter in itself is only a matter of implementing the stated pseudocode, and is not difficult. The difficult part is designing the probability functions $p_t$ and $q_t$ for the given system. In chapters TODO we propose a probabilistic implementation of these functions.
+
 
 \subsubsection{Formal description of the particle filter}
 Here we state the particle filter algorithm. Below we elaborate on what this actually does and why.
@@ -54,6 +56,9 @@ Here we state the particle filter algorithm. Below we elaborate on what this act
 We draw a set $\bar{X}_t = \xtmN{x}{m}{t}{N}$ of samples from $p_t$. These samples roughly represent a probability distribution for the current state $x_t$, but we have yet to consider our observation. Therefore, we will create a new probability distribution weighted by how probable the observation $z_t$ is. For each $x_t^m$, we let $w_t^m := q_t\left(z_t | x_t\right)$. This defines a discrete probability distribution where $x_t^m$ is assumed with a probability proportional to $w_t^m$. From this final distribution we again draw $N$ samples $X_t$, which will be our estimate of the current state. The elements $x_t^m$ are referred to as \emph{particles} and the set $X_t$ as the \emph{belief at time $t$}.
 
 In our case, we do not really know $x_{t-1}$, rather we have an estimate $X_{t-1}$ of $N$ particles. In this case, we sample $x_t^m$ with probability $p_t\left(x_t^m | x_{t-1}^m\right)$.
+
+\subsection{Particle filtering whisker movements}
+Here we propose a way to model whiskers as a dynamic system.
 
 \subsection{Kinematic whisker models}
 What are our kinematic models?
