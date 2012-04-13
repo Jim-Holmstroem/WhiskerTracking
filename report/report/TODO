@@ -20,10 +20,7 @@ KD-tree
 bayes optimal as in bik12, is this applicable ?
 
 
-Can something be considered to ba an heuristic?
-
-
-
+Can something be considered to be an heuristic?
 
 
 ==========================================
@@ -56,6 +53,10 @@ img=\sum\dirac{}
 
 
 
+bik12-holistic appearance-based descriptor
+
+
+
 "partikelfiltrering: approximativ slutledning i dynamiska bayesianska nätverk"
 Point out the connection between physical kinematic system (present the main formulaes that governs the motions of objects and show that they are infact a dynamic system, then adding uncertaintis we get bayesian network)
 
@@ -82,6 +83,9 @@ the image happens to be in color.
 
 
 
+========================================
+
+Feature extraction vs. feature selection (bik)
 
 
 

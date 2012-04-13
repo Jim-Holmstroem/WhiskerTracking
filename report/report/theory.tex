@@ -94,6 +94,78 @@ In this thesis, $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set
 
 
 \subsubsection{Curse of dimensonality}
+
+
+% """
+%The "Curse of dimensionality", is a term coined by Bellman to describe the
+%problem caused by the exponential increase in volume associated with adding
+%extra dimensions to a (mathematical) space. One implication of the curse of
+%dimensionality is that some methods for numerical solution of the Bellman
+%equation require vastly more computer time when there are more state variables
+%in the value function.
+
+%For example, 100 evenly-spaced sample points suffice to sample a unit interval
+%with no more than 0.01 distance between points; an equivalent sampling of a
+%10-dimensional unit hypercube with a lattice with a spacing of 0.01 between
+%adjacent points would require 1020 sample points: thus, in some sense, the
+%10-dimensional hypercube can be said to be a factor of 1018 "larger" than the
+%unit interval. (Adapted from an example by R. E. Bellman, see below.)
+% """
+
+from:
+"R. Bellman, Adaptive control Processes, p.94, Princeton University Press, NJ,
+1961."
+
+“In view of all that we have said in the foregoing
+sections, the many obstacles we appear to have
+surmounted. What casts the pall over our victory
+celebration? It is the curse of dimensionality, a
+malediction that has plagued the scientist from
+earliest days.”
+
+
+show curse of dimensionallity with a simple like in bik12.lecture7
+1D->2D
+either maintain density samples increases drastically
+or maintain samples and density decreases drastically
+2D->3D
+even worse
+
+To have a sample density of C we need $O(C^n)$ samples for n-dimensional data,
+that is the number of samples grows exponential on the number of dimensions.
+And a consequence of this is that in order to approximate some
+function defined in higher dimensional space one needs many more samples.
+
+One more thing with the high dimensional space is the large boundaries 
+of the sample-set then from lower dimensional space which results in orders of
+magnitude higher chance for an point one want to approximate to fall outside
+the sample-set and needs to be extrapolated instead of interpolate which is
+much better.
+
+% """
+%
+% Number of states grows exponentially in n (assuming fixed number of
+% discretization levels per coordinate)
+%
+% """
+
+%
+%"""
+% One solution on how to make the effects of the curse of dimensionality is to
+% make a directed search..
+%"""
+%
+
+%
+%"""
+% Bellmans dynamic programming (DP) requires knowledge of transition
+% probablities of the dynamic system from ones state to the next
+%"""
+%
+
+
+
+
 The 8 DOF in our model produces vast amounts of space in our feature space and this has the consequence that we need proportional to $n^8$ datapoints to fill it to an specified density c.
 
 For instance, we would need $4^8=65536$ samples just to make a grid with 4 samples in each DOF which in many cases (aspecially for hand labeled data). 
@@ -110,6 +182,9 @@ So having a bias towards trying out more plausible hypotesis for the models inne
 doing a naive exhausted search tru the entire feature space, this could only be used if you have $\le$ 3 DOF as in for example finding straight edges with houghtransformation[ref].
 ...
 One method that uses prior knowledge of the models PDF and a pretrained database containing knowledge on how to approximate the models PDF in the next timestep is particle filter which is an (instance?) of the ideal bayesian filter.
+
+
+
 
 
 
