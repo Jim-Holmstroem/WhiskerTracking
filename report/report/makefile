@@ -9,4 +9,7 @@ run:
 	evince report.pdf
 
 %.pdf: *.tex
-	pdflatex $*.tex
+	pdflatex $*
+	bibtex $*
+	pdflatex $*
+	pdflatex $*
