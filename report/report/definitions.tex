@@ -1,0 +1,46 @@
+=============== Invariances ==============
+Section about invariances and why they are needed in localization.
+
+The "filter" must give the same response invariant of the position in the image 
+and its often wanted to have it rotational and scale invariant (if your not 
+intending to measure things like angles or size that is)
+
+============== Data ========================
+= Image
+In a computer an image is represented as an array of 
+numbers, mostly 8bit numbers ranging between [0,255] 
+
+[should one use N or [0,255] instead of Z?]
+== RGB image is a function;
+image: ZxZ=pos->ZxZxZ=color (mapping each position into an RGBcolor)
+that is foreach pixel a value for Red,Green,Blue is defined.
+But one might as well see it as a list of pixels Z^5=<pos,color>
+
+== Grayscale image is in the same way as an RGB image but without the RGB part
+just a function;
+image: ZxZ->Z
+or alternatively list of Z^3=<pos,value>
+== Video
+Ordered list of images
+
+
+== Feature
+
+== Featurespace
+One configuration of the object corresponds to one point in the featurespace
+<example with a plot>
+
+
+== Hypothesis
+Explain: Hypotesis (in the context of PF), sample, DOF?, 
+
+== Prop. function as a collection of points with attached weight.
+
+
+== Dynamic system
+    It's a tuple <space,update,time>
+    Any mechanical system following newton physics (or relativistic for that matter) can be considered to be an dynamic system
+    in our case the tuple whould be <feature_space,update_rule (the one we are trying to preprocess data to approximate),time>
+
+
+
