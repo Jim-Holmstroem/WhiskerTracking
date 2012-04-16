@@ -1,39 +1,39 @@
 Intro:
-- Emil Lundberg och Jim Holmström, studerar Maskininlärning vid KTH
+- Emil Lundberg och Jim HolmstrÃ¶m, studerar MaskininlÃ¤rning vid KTH
 
 Need:
-- Fler och fler forskningslag inom neurovetenskap vill studera morrhår
-  - KI: morrhår
+- Fler och fler forskningslag inom neurovetenskap vill studera morrhÃ¥r
+  - KI: morrhÃ¥r
   - Indien: flugvingar (liknande projekt)
   - ?: Salamandrar (liknande projekt)
-- Behöver automatiska verktyg för att ta ut rörelsedata
-  - Kan kosta så mycket som 300 000 kr att manuellt pricka ut videosekvenser för ett experiment
-- Befintliga lösningar är dyra eller inskränkande:
-  - Spänner fast djuret
-  - Fäster markörer på morrhåren
-  - Kräver borttagning av många eller nästan alla morrhår
+- BehÃ¶ver automatiska verktyg fÃ¶r att ta ut rÃ¶relsedata
+  - Kan kosta sÃ¥ mycket som 300 000 kr att manuellt pricka ut videosekvenser fÃ¶r ett experiment
+- Befintliga lÃ¶sningar Ã¤r dyra eller inskrÃ¤nkande:
+  - SpÃ¤nner fast djuret
+  - FÃ¤ster markÃ¶rer pÃ¥ morrhÃ¥ren
+  - KrÃ¤ver borttagning av mÃ¥nga eller nÃ¤stan alla morrhÃ¥r
 
 Solution:
-- Probabilistisk metod som bygger på maskininlärning
+- Probabilistisk metod som bygger pÃ¥ maskininlÃ¤rning
   - Solid matematisk grund
-- Tracking i ordets sanna mening: faktisk följning och analys av rörelse mellan bildrutor
+- Tracking i ordets sanna mening: faktisk fÃ¶ljning och analys av rÃ¶relse mellan bildrutor
 
 Why us?
-- Enda kravet på experimentet är rätt belysning och kameramontering
-- Klarar många morrhår samtidigt, även om de korsar varandra
-- Plug n' Play-lösning: kräver ingen installation förutom gratis dependencies som ofta redan finns
-- Både algoritmen och koden är modulär
-  - Möjligt att anpassa tracking-motorn vid behov 
-    - T.ex. till att följa andra typer av rörelser
-- Får resultaten av experimentet inom en timme
+- Enda kravet pÃ¥ experimentet Ã¤r rÃ¤tt belysning och kameramontering
+- Klarar mÃ¥nga morrhÃ¥r samtidigt, Ã¤ven om de korsar varandra
+- Plug n' Play-lÃ¶sning: krÃ¤ver ingen installation fÃ¶rutom gratis dependencies som ofta redan finns
+- BÃ¥de algoritmen och koden Ã¤r modulÃ¤r
+  - MÃ¶jligt att anpassa tracking-motorn vid behov 
+    - T.ex. till att fÃ¶lja andra typer av rÃ¶relser
+- FÃ¥r resultaten av experimentet inom en timme
 
 Investment:
-- För 100 000 kr kan vi jobba på heltid i två månader för att utveckla detta
-  - Om vi tillhandahålls lokaler och datorresurser kan kostnaden minskas med upp till 30%
-- Får 20% av företaget
-- Kommer kunna expanderas till fler användningsområden (t.ex. andra djur) och således få fler möjliga kunder
+- FÃ¶r 100 000 kr kan vi jobba pÃ¥ heltid i tvÃ¥ mÃ¥nader fÃ¶r att utveckla detta
+  - Om vi tillhandahÃ¥lls lokaler och datorresurser kan kostnaden minskas med upp till 30%
+- FÃ¥r 20% av fÃ¶retaget
+- Kommer kunna expanderas till fler anvÃ¤ndningsomrÃ¥den (t.ex. andra djur) och sÃ¥ledes fÃ¥ fler mÃ¶jliga kunder
 
 Next step:
-- Kontakta oss för att diskutera projektet och förhandla pris
+- Kontakta oss fÃ¶r att diskutera projektet och fÃ¶rhandla pris
   - Muntligen direkt efter presentationen
   - E-post, telefon
