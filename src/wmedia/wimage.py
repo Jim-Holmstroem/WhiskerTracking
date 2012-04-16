@@ -66,7 +66,6 @@ class wimage(wlayer):
     def get_array(self):
         return self.data
 
-
     def render(self,context,i=None):
         """
         Argument i not used by wvideo but needed to be a wlayer

@@ -18,12 +18,27 @@ if __name__=="__main__":
     bounce=wvideo("../video/square_simple.pngvin/",0.5)    
     #layermanager.add_layer(bounce) 
 
-    blurbounce=bounce.transform(lambda img: filters.gaussian_filter(img,3))
-    edgebounce=blurbounce.transform(lambda img:numpy.sqrt(filters.prewitt(img,axis=0)**2+filters.prewitt(img,axis=1)**2))
-    layermanager.add_layer(blurbounce)
-    layermanager.add_layer(edgebounce)
+    blur5 = lambda img: filters.gaussian_filter(img,5)
 
-    layermanager.add_layer(testscreen(5,0.4))
+    blurbounce=bounce.transform(blur5)
+    edge_filter=filters.prewitt
+    abs_edge_filter=lambda img:numpy.sqrt(edge_filter(img,axis=0)**2+edge_filter(img,axis=1)**2)
+    edgebounce=blurbounce.transform(abs_edge_filter)
+    
+    def normalize(img):
+        min,max=numpy.min(img),numpy.max(img) #returns extrems
+        return (255.0/(max-min))*(img-min)
+
+
+
+    #badedgebounce=bounce.transform(abs_edge_filter)
+    #bluredbadedgebounce=badedgebounce.transform(blur5)
+    #layermanager.add_layer(bluredbadedgebounce.transform(normalize))
+
+    
+    #layermanager.add_layer(blurbounce)
+    layermanager.add_layer(edgebounce.transform(normalize))
+    #layermanager.add_layer(testscreen(5,0.4))
 
     win=wwindow(layermanager)
 
