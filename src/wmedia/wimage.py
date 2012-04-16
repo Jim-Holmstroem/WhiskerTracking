@@ -60,6 +60,13 @@ class wimage(wlayer):
         """
         Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),numpy.uint8(self.array),'raw',0,1).show()
 
+
+    def __add__(self,other):
+        return wimage(self.data+other.data)
+    def __mul__(self,other):
+        return wimage(numpy.multiply(self.data,other.data))
+
+
     def shape(self):
         return self.data.shape
     
