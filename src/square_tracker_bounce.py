@@ -2,6 +2,7 @@ from pf import pf
 from time import time
 from wdb import StateTransitionDatabase
 from wmedia import wvideo as video, left_align_videoformat
+import cProfile
 import cairo
 import numpy
 import os
@@ -96,5 +97,4 @@ def run(movie_id):
         
     print "Finished in %f seconds." % (time()-start_time)
 
-import cProfile
 cProfile.run("run(7)")
