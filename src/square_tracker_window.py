@@ -29,7 +29,6 @@ if __name__=="__main__":
     #badedgebounce=bounce.transform(abs_edge_filter)
     #bluredbadedgebounce=badedgebounce.transform(blur5)
     #layermanager.add_layer(bluredbadedgebounce.transform(normalize))
-
     
     #layermanager.add_layer(blurbounce)
     layermanager.add_layer(edgebounce.transform(normalize))
