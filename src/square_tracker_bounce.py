@@ -32,28 +32,27 @@ def sample(prev_particle):
     new_particle /= db_weight + prev_weight
     return new_particle
 
-IMAGE_WIDTH = 512
-IMAGE_HEIGHT = 512
+IMAGE_WIDTH = 512.
+IMAGE_HEIGHT = 512.
 
 dataset = "square_bounce"
 db = StateTransitionDatabase(dataset)
+num_particles = 100
+    
 square_side = 50
 half_square_side = square_side/2.0
-
 X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
 Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
 
 def run(movie_id):
     movie = dataset + "_" + str(movie_id)
-    save_img_dir = os.path.join("run", "square_tracker_bounce-" + movie + ".pngvin")
+    save_img_dir = os.path.join("run", "square_tracker_bounce-%i.pngvin"%(movie_id))
     if(not os.path.exists(save_img_dir)):
         os.makedirs(save_img_dir)
     
     print("Rendering tracking images to " + save_img_dir)
     
     v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
-    
-    num_particles = 10
     #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
     #particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
     #start_state = numpy.array([102, 102, 0])
