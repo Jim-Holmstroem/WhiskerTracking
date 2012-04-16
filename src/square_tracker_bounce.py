@@ -1,8 +1,8 @@
-from PIL import ImageDraw
 from pf import pf
 from time import time
 from wdb import StateTransitionDatabase
-from wmedia import video, left_align_videoformat
+from wmedia import wvideo as video, left_align_videoformat
+import cairo
 import numpy
 import os
 
@@ -71,18 +71,26 @@ def run(movie_id):
     
     for (i, frame) in enumerate(v):
     
-        img = frame.get_copy_of_current_image()
-        draw = ImageDraw.Draw(img)
+        imageSurface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(IMAGE_WIDTH), int(IMAGE_HEIGHT))
+        context = cairo.Context(imageSurface)
+        frame.render(context)
+        context.paint()
+        
+        context.set_source_rgb(255, 0, 0)
         for row in particles:
-            draw.point((row[0], row[2]), fill="#FF0000")
-
+            context.rectangle(row[0], row[2], 1, 1)
+#            print row[0], row[2]
+            context.fill()
         
         pos = particles[:,0:3:2].mean(axis=0)
         
 #        draw.rectangle(((pos-half_square_side).tolist(), (pos+half_square_side).tolist()), outline=0x00FF00)
-        draw.point(pos.tolist(), fill="#00FF00")
-        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
-        print("Successfully rendered frame " + str(i))
+        context.set_source_rgb(0, 255, 0)
+        context.rectangle(pos[0], pos[1], 1, 1)
+        context.fill()
+        imageSurface.write_to_png(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"))
+#        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
+        print "Successfully rendered frame %i"%(i)
         
         particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
         
