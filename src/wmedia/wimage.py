@@ -52,7 +52,7 @@ class wimage(wlayer):
         transforms the image with the function f:img->img
         """
         return wimage(f(self.data),alpha=self.alpha) #creates a new image
-    
+
     def debug_show(self):
         """
         DEBUGGING

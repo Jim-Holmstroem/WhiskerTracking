@@ -1,5 +1,5 @@
 
-__all__= ['gray','transform','histeq','histeqlocal','histogram','blur_gauss','dog']
+__all__= ['normalize','transform','histeq','histeqlocal','histogram','blur_gauss','dog']
 
 import numpy
 
@@ -20,6 +20,15 @@ im = img(1:256,100+(1:256));
 overlaycurves(im,njetedge(im,1,3,'valid'));
 
 """
+
+
+def normalize(img):
+    """
+    normalizes the image
+    """
+    min,max=numpy.min(img),numpy.max(img) #returns extrems
+    return (255.0/(max-min))*(img-min)
+    
 
 def transform(img,function):
     """
