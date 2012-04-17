@@ -140,7 +140,7 @@ def render_online():
     
     print "Done."
 
-def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), bounce_factor=0.75, input_to_database=True):
+def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 2]), bounce_factor=0.75, input_to_database=True):
     """
     Renders a falling and bouncing square.
     """
@@ -158,15 +158,15 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 9.81]), 
         delete_database(dataset)
         create_database(dataset, [2, 2])
         render_bounce(0, numpy.array([IMAGE_WIDTH/2., 0., Y_LIMITS[0], 0.]))
-        render_bounce(1, numpy.array([IMAGE_WIDTH/2., 10., Y_LIMITS[0], 0.]))
-        render_bounce(2, numpy.array([IMAGE_WIDTH*2./3, -5, IMAGE_HEIGHT/2., -2]))
+        render_bounce(1, numpy.array([IMAGE_WIDTH/2., 2., Y_LIMITS[0], 0.]))
+        render_bounce(2, numpy.array([IMAGE_WIDTH*2./3, -1, IMAGE_HEIGHT/2., -0.4]))
         render_bounce(3, numpy.array([IMAGE_WIDTH/4., 0., Y_LIMITS[1], 0.]))
-        render_bounce(4, numpy.array([IMAGE_WIDTH*3./4, 0., Y_LIMITS[1], 10]))
-        render_bounce(5, numpy.array([IMAGE_WIDTH/2., 4, Y_LIMITS[1], 3.]))
-        render_bounce(6, numpy.array([IMAGE_WIDTH/2., 20., IMAGE_HEIGHT/2., 0.]))
-        render_bounce(7, numpy.array([X_LIMITS[0], 25., Y_LIMITS[0], 0.]))
-        render_bounce(8, numpy.array([IMAGE_WIDTH/2., -5, IMAGE_HEIGHT*3./4, 3]))
-        render_bounce(9, numpy.array([IMAGE_WIDTH/5., 10, IMAGE_HEIGHT/3., 2]))
+        render_bounce(4, numpy.array([IMAGE_WIDTH*3./4, 0., Y_LIMITS[1], 2]))
+        render_bounce(5, numpy.array([IMAGE_WIDTH/2., 4, Y_LIMITS[1], 0.6]))
+        render_bounce(6, numpy.array([IMAGE_WIDTH/2., 4., IMAGE_HEIGHT/2., 0.]))
+        render_bounce(7, numpy.array([X_LIMITS[0], 5., Y_LIMITS[0], 0.]))
+        render_bounce(8, numpy.array([IMAGE_WIDTH/2., -1, IMAGE_HEIGHT*3./4, 0.6]))
+        render_bounce(9, numpy.array([IMAGE_WIDTH/5., 2, IMAGE_HEIGHT/3., 0.4]))
         return
     
     movie_name = dataset + "_" + str(movie_id)

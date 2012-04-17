@@ -1,5 +1,6 @@
 import numpy
 import pylab
+from math import exp, pi, sqrt
 from wmath import distribution
 
 class Tester:
@@ -35,6 +36,9 @@ test(numpy.array([1]*25+[0]*25))
 
 ### Alternator ###
 test(numpy.array([0,1]*25))
+
+### Gauss ###
+test(numpy.array([1/(sqrt(2*pi)) * exp(-(x*x)/2) for x in numpy.linspace(-5, 5, 50)]))
 
 ### Plot the results ###
 pylab.show()
