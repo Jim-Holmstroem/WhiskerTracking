@@ -2,6 +2,7 @@ from pf import pf
 from time import time
 from wdb import StateTransitionDatabase
 from wmedia import wvideo as video, left_align_videoformat
+from wmedia.square_particles_animator import square_particles_animator
 import cProfile
 import cairo
 import numpy
@@ -60,54 +61,49 @@ def run(movie_id):
     if(not os.path.exists(save_img_dir)):
         os.makedirs(save_img_dir)
     
-    print("Rendering tracking images to " + save_img_dir)
+    print("Starting up...")
     
+    print("Loading video...")
     v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
+    print("Video loaded.")
     #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
     #particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
     #start_state = numpy.array([102, 102, 0])
+    
+    num_frames = len(v)
     
     start_states = {
             7:numpy.array([X_LIMITS[0], 25., Y_LIMITS[0], 0.]),
             8:numpy.array([IMAGE_WIDTH/2., -5, IMAGE_HEIGHT*3./4, 3]),
             9:numpy.array([IMAGE_WIDTH/5., 10, IMAGE_HEIGHT/3., 2])}
-    #for state in start_states.values():
-    #    state[:2] += square_side/2
     
     particles = numpy.array([start_states[movie_id]]*num_particles)
-    intermediate_particles = particles
-    #particles = numpy.random.normal(start_state, scale=[3, 3, pi/18], size=[num_particles, start_state.size])
+    intermediate_particles = particles.copy()
+    spa = square_particles_animator(numpy.zeros((num_frames, num_particles, start_states[movie_id].size)), square_side, intermediate_particles=numpy.zeros((num_frames, num_particles, start_states[movie_id].size)))
+    
+    imageSurface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(IMAGE_WIDTH), int(IMAGE_HEIGHT))
+    context = cairo.Context(imageSurface)
+    
+    def render(i, frame):
+        spa.particles[i] = particles.copy()
+        spa.intermediate_particles[i] = intermediate_particles.copy()
+        
+        frame.render(context)
+        context.paint()
+        spa.render(context, i)
+        imageSurface.write_to_png(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"))
+
+    print "Startup complete."
+    print "Rendering tracking images to", save_img_dir
     
     start_time = time()
     
-    for (i, frame) in enumerate(v):
-    
-        imageSurface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(IMAGE_WIDTH), int(IMAGE_HEIGHT))
-        context = cairo.Context(imageSurface)
-        frame.render(context)
-        context.paint()
-        
-        context.set_source_rgb(0, 0, 255)
-        for row in intermediate_particles:
-            context.rectangle(row[0], row[2], 1, 1)
-            context.fill()
-            
-        context.set_source_rgb(255, 0, 0)
-        for row in particles:
-            context.rectangle(row[0], row[2], 1, 1)
-            context.fill()
-        
-        pos = particles[:,0:3:2].mean(axis=0)
-        
-        from wmedia.square_animation import square_animation
-        san = square_animation([pos], square_side, color=(0,255,0))
-        san.render(context, 0)
-        
-        imageSurface.write_to_png(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"))
-#        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
-        print "Successfully rendered frame %i"%(i)
-        
+    render(0, v[0])
+    for i, frame in enumerate(v[1:], 1):
         particles, intermediate_particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
+        render(i, frame)
+        
+        print "Processed frame %i"%(i)
         
     print "Finished in %f seconds." % (time()-start_time)
 
