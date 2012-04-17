@@ -69,12 +69,14 @@ class wvideo(wlayer):
 
     def __add__(self,other):
         padding_size=abs(len(self)-len(other))
+        print padding_size
         [small_len,big_len]=sorted(map(len,[self,other]))
         biggest=argmax(len,(self,other))
         return wvideo([map(lambda (i,j):i+j,izip(self.imgs,other.imgs)),biggest[small_len:]])
 
     def __mul__(self,other):
         padding_size=abs(len(self)-len(other))
+        print padding_size
         return wvideo([map(lambda (i,j):i*j,izip(self.imgs,other.imgs)),map(lambda dummy:wimage((512,512)),range(padding_size))])
 
     def __len__(self):
