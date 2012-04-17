@@ -99,10 +99,10 @@ def run(movie_id):
         
         pos = particles[:,0:3:2].mean(axis=0)
         
-#        draw.rectangle(((pos-half_square_side).tolist(), (pos+half_square_side).tolist()), outline=0x00FF00)
-        context.set_source_rgb(0, 255, 0)
-        context.rectangle(pos[0], pos[1], 1, 1)
-        context.fill()
+        from wmedia.square_animation import square_animation
+        san = square_animation([pos], square_side, color=(0,255,0))
+        san.render(context, 0)
+        
         imageSurface.write_to_png(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"))
 #        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
         print "Successfully rendered frame %i"%(i)
