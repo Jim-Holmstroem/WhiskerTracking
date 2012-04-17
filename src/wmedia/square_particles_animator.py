@@ -3,10 +3,11 @@ __all__ = ["square_particles_animator"]
 from wmedia.wanimation import wanimation
 
 class square_particles_animator(wanimation):
-    def __init__(self, particles, square_side, main_particles=None, intermediate_particles=None, particle_color=(255, 0, 0), main_particle_color=(0,0,255), intermediate_particle_color=(0,255,0), alpha=1.0):
+    def __init__(self, particles, square_side, main_particles=None, intermediate_particles=None, particle_color=(255, 0, 0), main_particle_color=(0,0,255), intermediate_particle_color=(0,255,0), alpha=0.1):
         self.particles = particles
         self.main_particles = main_particles
         self.intermediate_particles = intermediate_particles
+        self.alpha = alpha
         
         self.particle_color = particle_color
         self.main_particle_color = main_particle_color
@@ -24,12 +25,12 @@ class square_particles_animator(wanimation):
 #        context.scale(512,512)
 
         if self.intermediate_particles != None:
-            context.set_source_rgb(*self.intermediate_particle_color)
+            context.set_source_rgba(*(self.intermediate_particle_color + (self.alpha,)))
             for row in self.intermediate_particles[i]:
                 context.rectangle(row[0], row[2], 1, 1)
                 context.fill()
         
-        context.set_source_rgb(*self.particle_color)
+        context.set_source_rgba(*(self.particle_color + (self.alpha,)))
         for row in self.particles[i]:
             context.rectangle(row[0], row[2], 1, 1)
             context.fill()
