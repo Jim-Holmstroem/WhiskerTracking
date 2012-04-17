@@ -5,6 +5,11 @@ import collections
 
 from wmedia.wlayer import wlayer
 
+from wmedia.wimage import wimage
+from wmedia.wvideo import wvideo
+
+import cairo
+
 class wanimation(wlayer):
     """
     Acts as a base for moving layers, has some helping hands; one can either inherit from it and override the __init__ or just send in data and data_renderer
@@ -25,6 +30,18 @@ class wanimation(wlayer):
             self.data_renderer(context,self.data(i))
         else:
             raise Exception("Data is not sequence nor callable")
+
+    def export_frame(self,i):
+        img = cairo.ImageSurface(cairo.ARGB32,512,512)
+        context = cairo.Context(img)
+        self.render(context,i)
+        context.paint()
+        return img
+
+    def export(self,range=None):
+        if range:
+            raise NotImplemented("export range not implemented yet")
+        return wvideo(map(self.export_frame,range(len(self))))
 
     def __len__(self):
         raise Exception("must define __len__ in child to wanimation")

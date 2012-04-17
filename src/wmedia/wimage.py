@@ -23,6 +23,8 @@ class wimage(wlayer):
         #Handles different argument types
         if isinstance(input_data,numpy.ndarray):
             self.init_with_array(input_data)
+        elif isinstance(input_data,tuple):
+            self.init_with_size(input_data)
         elif isinstance(input_data,basestring):
             self.init_with_filename(input_data)
         elif isinstance(input_data,cairo.ImageSurface):
@@ -30,15 +32,20 @@ class wimage(wlayer):
         else:
             raise Exception("Invalid input type; not (ndarray/basestring/imagesurface")
     
+    def init_with_size(self,input_data):
+        self.init_with_array(numpy.ndarray(input_data))
+
     def init_with_array(self,input_data):
 #        print "wimage(numpy.ndarray[",id(input_data),"])"
         input_data=numpy.atleast_3d(input_data)
         assert(input_data.shape[2]==1) #must be grayscale image (MxNx1)
         self.data=input_data
+
     def init_with_filename(self,input_data):
 #        print "wimage(",input_data,")"
         img=cairo.ImageSurface.create_from_png(input_data) #RGBA
         self.init_with_imagesurface(img)
+
     def init_with_imagesurface(self,input_data):
         self.data=numpy.frombuffer(input_data.get_data(),dtype=numpy.uint8) #RGBA
         self.data=numpy.cast['float64'](self.data) 
@@ -62,10 +69,13 @@ class wimage(wlayer):
 
 
     def __add__(self,other):
+        if(other=None):
+            return wimage(self.data) #self.data+0
         return wimage(self.data+other.data)
     def __mul__(self,other):
+        if(other=None):
+            return wimage((512,512))
         return wimage(numpy.multiply(self.data,other.data))
-
 
     def shape(self):
         return self.data.shape

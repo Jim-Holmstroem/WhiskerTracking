@@ -9,6 +9,9 @@ from wmedia.wimage import wimage
 
 from parallel.parallel_map import parallel_map
 
+from itertools import izip_longest
+import operator
+
 class wvideo(wlayer):
     """
     Opens a PNGVIN-file
@@ -59,6 +62,13 @@ class wvideo(wlayer):
         transform the entire video with the function f:img->img
         """
         return wvideo(map(lambda img:img.transform(f),self.imgs),alpha=self.alpha)         
+
+    def __add__(self,other):
+        padding_size=abs(len(self)-len(other))
+        return wvideo([map(lambda (i,j):i+j,izip(self.imgs,other.imgs)),])
+
+    def __mul__(self,other):
+        
 
     def __len__(self):
         return len(self.imgs)
