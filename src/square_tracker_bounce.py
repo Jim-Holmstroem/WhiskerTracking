@@ -73,9 +73,9 @@ def run(movie_id):
     num_frames = len(v)
     
     start_states = {
-            7:numpy.array([X_LIMITS[0], 25., Y_LIMITS[0], 0.]),
-            8:numpy.array([IMAGE_WIDTH/2., -5, IMAGE_HEIGHT*3./4, 3]),
-            9:numpy.array([IMAGE_WIDTH/5., 10, IMAGE_HEIGHT/3., 2])}
+            7:numpy.array([X_LIMITS[0], 5., Y_LIMITS[0], 0.]),
+            8:numpy.array([IMAGE_WIDTH/2., -1, IMAGE_HEIGHT*3./4, 0.6]),
+            9:numpy.array([IMAGE_WIDTH/5., 2, IMAGE_HEIGHT/3., 0.4])}
     
     particles = numpy.array([start_states[movie_id]]*num_particles)
     intermediate_particles = particles.copy()
