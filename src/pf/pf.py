@@ -60,4 +60,4 @@ def pf(X_prev, observation, importance_function, sampling_function=default_sampl
     else:
         weights /= float(weights.sum())
     
-    return resampling_function(X_bar, weights)
+    return resampling_function(X_bar, weights), X_bar

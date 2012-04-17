@@ -75,6 +75,7 @@ def run(movie_id):
     #    state[:2] += square_side/2
     
     particles = numpy.array([start_states[movie_id]]*num_particles)
+    intermediate_particles = particles
     #particles = numpy.random.normal(start_state, scale=[3, 3, pi/18], size=[num_particles, start_state.size])
     
     start_time = time()
@@ -86,10 +87,14 @@ def run(movie_id):
         frame.render(context)
         context.paint()
         
+        context.set_source_rgb(0, 0, 255)
+        for row in intermediate_particles:
+            context.rectangle(row[0], row[2], 1, 1)
+            context.fill()
+            
         context.set_source_rgb(255, 0, 0)
         for row in particles:
             context.rectangle(row[0], row[2], 1, 1)
-#            print row[0], row[2]
             context.fill()
         
         pos = particles[:,0:3:2].mean(axis=0)
@@ -102,7 +107,7 @@ def run(movie_id):
 #        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
         print "Successfully rendered frame %i"%(i)
         
-        particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
+        particles, intermediate_particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
         
     print "Finished in %f seconds." % (time()-start_time)
 
