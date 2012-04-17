@@ -1,3 +1,5 @@
+__all__ = ["weighted_choice"]
+
 from random import uniform
 
 '''

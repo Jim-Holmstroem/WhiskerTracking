@@ -1,2 +1,2 @@
-from wmath import weighted_choice
-from distribution import distribution
+from wmath import *
+from distribution import *
