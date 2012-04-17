@@ -21,6 +21,9 @@ class wimage(wlayer):
         """
         wlayer.__init__(self,alpha)
         #Handles different argument types
+
+        #TODO copy constructor
+        print '>',type(input_data)
         if isinstance(input_data,numpy.ndarray):
             self.init_with_array(input_data)
         elif isinstance(input_data,tuple):

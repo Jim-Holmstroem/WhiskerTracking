@@ -9,7 +9,9 @@ from wmedia.wimage import wimage
 
 from parallel.parallel_map import parallel_map
 
-from itertools import izip_longest
+from wmath.wmath import argmax
+
+from itertools import izip
 import operator
 
 class wvideo(wlayer):
@@ -28,7 +30,9 @@ class wvideo(wlayer):
 
         @Param input_data, can be string or ordered vector with elements valid wimage.input_data
         """
-        wlayer.__init__(self,alpha) 
+        wlayer.__init__(self,alpha)
+
+
 #        print "wvideo("
         if isinstance(input_data,basestring):
 #            print "filename=",input_data
@@ -65,8 +69,9 @@ class wvideo(wlayer):
 
     def __add__(self,other):
         padding_size=abs(len(self)-len(other))
-
-        return wvideo([map(lambda (i,j):i+j,izip(self.imgs,other.imgs)),map(lambda dummy:wimage((512,512)),range(padding_size))])
+        [small_len,big_len]=sorted(map(len,[self,other]))
+        biggest=argmax(len,(self,other))
+        return wvideo([map(lambda (i,j):i+j,izip(self.imgs,other.imgs)),biggest[small_len:]])
 
     def __mul__(self,other):
         padding_size=abs(len(self)-len(other))
