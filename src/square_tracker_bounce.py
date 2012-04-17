@@ -13,22 +13,32 @@ def goodness(particle, image):
     if x < 0 or y < 0 or y >= image.shape[0] or x >= image.shape[1]:
         return 0
     
-    if not False in (image[y,x,:3] == 255):
+    if (image[y,x,:3] == 255).all():
         return 1000
     else:
         return 1
 
 def sample(prev_particle):
     
-    next_pos = prev_particle + numpy.array((prev_particle[1], prev_particle[3], 9.81, 9.81))
-    new_particle_from_prev = next_pos + numpy.random.normal(loc=0, scale=10, size=prev_particle.shape)
-    new_particle_from_db = db.sample_weighted_average(numpy.array((0, prev_particle[1], 0, prev_particle[3])))
+    next_pos = prev_particle.copy()
+    next_pos[0] += prev_particle[1]
+    next_pos[1] += 9.81
+    next_pos[2] += prev_particle[3]
+    next_pos[3] += 9.81
+    new_particle_from_prev = next_pos + numpy.random.normal(loc=0, scale=5, size=prev_particle.shape)
+    
+    prev_particle_copy = prev_particle.copy()
+    prev_particle_copy[0] = 0
+    prev_particle_copy[2] = 0
+    new_particle_from_db = db.sample_weighted_average(prev_particle_copy)
+    new_particle_from_db[0] += prev_particle[0]
+    new_particle_from_db[2] += prev_particle[2]
 #    new_particle_from_db += numpy.random.normal(0, scale=[3, 3], size=new_particle_from_db.shape)
     
     db_weight = 1
     prev_weight = 1
     
-    new_particle = new_particle_from_prev*prev_weight + (prev_particle+new_particle_from_db)*db_weight
+    new_particle = new_particle_from_prev*prev_weight + (new_particle_from_db)*db_weight
     new_particle /= db_weight + prev_weight
     return new_particle
 
