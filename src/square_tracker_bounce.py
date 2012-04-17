@@ -1,8 +1,9 @@
-from PIL import ImageDraw
 from pf import pf
 from time import time
 from wdb import StateTransitionDatabase
-from wmedia import video, left_align_videoformat
+from wmedia import wvideo as video, left_align_videoformat
+import cProfile
+import cairo
 import numpy
 import os
 
@@ -31,28 +32,27 @@ def sample(prev_particle):
     new_particle /= db_weight + prev_weight
     return new_particle
 
-IMAGE_WIDTH = 512
-IMAGE_HEIGHT = 512
+IMAGE_WIDTH = 512.
+IMAGE_HEIGHT = 512.
 
 dataset = "square_bounce"
 db = StateTransitionDatabase(dataset)
+num_particles = 100
+    
 square_side = 50
 half_square_side = square_side/2.0
-
 X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
 Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
 
 def run(movie_id):
     movie = dataset + "_" + str(movie_id)
-    save_img_dir = os.path.join("run", "square_tracker_bounce-" + movie + ".pngvin")
+    save_img_dir = os.path.join("run", "square_tracker_bounce-%i.pngvin"%(movie_id))
     if(not os.path.exists(save_img_dir)):
         os.makedirs(save_img_dir)
     
     print("Rendering tracking images to " + save_img_dir)
     
     v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
-    
-    num_particles = 10
     #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
     #particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
     #start_state = numpy.array([102, 102, 0])
@@ -71,22 +71,29 @@ def run(movie_id):
     
     for (i, frame) in enumerate(v):
     
-        img = frame.get_copy_of_current_image()
-        draw = ImageDraw.Draw(img)
+        imageSurface = cairo.ImageSurface(cairo.FORMAT_ARGB32, int(IMAGE_WIDTH), int(IMAGE_HEIGHT))
+        context = cairo.Context(imageSurface)
+        frame.render(context)
+        context.paint()
+        
+        context.set_source_rgb(255, 0, 0)
         for row in particles:
-            draw.point((row[0], row[2]), fill="#FF0000")
-
+            context.rectangle(row[0], row[2], 1, 1)
+#            print row[0], row[2]
+            context.fill()
         
         pos = particles[:,0:3:2].mean(axis=0)
         
 #        draw.rectangle(((pos-half_square_side).tolist(), (pos+half_square_side).tolist()), outline=0x00FF00)
-        draw.point(pos.tolist(), fill="#00FF00")
-        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
-        print("Successfully rendered frame " + str(i))
+        context.set_source_rgb(0, 255, 0)
+        context.rectangle(pos[0], pos[1], 1, 1)
+        context.fill()
+        imageSurface.write_to_png(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"))
+#        img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
+        print "Successfully rendered frame %i"%(i)
         
         particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
         
     print "Finished in %f seconds." % (time()-start_time)
 
-import cProfile
 cProfile.run("run(7)")
