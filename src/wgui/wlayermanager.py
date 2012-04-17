@@ -22,13 +22,6 @@ class wlayermanager(gtk.DrawingArea):
         self.connect("motion-notify-event",self.motion)
         self.set_size_request(512,512)
 
-    def set_current_frame(self,i):
-        self.current_frame=i
-    def next_frame(self):
-        self.current_frame+=1
-    def prev_frame(self):
-        self.current_frame-=1
-
     def render_layer(self,context,layer,i):
         """
         Used by renderer to render each layer
