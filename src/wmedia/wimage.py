@@ -69,11 +69,11 @@ class wimage(wlayer):
 
 
     def __add__(self,other):
-        if(other=None):
+        if(other==None):
             return wimage(self.data) #self.data+0
         return wimage(self.data+other.data)
     def __mul__(self,other):
-        if(other=None):
+        if(other==None):
             return wimage((512,512))
         return wimage(numpy.multiply(self.data,other.data))
 
