@@ -32,24 +32,27 @@ class wvideo(wlayer):
         """
         wlayer.__init__(self,alpha)
 
-
-#        print "wvideo("
         if isinstance(input_data,basestring):
-#            print "filename=",input_data
             self.init_with_filename(input_data)
+        elif isinstance(input_data,wanimation):
+            self.init_with_list(input_data.export()) 
         elif isinstance(input_data,(list)):
-#            print "input_data="
-            if len(input_data)!=0:
-                if isinstance(input_data[0],wimage):
-#                    print "{wimage}"
-                    self.imgs=input_data
-                else:
-#                    print "{data}"
-                    self.imgs=map(lambda data:wimage(data,self.alpha),input_data)
-        
+            self.init_with_list(input_data) 
         else:
             raise Exception("input_data has incorrect type")
-#        print ")"
+
+    def init_with_list(self,datalist):
+        """
+        Init with a list of image-data (of somesort)
+        """
+        if len(input_data)!=0:
+            if isinstance(input_data[0],wimage):
+                self.imgs=input_data
+            else:
+                self.imgs=map(lambda data:wimage(data,self.alpha),input_data)
+        else:
+            raise Exception("input_data-list has len=0")
+
 
     def init_with_filename(self,filename):
         """

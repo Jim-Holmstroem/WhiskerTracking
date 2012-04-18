@@ -32,6 +32,9 @@ class wanimation(wlayer):
             raise Exception("Data is not sequence nor callable")
 
     def export_frame(self,i):
+        """
+        Export certain frame to cairo.ImageSurface
+        """
         img = cairo.ImageSurface(cairo.ARGB32,512,512)
         context = cairo.Context(img)
         self.render(context,i)
@@ -39,9 +42,12 @@ class wanimation(wlayer):
         return img
 
     def export(self,range=None):
+        """
+        Export to a list of cairo.ImageSurface
+        """
         if range:
             raise NotImplemented("export range not implemented yet")
-        return wvideo(map(self.export_frame,range(len(self))))
+        return map(self.export_frame,range(len(self)))
 
     def __len__(self):
         raise Exception("must define __len__ in child to wanimation")
