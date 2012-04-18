@@ -1,4 +1,4 @@
-__all__ = ["distribution"]
+__all__= ['distribution']
 
 import numpy
 from random import random

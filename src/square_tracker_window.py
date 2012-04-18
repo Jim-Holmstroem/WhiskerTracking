@@ -3,6 +3,7 @@ import gtk
 
 from wgui import wwindow,wlayermanager
 from wmedia import wvideo,testscreen
+from wimageprocessing import normalize
 
 from scipy.ndimage import filters
 
@@ -25,19 +26,12 @@ if __name__=="__main__":
     abs_edge_filter=lambda img:numpy.sqrt(edge_filter(img,axis=0)**2+edge_filter(img,axis=1)**2)
     edgebounce=blurbounce.transform(abs_edge_filter)
     
-    def normalize(img):
-        min,max=numpy.min(img),numpy.max(img) #returns extrems
-        return (255.0/(max-min))*(img-min)
-
-
-
     #badedgebounce=bounce.transform(abs_edge_filter)
     #bluredbadedgebounce=badedgebounce.transform(blur5)
     #layermanager.add_layer(bluredbadedgebounce.transform(normalize))
-
     
     #layermanager.add_layer(blurbounce)
-    layermanager.add_layer(edgebounce.transform(normalize))
+    layermanager.add_layer((blurbounce*edgebounce).transform(normalize))
     #layermanager.add_layer(testscreen(5,0.4))
 
     win=wwindow(layermanager)
