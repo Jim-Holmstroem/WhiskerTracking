@@ -30,6 +30,16 @@ Seperate filter (as in image filter) and filter (as in tracker)
 PF vs condensation
 
 
+==========================================
+(not even considering)Non adaptive [ref:probrob] since we dont have realtime issues
+
+
+===========================================
+
+Prove particle approx for PDF's (lim analysis?) and show this by example, also show the PDF-multiplication we are doing in the PF with example (and proof?)
+
+
+
 ===================== PF as searchblablabla =================
 
 PF is simply a directed search
