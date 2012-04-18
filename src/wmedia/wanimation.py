@@ -5,9 +5,6 @@ import collections
 
 from wmedia.wlayer import wlayer
 
-from wmedia.wimage import wimage
-from wmedia.wvideo import wvideo
-
 import cairo
 
 class wanimation(wlayer):
@@ -47,7 +44,7 @@ class wanimation(wlayer):
         """
         if range:
             raise NotImplemented("export range not implemented yet")
-        return map(self.export_frame,range(len(self)))
+        return map(lambda i:self.export_frame(i),range(len(self)))
 
     def __len__(self):
         raise Exception("must define __len__ in child to wanimation")
