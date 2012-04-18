@@ -13,7 +13,7 @@ class testscreen(wanimation):
         context.scale(512,512)
         context.rectangle(0,0,1,0.5-data_point/(5.0*50))
         
-        context.set_source_rgba(1,1,1,1)
+        context.set_source_rgba(1,1,1,self.alpha)
         context.fill()
 
         context.restore()

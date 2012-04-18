@@ -32,19 +32,20 @@ class wanimation(wlayer):
         """
         Export certain frame to cairo.ImageSurface
         """
-        img = cairo.ImageSurface(cairo.ARGB32,512,512)
+        img = cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)
         context = cairo.Context(img)
         self.render(context,i)
         context.paint()
         return img
 
-    def export(self,range=None):
+    def export(self,srange=None):
         """
         Export to a list of cairo.ImageSurface
         """
-        if range:
+        if srange:
             raise NotImplemented("export range not implemented yet")
-        return map(lambda i:self.export_frame(i),range(len(self)))
+
+        return map(self.export_frame,range(len(self)))
 
     def __len__(self):
         raise Exception("must define __len__ in child to wanimation")

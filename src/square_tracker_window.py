@@ -31,9 +31,9 @@ if __name__=="__main__":
     #layermanager.add_layer(bluredbadedgebounce.transform(normalize))
     
     #layermanager.add_layer(blurbounce)
-    layermanager.add_layer((blurbounce*edgebounce).transform(normalize))
+   # layermanager.add_layer((blurbounce*edgebounce).transform(normalize))
     
-    layermanager.add_layer(wvideo(testscreen(5,0.4)))
+    layermanager.add_layer((testscreen()))
 
     win=wwindow(layermanager)
 
