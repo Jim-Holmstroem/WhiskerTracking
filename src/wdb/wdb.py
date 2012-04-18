@@ -6,6 +6,7 @@ import sqlite3
 
 DATABASE_DIR = "data/transition-db"
 DEFAULT_EXTENSION = ".sqlite3"
+TABLE_NAME = "transitions_group_"
 PARAMETER_NAME = "theta_"
 PARAMETER_TYPE = "FLOAT NOT NULL"
 PREFIXES = ("from_", "to_")
@@ -46,7 +47,7 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
         
     
     for group_i, number_in_group in enumerate(parameter_groups):
-        createTransitionsTableQuery = "CREATE TABLE transitions_group_" + str(group_i) + "("
+        createTransitionsTableQuery = "CREATE TABLE %s%i ("%(TABLE_NAME, group_i)
         
         for prefix in PREFIXES:
             for i in xrange(number_in_group):
@@ -57,7 +58,7 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
         con.execute(createTransitionsTableQuery)
         
         # Create indexes. Sample query resulting from this expression: CREATE INDEX index_g0 ON transitions_group_0(from_theta_0 ASC, from_theta_1 ASC);
-        con.execute("CREATE INDEX index_g%i ON transitions_group_%i(%s);"%(group_i, group_i, ", ".join(["%s%s%i ASC"%(PREFIXES[0], PARAMETER_NAME, i) for i in xrange(number_in_group)])))
+        con.execute("CREATE INDEX index_g%i ON %s%i(%s);"%(group_i, TABLE_NAME, group_i, ", ".join(["%s%s%i ASC"%(PREFIXES[0], PARAMETER_NAME, i) for i in xrange(number_in_group)])))
     
     con.commit()
     
@@ -92,7 +93,7 @@ class StateTransitionDatabase:
         self.__insert_queries = []        
         
         for group, num_params in enumerate(self.__param_groups):
-            insert_query_parts = ["INSERT INTO transitions_group_" + str(group) + " VALUES("]
+            insert_query_parts = ["INSERT INTO %s%i VALUES("%(TABLE_NAME, group)]
             insert_query_parts.append(("?, "*(num_params*2))[:-2]) # Remove the trailing ", "
             insert_query_parts.append(");")
             self.__insert_queries.append("".join(insert_query_parts))
@@ -164,33 +165,6 @@ class StateTransitionDatabase:
 
     def __split_transition(self, transition):
         return numpy.hsplit(transition, 2)
-    
-    def sample_weighted_random(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
-        """OLD AND BROKEN
-        Generate a new particle by taking a random one from the database.
-        
-        For each transition t in the database, a weight w[t] is calculated
-        using the provided function as w[t] = weight_function(prev_particle,
-        t.from). The returned particle is a randomly chosen element of
-        {t.to for t in database}, weighted according to {w[t]}.
-        
-        @param prev_particle: the particle using which to create new particles
-        @param weight_function: a function to use for weighting database
-            entries. Will be called as weight_function(prev_particle, t) where
-            t is the "from" part of a transition in the database.
-        @return: A randomly chosen "to" part of a transition in the database.
-        """
-        from_states, to_states = self.split_transition(self.get_transitions())
-        
-        weights = numpy.zeros((from_states.shape[0], 1))
-        for i in xrange(from_states.shape[0]):
-            weights[i] = weight_function(prev_particle, from_states[i,:])
-        
-        weights = weights/sum(weights)
-        
-        dist = distribution(weights)
-        
-        return numpy.array(dist.sample(sample_set=to_states))
     
     def sample_weighted_average(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
         """Generate a particle by taking the average of the database.
