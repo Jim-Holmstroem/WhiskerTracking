@@ -1,4 +1,4 @@
-from itertools import imap, izip
+from itertools import imap, izip, product
 from wmath import distribution
 import numpy
 import os
@@ -41,10 +41,6 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
     
     con.execute("CREATE TABLE parameter_group_definitions(id PRIMARY KEY, number_of_parameters INTEGER NOT NULL);")
     con.executemany("INSERT INTO parameter_group_definitions VALUES(?, ?);", enumerate(parameter_groups))
-    
-#    cur.execute("CREATE TABLE transitions_group_?(group INTEGER NOT NULL, parameter INTEGER NOT NULL);")
-#    cur.executemany("INSERT INTO parameter_groups VALUES(?, ?);", [(i, )])
-        
     
     for group_i, number_in_group in enumerate(parameter_groups):
         createTransitionsTableQuery = "CREATE TABLE %s%i ("%(TABLE_NAME, group_i)
@@ -108,26 +104,20 @@ class StateTransitionDatabase:
             min <= parameter - origin <= max
         is true for all parameters.
         """
-        select_square_rectangle_parts = ["SELECT "]
-        for prefix in PREFIXES:
-            for group, num_params in enumerate(self.__param_groups):
-                for param in xrange(num_params):
-                    select_square_rectangle_parts.append("g%i.%s%s%i, "%(group, prefix, PARAMETER_NAME, param))
-        select_square_rectangle_parts[-1] = select_square_rectangle_parts[-1][:-2] # Remove the trailing ", "
         
-        select_square_rectangle_parts.append(" FROM ")
-        for group in xrange(len(self.__param_groups)):
-            select_square_rectangle_parts.append("transitions_group_%i AS g%i, "%(group, group))
-        select_square_rectangle_parts[-1] = select_square_rectangle_parts[-1][:-2] # Remove the trailing ", "
-        
-        select_square_rectangle_parts.append(" WHERE ")
+        self.__select_all_queries = []
         for group, num_params in enumerate(self.__param_groups):
-            for param in xrange(num_params):
-                select_square_rectangle_parts.append("g%i.%s%s%i - ? BETWEEN ? AND ? AND "%(group, PREFIXES[0], PARAMETER_NAME, param))
-        select_square_rectangle_parts[-1] = select_square_rectangle_parts[-1][:-5] # Remove the trailing " AND "
+            query = "SELECT %s FROM %s%i;"%(", ".join(["%s%s%i"%(prefix, PARAMETER_NAME, param) for prefix, param in product(PREFIXES, xrange(num_params))]), TABLE_NAME, group)
+            self.__select_all_queries.append(query)
         
-        select_square_rectangle_parts.append(";")
-        self.__select_rectangle_query = "".join(select_square_rectangle_parts)
+        self.__select_rectangle_queries = []
+        for group, num_params in enumerate(self.__param_groups):
+            query = ["SELECT %s FROM %s%i WHERE "%(", ".join(["%s%s%i"%(prefix, PARAMETER_NAME, param) for prefix, param in product(PREFIXES, xrange(num_params))]), TABLE_NAME, group)]
+            where_clause_parts = []
+            for param in xrange(num_params):
+                where_clause_parts.append("%s%s%i BETWEEN ? AND ?"%(PREFIXES[0], PARAMETER_NAME, param))
+            query += " AND ".join(where_clause_parts) + ";"
+            self.__select_rectangle_queries.append(query)
         
     def add_transitions(self, from_states, to_states):
         '''Add new transitions to the database.
@@ -147,21 +137,20 @@ class StateTransitionDatabase:
         
         self.__con.commit()
     
-    def get_transitions_in_rectangle(self, origin, max_diffs):
+    def get_transitions_in_rectangle(self, param_group, origin, max_diffs):
         """Return all transitions in the database sufficiently close to origin.
         """
         
-#        from time import time
-#        t = time()
-        
         # This statement weaves origin and max_diffs into one long array, where query_args[i] = {origin[i/2] if i%2==0, otherwise max_diffs[(i-1)/2]}.
-        query_args = numpy.hstack(zip(origin, -max_diffs, max_diffs))
+        query_args = numpy.hstack(zip(origin, origin-max_diffs, origin+max_diffs))
         
-#        result = numpy.array(self.__con.execute(self.__select_rectangle_query, query_args).fetchall())
-#        print "Found %i close particles in %f milliseconds around %s with maxdiffs %s"%(len(result), ((time()-t)*1000), origin, max_diffs)
-#        return result
-        return numpy.array(self.__con.execute(self.__select_rectangle_query, query_args).fetchall())
+        return numpy.array(self.__con.execute(self.__select_rectangle_queries[param_group], query_args).fetchall())
         
+    def __split_by_parameter_groups(self, particles):
+        """Splits the given particles into subparticles of independent parameters"""
+        if len(self.__param_groups) == 1:
+            return particles
+        return numpy.hsplit(particles, self.__param_groups.cumsum()[:-1])
 
     def __split_transition(self, transition):
         return numpy.hsplit(transition, 2)
@@ -180,35 +169,26 @@ class StateTransitionDatabase:
             t is the "from" part of a transition in the database.
         @return: A weighted average of the database as a new particle 
         """
-        MIN_PARTICLES = 10
-        from_states, to_states = [[], []]
-        pos_threshold = 1
-        vel_threshold = 1
-        max_diffs = numpy.array((pos_threshold, pos_threshold, vel_threshold, vel_threshold))
-        while len(from_states) < MIN_PARTICLES:
-            from_states, to_states = self.__split_transition(self.get_transitions_in_rectangle(prev_particle, max_diffs))
-            max_diffs += 1
-#        print "Found", len(from_states), "close particles"
         
-#        print "Found %d close states"%len(from_states)
-#        print from_states
-#        print to_states
-        
-        #TODO: this is HORRIBLY slow!
-#        weights = numpy.zeros((from_states.shape[0]))
-#        for i in xrange(from_states.shape[0]):
-#            weights[i] = weight_function(prev_particle, from_states[i,:])
-#
-#        weights = weights/sum(weights)
-        """
-        Calculate weights as 1/(Euclidean distance to prev_particle, squared)
-        """
-        weights = ((from_states-prev_particle)**2).sum(axis=1)
-        weights += numpy.min(weights[numpy.nonzero(weights)])*1e-6 # HACK: Prevent division by zero
-        weights = 1.0/weights
-        weights /= sum(weights)
-        
-        return numpy.average(to_states, axis=0, weights=weights)
+        split_particle = self.__split_by_parameter_groups(prev_particle)
+        selected = []
+        for group, subparticle in enumerate(split_particle):
+            from_states, to_states = self.__split_transition(numpy.array(self.__con.execute(self.__select_all_queries[group]).fetchall()))
+            standard_deviations = numpy.std(from_states, axis=0)
+            
+            # HACK: Prevent division by zero
+            zero_std_cols = numpy.where(standard_deviations == 0)[0]
+            standard_deviations = numpy.delete(standard_deviations, zero_std_cols)
+            from_states = numpy.delete(from_states, zero_std_cols, axis=1)
+            
+            weights = (((from_states-subparticle)/standard_deviations)**2).sum(axis=1)
+            weights += numpy.min(weights[numpy.nonzero(weights)])*1e-6 # HACK: Prevent division by zero
+            weights = 1.0/weights
+            weights /= sum(weights)
+            
+            selected.append(numpy.average(to_states, axis=0, weights=weights))
+        return numpy.hstack(selected)
+#            from_states, to_states = self.__split_transition(self.get_transitions_in_rectangle(group, subparticle, max_diffs))
 
 if __name__ == "__main__":
     delete_database("lol")
