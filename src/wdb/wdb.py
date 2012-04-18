@@ -21,9 +21,6 @@ def euclidean_distance_inverse_squared(a, b):
     
     return 1.0/(zero_division_defense + (numpy.linalg.norm(a-b))**2)
 
-
-
-
 def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
     db_file = os.path.join(database_dir, database_name + database_extension)
     
