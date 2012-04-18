@@ -5,9 +5,6 @@ import collections
 
 from wmedia.wlayer import wlayer
 
-from wmedia.wimage import wimage
-from wmedia.wvideo import wvideo
-
 import cairo
 
 class wanimation(wlayer):
@@ -35,7 +32,7 @@ class wanimation(wlayer):
         """
         Export certain frame to cairo.ImageSurface
         """
-        img = cairo.ImageSurface(cairo.ARGB32,512,512)
+        img = cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)
         context = cairo.Context(img)
         self.render(context,i)
         context.paint()
@@ -45,7 +42,7 @@ class wanimation(wlayer):
         """
         Export to a list of cairo.ImageSurface
         """
-        if range:
+        if range != None:
             raise NotImplemented("export range not implemented yet")
         return map(self.export_frame,range(len(self)))
 

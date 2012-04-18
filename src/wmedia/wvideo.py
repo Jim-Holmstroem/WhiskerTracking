@@ -6,13 +6,11 @@ import re
 
 from wmedia.wlayer import wlayer 
 from wmedia.wimage import wimage
-
-from parallel.parallel_map import parallel_map
+from wmedia.wanimation import wanimation
 
 from wmath.wmath import argmax
 
 from itertools import izip
-import operator
 
 class wvideo(wlayer):
     """
@@ -41,7 +39,7 @@ class wvideo(wlayer):
         else:
             raise Exception("input_data has incorrect type")
 
-    def init_with_list(self,datalist):
+    def init_with_list(self,input_data):
         """
         Init with a list of image-data (of somesort)
         """
