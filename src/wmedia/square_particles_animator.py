@@ -17,7 +17,11 @@ class square_particles_animator(wanimation):
         self.data_renderer = self.render
     
     def __len__(self):
-        return len(self.data)
+        if self.particles != None:
+            return len(self.particles)
+        elif self.main_particles != None:
+            return len(self.main_particles)
+        return 0
     
     def render(self, context, i):
         context.save()
@@ -30,18 +34,19 @@ class square_particles_animator(wanimation):
                 context.rectangle(row[0], row[2], 1, 1)
                 context.fill()
         
-        context.set_source_rgba(*(self.particle_color + (self.alpha,)))
-        for row in self.particles[i]:
-            context.rectangle(row[0], row[2], 1, 1)
-            context.fill()
+        if self.particles != None:
+            context.set_source_rgba(*(self.particle_color + (self.alpha,)))
+            for row in self.particles[i]:
+                context.rectangle(row[0], row[2], 1, 1)
+                context.fill()
         
         main_particle = None
         if self.main_particles != None:
-            main_particle = self.main_particles[i]
+            main_particle = self.main_particles[i] - self.square_side/2.0
         else:
-            main_particle = self.particles[i][:,0:3:2].mean(axis=0) - self.square_side/2.0
+            main_particle = self.particles[i].mean(axis=0) - self.square_side/2.0
         
-        context.rectangle(main_particle[0], main_particle[1], self.square_side, self.square_side)
+        context.rectangle(main_particle[0], main_particle[2], self.square_side, self.square_side)
         context.set_source_rgb(*self.main_particle_color)
         context.set_line_width(1)
         context.stroke()
