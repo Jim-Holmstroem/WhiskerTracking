@@ -1,4 +1,3 @@
-from itertools import izip
 from wdb import create_database, delete_database, StateTransitionDatabase
 from wmedia import left_align_videoformat
 import cairo
@@ -324,9 +323,9 @@ def render_newton2(movie_id=0, start_state=None, accel_func=lambda a:numpy.zeros
     numpy.save(os.path.join(save_dir, "state_sequence"), states)
     print "Completed rendering", movie_name
 
-def generate_gravity(number_of_transitions, gravity=numpy.array([0, 1]), debug=False):
+def generate_accelerating(number_of_transitions, accel_func=lambda a:numpy.array((0,0,0,1)), debug=False):
     """
-    Generates number_of_transitions random movements of objects subject to gravity
+    Generates number_of_transitions random movements of objects subject to acceleration given by accel_func
     """
     
     dataset = "square_gravity"
@@ -338,22 +337,22 @@ def generate_gravity(number_of_transitions, gravity=numpy.array([0, 1]), debug=F
     delete_database(dataset)
     create_database(dataset, [2, 2])
     
-    print "Generating %i random movements subject to gravity"%(number_of_transitions)
+    print "Generating %i random accelerating movements"%(number_of_transitions)
     db = StateTransitionDatabase(dataset)
+    
+    
+    def velocities(states):
+        return numpy.vstack((states[:,1],
+                           numpy.zeros(number_of_transitions),
+                           states[:,3],
+                           numpy.zeros(number_of_transitions)
+                           )).T + accel_func(states)
     
     def timestep(states, fixpoint_iterations=10):
         next_states = states
-        d0 = numpy.vstack((states[:,1],
-                           numpy.ones(number_of_transitions)*gravity[0],
-                           states[:,3],
-                           numpy.ones(number_of_transitions)*gravity[1]
-                           )).T
+        d0 = velocities(states)
         for i in xrange(fixpoint_iterations):
-            d = numpy.vstack((next_states[:,1],
-                              numpy.ones(number_of_transitions)*gravity[0],
-                              next_states[:,3],
-                              numpy.ones(number_of_transitions)*gravity[1]
-                              )).T
+            d = velocities(next_states)
             next_states = states + 0.5 * (d0 + d) * dt
         return next_states
     
@@ -378,4 +377,4 @@ if (__name__=='__main__'):
 #    render_online()
     render_bounce()
     render_newton2()
-    generate_gravity(1000)
+    generate_accelerating(1000)
