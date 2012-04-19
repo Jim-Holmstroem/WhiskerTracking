@@ -324,9 +324,58 @@ def render_newton2(movie_id=0, start_state=None, accel_func=lambda a:numpy.zeros
     numpy.save(os.path.join(save_dir, "state_sequence"), states)
     print "Completed rendering", movie_name
 
-
+def generate_gravity(number_of_transitions, gravity=numpy.array([0, 1]), debug=False):
+    """
+    Generates number_of_transitions random movements of objects subject to gravity
+    """
+    
+    dataset = "square_gravity"
+    dt = 0.5
+    X_STD = IMAGE_WIDTH/15.0
+    Y_STD = IMAGE_HEIGHT/15.0
+    
+    # State: [x, y, x', y']
+    delete_database(dataset)
+    create_database(dataset, [2, 2])
+    
+    print "Generating %i random movements subject to gravity"%(number_of_transitions)
+    db = StateTransitionDatabase(dataset)
+    
+    def timestep(states, fixpoint_iterations=10):
+        next_states = states
+        d0 = numpy.vstack((states[:,1],
+                           numpy.ones(number_of_transitions)*gravity[0],
+                           states[:,3],
+                           numpy.ones(number_of_transitions)*gravity[1]
+                           )).T
+        for i in xrange(fixpoint_iterations):
+            d = numpy.vstack((next_states[:,1],
+                              numpy.ones(number_of_transitions)*gravity[0],
+                              next_states[:,3],
+                              numpy.ones(number_of_transitions)*gravity[1]
+                              )).T
+            next_states = states + 0.5 * (d0 + d) * dt
+        return next_states
+    
+    from_states = numpy.vstack((numpy.zeros(number_of_transitions),
+                                numpy.random.normal(0, X_STD, number_of_transitions),
+                                numpy.zeros(number_of_transitions),
+                                numpy.random.normal(0, Y_STD, number_of_transitions)
+                                )).T
+    to_states = timestep(from_states)
+    
+    db.add_transitions(from_states, to_states)
+    
+    print "Done."
+    
+    if debug:
+        import matplotlib.pyplot as plot
+        plot.hist(from_states[:,1::2], 20)
+        plot.show()
+    
 if (__name__=='__main__'):
 #    render_simple()
 #    render_online()
     render_bounce()
     render_newton2()
+    generate_gravity(1000)
