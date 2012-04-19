@@ -12,6 +12,11 @@
 
 </basics>
 
+<assumptions>
+    Assumptions taken all over the place
+    <ergodicity>http://en.wikipedia.org/wiki/Ergodicity</ergodicity>
+</assumptions>
+
 <search>
     <exhausted_search>
         <problem>
