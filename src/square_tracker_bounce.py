@@ -45,6 +45,7 @@ IMAGE_HEIGHT = 512.
 dataset = "square_bounce"
 db = StateTransitionDatabase(dataset)
 num_particles = 1000
+MAX_FRAMES = 20
 
 square_side = 50
 half_square_side = square_side/2.0
@@ -62,6 +63,8 @@ def run(movie_id):
     print("Loading video...")
     v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
     print("Video loaded.")
+    num_frames = min(MAX_FRAMES, len(v))
+    v = video(v[:num_frames])
     print("Blurring video...")
     v_blur = v.transform(lambda img: filters.gaussian_filter(img, 20))
     print("Video blurred.")
@@ -96,12 +99,15 @@ def run(movie_id):
     start_time = time()
     
     render(0, v[0])
-    for i, frame in enumerate(v_blur[1:], 1):
+    print "Rendered frame %i of %i"%(1, num_frames)
+    for i, frame in enumerate(v_blur[1:], 2):
         particles, intermediate_particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
         render(i, v[i])
         
-        print "Processed frame %i"%(i)
-        
+        print "Rendered frame %i of %i"%(i, num_frames)
+    
     print "Finished in %f seconds." % (time()-start_time)
 
 cProfile.run("run(7)")
+cProfile.run("run(8)")
+cProfile.run("run(9)")
