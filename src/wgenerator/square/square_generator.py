@@ -140,7 +140,7 @@ def render_online():
     
     print "Done."
 
-def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 2]), bounce_factor=0.75, input_to_database=True):
+def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 1]), bounce_factor=0.75, input_to_database=True):
     """
     Renders a falling and bouncing square.
     """
@@ -149,6 +149,8 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 2]), bou
     num_frames = 128
     square_side = 50.
     half_square_side = square_side/2.0
+    
+    dt = 0.5
     
     X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
     Y_LIMITS = [half_square_side, IMAGE_HEIGHT-half_square_side]
@@ -164,9 +166,9 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 2]), bou
         render_bounce(4, numpy.array([IMAGE_WIDTH*3./4, 0., Y_LIMITS[1], 2]))
         render_bounce(5, numpy.array([IMAGE_WIDTH/2., 4, Y_LIMITS[1], 0.6]))
         render_bounce(6, numpy.array([IMAGE_WIDTH/2., 4., IMAGE_HEIGHT/2., 0.]))
-        render_bounce(7, numpy.array([X_LIMITS[0], 5., Y_LIMITS[0], 0.]))
-        render_bounce(8, numpy.array([IMAGE_WIDTH/2., -1, IMAGE_HEIGHT*3./4, 0.6]))
-        render_bounce(9, numpy.array([IMAGE_WIDTH/5., 2, IMAGE_HEIGHT/3., 0.4]))
+        render_bounce(7, numpy.array([X_LIMITS[0], 5., Y_LIMITS[0], 0.]), input_to_database=False)
+        render_bounce(8, numpy.array([IMAGE_WIDTH/2., -1, IMAGE_HEIGHT*3./4, 0.6]), input_to_database=False)
+        render_bounce(9, numpy.array([IMAGE_WIDTH/5., 2, IMAGE_HEIGHT/3., 0.4]), input_to_database=False)
         return
     
     movie_name = dataset + "_" + str(movie_id)
@@ -191,7 +193,7 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 2]), bou
         d0 = numpy.array((state[1], gravity[0], state[3], gravity[1]))
         for i in xrange(fixpoint_iterations):
             d = numpy.array((next_state[1], gravity[0], next_state[3], gravity[1]))
-            next_state = state + 0.5 * (d0 + d)
+            next_state = state + 0.5 * (d0 + d) * dt
         return next_state
     
     for i in xrange(num_frames):
@@ -208,9 +210,10 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 2]), bou
                     next_state[axis+1] *= -bounce_factor
                     next_state[axis] = 2*limits[1] - next_state[axis]
             
-            # Input the transition into the database
-            normalizer = numpy.array((state[0], 0, state[2], 0))
-            db.add_transitions(state - normalizer, next_state - normalizer)
+            if input_to_database:
+                # Input the transition into the database
+                normalizer = numpy.array((state[0], 0, state[2], 0))
+                db.add_transitions(state - normalizer, next_state - normalizer)
         
             state = next_state
         
