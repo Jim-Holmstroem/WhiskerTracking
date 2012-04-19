@@ -232,13 +232,13 @@ def render_bounce(movie_id=0, start_state=None, gravity=numpy.array([0, 1]), bou
 
     print "Completed rendering", movie_name
 
-def generate_accelerating(number_of_transitions, accel_func=lambda a:numpy.array((0,0,0,1)), debug=False):
+def generate_accelerating(number_of_transitions, accel_func=lambda a:numpy.array((0,0,0,0.1)), debug=False):
     """
     Generates number_of_transitions random movements of objects subject to acceleration given by accel_func
     """
     
-    dataset = "square_gravity"
-    dt = 0.5
+    dataset = "square_accelerating"
+    dt = 1
     X_STD = IMAGE_WIDTH/15.0
     Y_STD = IMAGE_HEIGHT/15.0
     
@@ -252,9 +252,9 @@ def generate_accelerating(number_of_transitions, accel_func=lambda a:numpy.array
     
     def velocities(states):
         return numpy.vstack((states[:,1],
-                           numpy.zeros(number_of_transitions),
+                           numpy.zeros(states.shape[0]),
                            states[:,3],
-                           numpy.zeros(number_of_transitions)
+                           numpy.zeros(states.shape[0])
                            )).T + accel_func(states)
     
     def timestep(states, fixpoint_iterations=10):
@@ -273,6 +273,54 @@ def generate_accelerating(number_of_transitions, accel_func=lambda a:numpy.array
     to_states = timestep(from_states)
     
     db.add_transitions(from_states, to_states)
+    
+    print "Done."
+    
+    print "Generating movement sequences for testing..."
+    square_side = 50.0
+    num_movies = 10
+    num_frames = int(number_of_transitions * 3.0/7 /num_movies)   # The 70-30 principle
+    
+    for movie_id in xrange(num_movies):
+        movie_name = dataset + "_" + str(movie_id)
+        save_dir = os.path.join("video", movie_name + ".pngvin")
+        import shutil
+        if os.path.exists(save_dir):
+            shutil.rmtree(save_dir)
+        os.makedirs(save_dir)
+        
+        print "Rendering pngvin movie", movie_name
+        
+        surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
+        ctx = cairo.Context(surface)
+        
+        state = numpy.hstack((numpy.random.normal(IMAGE_WIDTH/2.0, X_STD),
+                              numpy.random.normal(0, IMAGE_WIDTH/200.),
+                              numpy.random.normal(IMAGE_HEIGHT/2.0, Y_STD,),
+                              numpy.random.normal(0, IMAGE_HEIGHT/200.)))
+        state = numpy.reshape(state, (1,)+state.shape)
+        
+        states = numpy.zeros((num_frames, state.size))
+        
+        for i in xrange(num_frames):
+            x = (state[0,0]-square_side/2)/IMAGE_WIDTH
+            y = (state[0,2]-square_side/2)/IMAGE_HEIGHT
+            
+            clear(ctx)
+            ctx.rectangle(0, 0, 1, 1)
+            ctx.set_source_rgb(0,0,0)
+            ctx.fill()
+            
+            ctx.set_source_rgb(1, 1, 1)
+            ctx.rectangle(x, y, square_side/IMAGE_WIDTH, square_side/IMAGE_WIDTH)
+            ctx.fill()
+            
+            surface.write_to_png(os.path.join(save_dir, "frame-"+left_align_videoformat(i)+".png"))
+            states[i,:] = state
+            
+            state = timestep(state)
+        
+        numpy.save(os.path.join(save_dir, "state_sequence.npy"), states)
     
     print "Done."
     
