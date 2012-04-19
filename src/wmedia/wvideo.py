@@ -39,15 +39,15 @@ class wvideo(wlayer):
         else:
             raise Exception("input_data has incorrect type")
 
-    def init_with_list(self,input_data):
+    def init_with_list(self,dlist):
         """
         Init with a list of image-data (of somesort)
         """
-        if len(input_data)!=0:
-            if isinstance(input_data[0],wimage):
-                self.imgs=input_data
+        if len(dlist)!=0:
+            if isinstance(dlist[0],wimage):
+                self.imgs=dlist
             else:
-                self.imgs=map(lambda data:wimage(data,self.alpha),input_data)
+                self.imgs=map(lambda data:wimage(data,self.alpha),dlist)
         else:
             raise Exception("input_data-list has len=0")
 

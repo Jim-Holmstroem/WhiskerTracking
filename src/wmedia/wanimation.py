@@ -38,12 +38,13 @@ class wanimation(wlayer):
         context.paint()
         return img
 
-    def export(self,range=None):
+    def export(self,srange=None):
         """
         Export to a list of cairo.ImageSurface
         """
-        if range != None:
+        if srange:
             raise NotImplemented("export range not implemented yet")
+
         return map(self.export_frame,range(len(self)))
 
     def __len__(self):
