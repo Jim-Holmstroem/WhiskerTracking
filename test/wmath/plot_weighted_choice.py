@@ -1,11 +1,5 @@
-'''
-Created on Feb 20, 2012
-
-@author: Emil Lundberg
-'''
-
 import numpy
-import pylab
+import matplotlib.pylab as plot
 from wmath import weighted_choice
 
 weights = numpy.arange(25)
@@ -15,6 +9,6 @@ frequencies = numpy.zeros_like(weights)
 for i in xrange(num_samples):
     frequencies[weighted_choice(weights)] += 1
 
-pylab.plot(weights, weights/float(sum(weights)))
-pylab.plot(weights, frequencies/float(num_samples), "b*")
-pylab.show()
+plot.plot(weights, weights/float(sum(weights)))
+plot.plot(weights, frequencies/float(num_samples), "b*")
+plot.show()
