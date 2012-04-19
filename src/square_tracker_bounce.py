@@ -3,6 +3,7 @@ from time import time
 from wdb import StateTransitionDatabase
 from wmedia import wvideo as video, left_align_videoformat
 from wmedia.square_particles_animator import square_particles_animator
+from scipy.ndimage import filters
 import cProfile
 import cairo
 import numpy
@@ -14,19 +15,14 @@ def goodness(particle, image):
     if x < 0 or y < 0 or y >= image.shape[0] or x >= image.shape[1]:
         return 0
     
-    if (image[y,x,:3] == 255).all():
-        return 1000
-    else:
-        return 1
+    return image[y,x]**3
 
 def sample(prev_particle):
     
-    next_pos = prev_particle.copy()
-    next_pos[0] += prev_particle[1]
-    next_pos[1] += 9.81
-    next_pos[2] += prev_particle[3]
-    next_pos[3] += 9.81
-    new_particle_from_prev = next_pos + numpy.random.normal(loc=0, scale=5, size=prev_particle.shape)
+    new_particle_from_prev = prev_particle.copy()
+    new_particle_from_prev[0] += prev_particle[1]*0.5
+    new_particle_from_prev[2] += prev_particle[3]*0.5
+    new_particle_from_prev = new_particle_from_prev + numpy.random.normal(loc=0, scale=5, size=prev_particle.shape)
     
     prev_particle_copy = prev_particle.copy()
     prev_particle_copy[0] = 0
@@ -36,7 +32,7 @@ def sample(prev_particle):
     new_particle_from_db[2] += prev_particle[2]
 #    new_particle_from_db += numpy.random.normal(0, scale=[3, 3], size=new_particle_from_db.shape)
     
-    db_weight = 1
+    db_weight = 2
     prev_weight = 1
     
     new_particle = new_particle_from_prev*prev_weight + (new_particle_from_db)*db_weight
@@ -48,8 +44,8 @@ IMAGE_HEIGHT = 512.
 
 dataset = "square_bounce"
 db = StateTransitionDatabase(dataset)
-num_particles = 100
-    
+num_particles = 1000
+
 square_side = 50
 half_square_side = square_side/2.0
 X_LIMITS = [half_square_side, IMAGE_WIDTH-half_square_side]
@@ -66,9 +62,10 @@ def run(movie_id):
     print("Loading video...")
     v = video(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
     print("Video loaded.")
-    #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
-    #particles = numpy.random.normal(size=(num_particles, 2), scale=10) + numpy.array([51, 51])
-    #start_state = numpy.array([102, 102, 0])
+    print("Blurring video...")
+    v_blur = v.transform(lambda img: filters.gaussian_filter(img, 20))
+    print("Video blurred.")
+#    v_blur = v
     
     num_frames = len(v)
     
@@ -99,9 +96,9 @@ def run(movie_id):
     start_time = time()
     
     render(0, v[0])
-    for i, frame in enumerate(v[1:], 1):
+    for i, frame in enumerate(v_blur[1:], 1):
         particles, intermediate_particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)
-        render(i, frame)
+        render(i, v[i])
         
         print "Processed frame %i"%(i)
         
