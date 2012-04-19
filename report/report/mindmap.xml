@@ -1,0 +1,128 @@
+
+
+
+<basics>
+    <noise>
+        Noise vs descriminant (bik12)
+        Show with examples
+    </noise>
+
+    <dimensionality_devil>
+    </dimensionality_devil>
+
+</basics>
+
+<search>
+    <exhausted_search>
+        <problem>
+        </problem>
+    </exhausted_search>
+    <directed_search>
+        <solution>
+        </solution>
+        <choices>
+            <bayes></bayes>
+            <kalman_filter></kalman_filter>
+            <histogram_filter></histogram_filter>
+            <particle_filter></particle_filter>
+        </choices>
+    </directed_search>
+
+</search>
+
+
+Feature vs. Parameter? (which of them should be a 20keyword?)
+
+Time serie analysis ?
+
+
+<algorithm type=of_choice>
+    <fast_overview>
+        Give a fast overview of the algorithm before going into the parts.
+    </fast_overview>
+    
+    <model>
+        <feature>
+        
+        </feature> 
+        <analys>
+            Compare the models tested
+        </analys>
+    
+    </model>
+    <feature_detector>
+        <response>
+            <descripe>
+            </descripe>
+            <plot_feature_response>
+                <plot_over>
+                    Feature variation at some (multiply?) point(s)
+                    Vary feature params around given points to get height stepness and shape of the response
+                    <analysis>
+                        Analys the shape and what the consequences of the shape is.
+                    </analysis>
+                </plot_over>                
+            </plot_feature_response>
+        </response> 
+    </feature_detector>
+
+    <transition_database>
+        <feature_space>
+            <emptyness>
+                <problems>
+                    <density>
+                        Density gets lower
+                    </density>
+                    <boundary>
+                        Gets more boundaries => higher prob. of extrapolation instead of interpolation.
+                    </boundary>
+                </problems>
+            </emptyness>    
+        </feature_space>
+        <rescale_axis>
+            <Sigma>
+            </Sigma>
+            <scale_to_01>
+            
+            </scale_to_01>
+        </rescale_axis>
+        <divergent_samples>
+            <need>
+                <sample_density>
+                    Samples proportinal to the occurance
+                    <possibility>
+                        Random sampling what to label (in contrast to label an entire range)
+                    </possibility>
+                </sample_density>
+            </need>
+            <want>
+                Capture harder parts and sample does more.
+                <possibility>
+                    Is this possible and how?
+                </possibility>
+            </want>
+        </divergent_samples>
+        <PCA note=or_equivilent>
+            <usage> 
+                Find dependant parameters in the feature/parameter 
+            </usage>
+            <why>
+                Lower the dimensionality of featurespace
+            </why>
+            <possibility>
+                High memory/runtime complexity, lesser methods?
+            </possibility>
+        </PCA>
+    </transition_database>
+    <particle_filter>
+        <compared>
+            Compared to other possible filters
+        </compared>
+
+        <proof>
+        
+        </proof>
+    </particle_filter>
+</algorithm>
+
+
