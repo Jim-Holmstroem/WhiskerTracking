@@ -9,7 +9,6 @@ import os
 import wtracker
 
 class BounceTracker(wtracker.Tracker):
-    ANIMATOR_CLASS = square_particles_animator
     
     def __init__(self, db, video):
         wtracker.Tracker.__init__(self, db, video)
@@ -20,6 +19,9 @@ class BounceTracker(wtracker.Tracker):
         print("Video blurred.")
         
         print "Startup complete."
+        
+    def make_animator(self, main_particles, particles, intermediate_particles):
+        self.animator = square_particles_animator(main_particles, particles, intermediate_particles)
         
     def goodness(self, particle, image):
         x, y = (particle[0], particle[2])

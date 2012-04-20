@@ -1,9 +1,9 @@
 from square_tracker_bounce import BounceTracker
+from tracker.pendulum_tracker import PendulumTracker
 from wdb import StateTransitionDatabase
 from wgui.wlayermanager import wlayermanager
 from wgui.wwindow import wwindow
 from wmedia import wvideo
-from wmedia.square_particles_animator import square_particles_animator
 import gtk
 import numpy
 import os
@@ -34,10 +34,9 @@ class TrackerBenchmark:
     
     def animate(self, i):
         print "Animating test results"
-#        spa = square_particles_animator(None, 50, self.tracks[i], main_particle_color=(255,0,0))
         layer_manager = wlayermanager()
         layer_manager.add_layer(self.video)
-        layer_manager.add_layer(self.trackers[i].get_layer())
+        layer_manager.add_layer(self.trackers[i].get_animator())
         
         win = wwindow(layer_manager)
         gtk.gdk.threads_enter()
@@ -47,6 +46,6 @@ class TrackerBenchmark:
 
 if __name__ == "__main__":
     tracker_classes = [BounceTracker]
-    tester = TrackerBenchmark(tracker_classes, "square_accelerating_0", "square_accelerating", 1000)
+    tester = TrackerBenchmark(tracker_classes, "square_accelerating_0", "square_accelerating", 10)
     tester.run()
     tester.animate(0)

@@ -15,7 +15,13 @@ class Tracker:
     def sample(self, prev_particle):
         raise NotImplementedError("This class is abstract!")
     
-    def run(self, start_state, num_particles, square_side=50):
+    def make_animator(self, main_particles, particles, intermediate_particles):
+        raise NotImplementedError("This class is abstract!")
+    
+    def get_animator(self):
+        return self.animator
+    
+    def run(self, start_state, num_particles):
         
         print "Tracking..."
         
@@ -37,12 +43,9 @@ class Tracker:
         
         print "Tracking complete."
         
-        self.animator = self.ANIMATOR_CLASS(all_particles, square_side, track, all_intermediate_particles)
+        self.make_animator(track, all_particles, all_intermediate_particles)
         
         return track
     
     def render_results(self, context, frame_i):
-        self.animator.render(context, frame_i)
-    
-    def get_layer(self):
-        return self.animator
+        self.get_animator().render(context, frame_i)
