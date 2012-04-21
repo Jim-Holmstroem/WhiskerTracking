@@ -1,42 +1,42 @@
 from square_tracker_bounce import BounceTracker
+from tracker.pendulum_tracker import PendulumTracker
 from wdb import StateTransitionDatabase
 from wgui.wlayermanager import wlayermanager
 from wgui.wwindow import wwindow
 from wmedia import wvideo
-from wmedia.square_particles_animator import square_particles_animator
 import gtk
 import numpy
 import os
 
-class TrackerTester:
+class TrackerBenchmark:
     
     TEST_DATA_BASE_DIR = "video"
     
-    def __init__(self, tracker_class, video_name, database_name):
+    def __init__(self, tracker_classes, video_name, database_name, num_particles=100):
         video_path = os.path.join(self.TEST_DATA_BASE_DIR, video_name + ".pngvin")
         
         self.correct_states = numpy.load(os.path.join(video_path, "state_sequence.npy"))
         self.video = wvideo(video_path)
         self.db = StateTransitionDatabase(database_name)
-        
-        self.tracker = tracker_class(self.db)
+        self.num_particles = num_particles
+
+        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video), tracker_classes)
     
     def run(self):
         print "Running tracking test"
-        self.track = self.tracker.run(self.video, self.correct_states[0], 1000)
+        self.tracks = map(lambda tracker:tracker.run(self.correct_states[0], self.num_particles), self.trackers)
         
-        difference_from_correct = self.correct_states - self.track
-        cum_diff = difference_from_correct.cumsum(axis=0)
+        differences_from_correct = map(lambda track:numpy.abs(self.correct_states - track), self.tracks)
+        sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
         
-        print cum_diff[-1,:]
+        print sum_diffs
         print "Finished tracking test"
     
-    def animate(self):
+    def animate(self, i):
         print "Animating test results"
-        spa = square_particles_animator(None, 50, self.track, main_particle_color=(255,0,0))
         layer_manager = wlayermanager()
         layer_manager.add_layer(self.video)
-        layer_manager.add_layer(spa)
+        layer_manager.add_layer(self.trackers[i].get_animator())
         
         win = wwindow(layer_manager)
         gtk.gdk.threads_enter()
@@ -45,6 +45,7 @@ class TrackerTester:
         print "Done animating test results"
 
 if __name__ == "__main__":
-    tester = TrackerTester(BounceTracker, "square_accelerating_0", "square_accelerating")
+    tracker_classes = [BounceTracker]
+    tester = TrackerBenchmark(tracker_classes, "square_accelerating_0", "square_accelerating", 10)
     tester.run()
-    tester.animate()
+    tester.animate(0)
