@@ -26,8 +26,9 @@ class wlayermanager(gtk.DrawingArea):
         """
         Used by renderer to render each layer
         """
+        context.save()
         layer.render(context,i)
-        context.paint_with_alpha(layer.alpha)
+        context.restore()
 
     def render(self,context,i):
         """
@@ -50,7 +51,13 @@ class wlayermanager(gtk.DrawingArea):
 
         """
         context=widget.window.cairo_create()
+
+        context.set_source_rgba(0,0,0,1)
+        context.rectangle(0,0,512,512)
+        context.fill()
+        
         self.render(context,self.current_frame)
+
     
     def __len__(self):
         """

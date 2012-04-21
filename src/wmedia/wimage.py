@@ -89,13 +89,10 @@ class wimage(wlayer):
         """
         Argument i not used by wvideo but needed to be a wlayer
         """
-        #http://stackoverflow.com/questions/7610159/convert-pil-image-to-cairo-imagesurface
-        
         width,height=map(lambda i: self.data.shape[i],[0,1])
-    
         alpha=255.0*numpy.ones_like(self.data)
        
         rgba_data=numpy.concatenate((self.data,)*3+(alpha,),2)
         img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](rgba_data.copy()), cairo.FORMAT_ARGB32,width,height) #NOTE .copy() because of bug in numpy
         context.set_source_surface(img)
-
+        context.paint_with_alpha(self.alpha)

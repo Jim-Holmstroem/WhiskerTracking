@@ -37,7 +37,7 @@ class wvideo(wlayer):
         elif isinstance(input_data,(list)):
             self.init_with_list(input_data) 
         else:
-            raise Exception("input_data has incorrect type")
+            raise Exception("input_data has incorrect type:"+type(input_data))
 
     def init_with_list(self,dlist):
         """
