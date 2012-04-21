@@ -14,7 +14,6 @@ class color:
     green=(0,255,0)
     blue=(0,0,255)
 
-
 def vadd(vi,vj):
     return tuple(map(lambda (i,j):i+j,zip(tuple(vi),tuple(vj))))
 
@@ -29,13 +28,11 @@ def rotation_matrix(phi,theta,psi):
 
 print rotation_matrix(0,0,0)
 
-
 def interpolate(p):
     """
     Returns the points between the list p
     """
     pass
-
 
 class whisker:
     bodies=[]
