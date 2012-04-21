@@ -95,3 +95,5 @@ class wvideo(wlayer):
     def image_shape(self):
         assert len(self.imgs) > 0, "Video is empty"
         return self.imgs[0].data.shape
+
+

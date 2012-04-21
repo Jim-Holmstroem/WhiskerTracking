@@ -9,7 +9,6 @@ from wmedia.wlayer import wlayer
 
 class wimage(wlayer):
     """
-
     Could be used as a layer but mainly used in wvideo as a videframe.
     Has a numpy array as basis 
     """
@@ -67,7 +66,6 @@ class wimage(wlayer):
         Show the image with default imageviewer, just for debugging
         """
         Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),numpy.uint8(self.array),'raw',0,1).show()
-
 
     def __add__(self,other):
         if(other==None):
