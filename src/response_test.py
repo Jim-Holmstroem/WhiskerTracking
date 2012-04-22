@@ -26,9 +26,11 @@ class response_circle(response_object):
         self.pos=pos
 
     def render(self,context):
-        context.arc(self.pos[0],self.pos[1],64,0,2*math.pi)
-        context.set_source_rgba(1.0,1.0,1.0,1.0)
-        context.fill()
+        context.set_source_rgba(0.0,0.0,1.0,1.0)
+        context.set_line_width(2)
+        context.rectangle(10,10,256,256)
+        
+        #context.arc(self.pos[0],self.pos[1],64,0,2*math.pi)
 
 class response_test:
     def __init__(self):
