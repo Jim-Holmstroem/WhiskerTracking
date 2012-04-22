@@ -43,6 +43,9 @@ if __name__=="__main__":
     #layermanager.add_layer(multiply.transform(normalize))
   
 
+    layermanager.exportPNGVIN("layermanager.pngvin")
+
+
     win=wwindow(layermanager)
 
     gtk.gdk.threads_enter()
