@@ -4,6 +4,12 @@ __all__ = ['wlayermanager']
 import gtk
 import pygtk
 import cairo
+import os
+import re
+
+def video_format_filename(i):
+    I=str(i)
+    return "frame-"+"0"*(5-len(I))+I+".png"
 
 class wlayermanager(gtk.DrawingArea):
     """
@@ -71,11 +77,13 @@ class wlayermanager(gtk.DrawingArea):
         """
 
         """
+        assert re.match(".+\.(PNGVIN|pngvin)$",filename)
         #The index of the file is saved as the first element in the pair
-        surfaces=map(lambda frame:(frame,cairo.ImageSurface(FORMAT_ARGB32,WIDTH,HEIGHT)),xrange(len(self)))
+        surfaces=map(lambda frame:(frame,cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)),xrange(len(self)))
         contexts=map(lambda surface:(surface[0],cairo.Context(surface[1])),surfaces)
         map(lambda context:self.render(context[1],context[0]),contexts)
-        map(lambda surface:surface[1].write_to_png(filename+helper.video_format_filename(surface[0])),surfaces)
+        os.mkdir(filename)
+        map(lambda surface:surface[1].write_to_png(filename+"/"+video_format_filename(surface[0])),surfaces)
 
     def motion(self,widget,event):
         """
