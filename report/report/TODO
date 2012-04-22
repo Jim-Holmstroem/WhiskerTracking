@@ -111,6 +111,9 @@ Feature extraction vs. feature selection (bik)
 
 
 
+"In its rawest form"
+
+
 =============== WRAPUP ===================
 
 (Mockup?)
@@ -121,6 +124,13 @@ functionallity is missing and also having problems like missaligned buffers
 or having to write an adapter between images and matrices as an example.
 
 
+
+================Analysis====================
+can one just do analysis with a cost function, like cost=compution and to maximize accuracy/computations by using an directed search, even so much that we basically lowers the complexity of the algorithm
+Is it possible to do somewhat of of complexity analysis of this?
+Worstcase data? better data (assumptions in realdata?)
+without directed search (AKA uniform distribution pick) O(n^k)
+searching in an gaussianclock? searching in an flat gaussian clock, that is in an gaussian clock that has perfekt dependacies in some direction (that is no (or almost no) data in that dimension)
 
 
 
@@ -134,13 +144,26 @@ tex. "Structure of learning system"-dyker upp som delkapitel, ska vi ha samma st
 "Winner-Take-All"
 >Algorithm Evalation (follow the model when evaluating our algorithm)
 >Attribute (synonymsd: <<feature>>,property,trait,characteristic)
+>Bake-Off, "Bake-off is a disparaging term for experimental eval-
+uation of multiple learning algorithms by a process of
+applying each algorithm to a limited set of benchmark
+problems." (crossreference:algorithm evalution)
+>Bayes Rule
+>Bias
+>Confusion matrix (realclass vs assigned class) just relate it to if it fails and add risk (indicator if the algorithm starts to slip in the tracking)
+>Cost Function (do we apply it somewhere?), can one just do analysis with a cost function, like cost=compution and to maximize accuracy/computations by using an directed search.
+>Covariance
+>Cross-Validation (is this possible to implement, instead of doing the trivial test/train?)
+diagram at p116 (C.pdf) "system dimension" classify the algorithm diagram
+>>Curse of Dimensionality   
 
-[@B.pdf]
+[@D.pdf]
 
 
 ==Lookup words from above(are these relevant?)==
 >Hypotesis Language (under ANN.crossreference)
-
+>Semi supervised learning (Co-training)
+>Gaussian processes
 
 
 ===========================================
