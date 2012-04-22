@@ -1,3 +1,8 @@
+2012-04-20
+Improved on the benchmarking engine.
+Created a general framework for building trackers.
+Created generators of test cases for and a tracker for simple pendulums.
+
 2012-04-19
 Refactored test generators.
 Built a framework for testing trackers and displaying results.
