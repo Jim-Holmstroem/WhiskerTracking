@@ -125,6 +125,14 @@ or having to write an adapter between images and matrices as an example.
 
 
 
+
+==========================================
+Do an exhausted search for something low dimensional like the snot and then plot all the datapoints over time for a sequence in the video.
+Will be very high dimensional so perhaps some projection will be good but keep time as an axis
+The goal is to see the "worm" lingering tru the timeline (is it possible to do an variant of density-based clustering of this data to first find the path tru time of these worms given an head of the worm (a startpoint at t_0) and then "tracking" the timeworm? and ofcourse trying to find E[] of the timeworm)
+
+
+
 ================Analysis====================
 can one just do analysis with a cost function, like cost=compution and to maximize accuracy/computations by using an directed search, even so much that we basically lowers the complexity of the algorithm
 Is it possible to do somewhat of of complexity analysis of this?
@@ -156,15 +164,33 @@ problems." (crossreference:algorithm evalution)
 >Cross-Validation (is this possible to implement, instead of doing the trivial test/train?)
 diagram at p116 (C.pdf) "system dimension" classify the algorithm diagram
 >>Curse of Dimensionality   
-
-[@D.pdf]
-
+>Data preperation (data preprocessing)
+>Data set (for example we have 2 data sets, a training set which is the input for the learning system for it to analyze and learn a model and a test set which is used to evaluate the model learned by the system.
+>>Density Estimation "given a set of observations, which is a random sample from a probability desntiy function f_X(x) desnity estimation attempts to approximate f by fhat, a simple method ..." (also see crossreference)
+>Discretization (be carefull with the use of this in the report) [[Interesting enlisting: eager/lazy global/local etcetc]]
+>Distance measure (simliarity measure)
+>(Exploration, searching in search space)
+>Expected Maximization
+>Epsilon cover (all points e-close to a subset)
+>Error rate
+>Error Squared "Error squared is a common loss function used with
+regression. This is the square of the difference between
+the predicted and true values."
+>Evaluation / Evaluation data
+>("Expectation propagation is an algorithm for Bayesian
+=machine learning (see Bayesian Methods). It tunes the parameters of a simpler approximate distribution (e.g., a Gaussian) to match the exact posterior distribution of the model parameters given the data. ") (readmore) (In kalman (and variants) vs. partikelfilter where you dont need to know the distribution)
+>Expacted maximization
+>Explanation-Based Learning. Figure . Conventional learner
+>Experience curce(learning curves in machine learning)
+>
 
 ==Lookup words from above(are these relevant?)==
 >Hypotesis Language (under ANN.crossreference)
 >Semi supervised learning (Co-training)
 >Gaussian processes
-
+>Similarity measure
+>ROC analysis
+>Learning Curves in Machine learning
 
 ===========================================
 ===========================================
