@@ -182,6 +182,7 @@ the predicted and true values."
 >Expacted maximization
 >Explanation-Based Learning. Figure . Conventional learner
 >Experience curce(learning curves in machine learning)
+>Feature extraction/selection (dimensionality reduction basically) (compare clean selection with the probability selection, that is proportional to how important it is, the feature isnt really important to search in if you already can predict it with great certainty)
 >
 
 ==Lookup words from above(are these relevant?)==
@@ -191,6 +192,12 @@ the predicted and true values."
 >Similarity measure
 >ROC analysis
 >Learning Curves in Machine learning
+
+Bonuses:
+
+
+
+
 
 ===========================================
 ===========================================
