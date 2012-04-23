@@ -184,15 +184,35 @@ the predicted and true values."
 >Experience curce(learning curves in machine learning)
 >Feature extraction/selection (dimensionality reduction basically) (compare clean selection with the probability selection, that is proportional to how important it is, the feature isnt really important to search in if you already can predict it with great certainty)
 >Gaussian distribution (good to have as reference and why this is motivated etc.)
->Gaussian process (reference to the kalman filter)
->
+>Gaussian process (reference to the kalman filter) (vs dirichlet process)
+>Generalization bounds/Error bounds (can we do some analysis on this?, can we predict the performance analytically?)
+>Graphical models (use the same terms used here when doing statistics)
+>Greedy search, a pretrained PF performes a gready search overtime? (the algorithm assumes the last choose was an correct one right? without looking back "it chooses the best one and moves on without looking back")
+>>Hidden markov models (PFs little sister) aspecially (Figure1)
+>>Holdout evaluation (test/training set relations, readmore about it good to have in the report) (the opposit is called In-Sample evaluation "this provides a biased estimate of the learning performance" )
+>Hypothesis Language (not the particular term but things in it for example) "Most machine learning algorithms can be seen as a procedure for deriving onre or more hypotheses from a set of observations."
+>>Hypothesis Space (actually have 2 entries read both)
+>>Instance
+>>Medoid (instead of just using mean, this will be better against outliners)
+>>Kernels (in the context of gaussian process)
+>L1-distance
+>>Label/Labeled data
+>>Lazy learner (PF is the opposite, eager learner)
+>Learning as search (is it directly applicable?)
+>>Learning curves (great figure)
 
 
 
 
+=============================================
+Basically PF just guides the search and thereby making the algorithm much more effective computionally (effective=acc/compution) and becomes more local and therefore finding the closest match
 
 
+>Overfitting? could it exist in our case ? theory vs practice
 
+=============== RANDOM ===================
+
++, having signature R->R
 
 ==Lookup words from above(are these relevant?)==
 >Hypotesis Language (under ANN.crossreference)
@@ -201,7 +221,11 @@ the predicted and true values."
 >Similarity measure
 >ROC analysis
 >Learning Curves in Machine learning
-
+>Leave-on-out error (interesting)
+>Model space (hypothesis space)
+>>Naive bayes, do we use these assumptions in PF?
+>Supervised learning
+>Could one apply reinforcement learning somehow taking "the future" decision into consideration, that is if i choose this as most.prob solution at t what whould that give me in t+1,t+2,.. (basically heightens the total expected result, that is the result for the entire video, and since we dont run this in realtime we can use these types of expensive algorthims. (check it out further before going in to it more)
 
 ===================================================================
 Its work a bit in the same way as feature selection the more uncertain you are if a feature parameter is correct the more you spread the search there
