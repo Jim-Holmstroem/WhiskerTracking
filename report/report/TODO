@@ -195,13 +195,19 @@ the predicted and true values."
 >>Instance
 >>Medoid (instead of just using mean, this will be better against outliners)
 >>Kernels (in the context of gaussian process)
->L1-distance
+>L1-distance (crossref:manhattan distance)
 >>Label/Labeled data
 >>Lazy learner (PF is the opposite, eager learner)
 >Learning as search (is it directly applicable?)
 >>Learning curves (great figure)
+>>m-estimator (see wikipedia or <Rule learning>)
+>>Markov chain monte carlo vs PF? any simalarities?
+>>Mean square error "is a model evalutation metric often used with regression models"
+>>Measurement scales (categoral vs numeric) and some problems that comes with it.
+>>Mixturemodel \sum w_iP(x|D_i) where D_j is different PDFs, kinda like discrete transforms DTF but for ditributions
+>>>Model evaluation (do our analysis by this) and do <model selection>, NOTE do we have a mixup with the word model here, what exactly is a model, is our model the same thing?
 
-
+>Model space (hypothesis space)
 
 
 =============================================
@@ -209,6 +215,25 @@ Basically PF just guides the search and thereby making the algorithm much more e
 
 
 >Overfitting? could it exist in our case ? theory vs practice
+>Cross validation and setting the size of the folds(leave on out cross validation and leave one out error)
+>>Regression, is the database part in PF a form ov regression?
+>Our case is a special case of PF, since we don't have any control over the subject at all.
+
+
+"All instances of the test set", nice frase
+
+>>Find common acronyms for all the algorithms and such (MCMC,PF,)
+
+
+================================================
+!!NOTE!!
+Model vs Hypotesis (in our case):
+hypotesis \in model
+that is an hypotesis is just given parameters on the model
+what then is the model evaluation as described in the encyclopedia in our case?
+================================================
+
+
 
 =============== RANDOM ===================
 
@@ -222,7 +247,6 @@ Basically PF just guides the search and thereby making the algorithm much more e
 >ROC analysis
 >Learning Curves in Machine learning
 >Leave-on-out error (interesting)
->Model space (hypothesis space)
 >>Naive bayes, do we use these assumptions in PF?
 >Supervised learning
 >Could one apply reinforcement learning somehow taking "the future" decision into consideration, that is if i choose this as most.prob solution at t what whould that give me in t+1,t+2,.. (basically heightens the total expected result, that is the result for the entire video, and since we dont run this in realtime we can use these types of expensive algorthims. (check it out further before going in to it more)
