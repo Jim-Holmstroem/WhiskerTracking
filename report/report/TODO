@@ -183,7 +183,16 @@ the predicted and true values."
 >Explanation-Based Learning. Figure . Conventional learner
 >Experience curce(learning curves in machine learning)
 >Feature extraction/selection (dimensionality reduction basically) (compare clean selection with the probability selection, that is proportional to how important it is, the feature isnt really important to search in if you already can predict it with great certainty)
+>Gaussian distribution (good to have as reference and why this is motivated etc.)
+>Gaussian process (reference to the kalman filter)
 >
+
+
+
+
+
+
+
 
 ==Lookup words from above(are these relevant?)==
 >Hypotesis Language (under ANN.crossreference)
@@ -193,7 +202,10 @@ the predicted and true values."
 >ROC analysis
 >Learning Curves in Machine learning
 
-Bonuses:
+
+===================================================================
+Its work a bit in the same way as feature selection the more uncertain you are if a feature parameter is correct the more you spread the search there
+(Is it possible for the algorithm to sense when you are unceratain of the value for some parameter and lay extra effort until you have it ?) an example would be if one could dynamically choose the number of particles needed depending on how sure you are about the result (after all this isnt a realtime application)
 
 
 
