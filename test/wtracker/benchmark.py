@@ -32,11 +32,11 @@ class TrackerBenchmark:
         print sum_diffs
         print "Finished tracking test"
     
-    def animate(self, i):
+    def animate(self, tracker_i):
         print "Animating test results"
         layer_manager = wlayermanager()
         layer_manager.add_layer(self.video)
-        layer_manager.add_layer(self.trackers[i].get_animator())
+        layer_manager.add_layer(self.trackers[tracker_i].get_animator())
         
         win = wwindow(layer_manager)
         gtk.gdk.threads_enter()
