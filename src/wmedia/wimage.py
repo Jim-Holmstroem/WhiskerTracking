@@ -96,3 +96,5 @@ class wimage(wlayer):
         img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](rgba_data.copy()), cairo.FORMAT_ARGB32,width,height) #NOTE .copy() because of bug in numpy
         context.set_source_surface(img)
         context.paint_with_alpha(self.alpha)
+
+
