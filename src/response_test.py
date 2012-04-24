@@ -7,6 +7,7 @@ from wmedia.wlayer import wlayer
 from wmedia.wimage import wimage
 from wmedia.wvideo import wvideo
 from wgui.wlayermanager import wlayermanager
+from wimageprocessing.imageprocessing import normalize
 
 w,h=[512,512]
 
@@ -41,6 +42,6 @@ for response in response_x:
     print response
 
 lm=wlayermanager()
-lm.add_layer(wvideo(correlation_x))
+lm.add_layer(wvideo(correlation_x).transform(normalize))
 lm.exportPNGVIN("test.pngvin")
 
