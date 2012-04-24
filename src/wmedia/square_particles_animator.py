@@ -3,7 +3,10 @@ __all__ = ["square_particles_animator"]
 from wmedia.wanimation import wanimation
 
 class square_particles_animator(wanimation):
-    def __init__(self, particles, square_side, main_particles=None, intermediate_particles=None, particle_color=(255, 0, 0), main_particle_color=(0,0,255), intermediate_particle_color=(0,255,0), alpha=0.1):
+    
+    SQUARE_SIDE = 50
+    
+    def __init__(self, main_particles, particles, intermediate_particles=None, main_particle_color=(0,0,255), particle_color=(255, 0, 0), intermediate_particle_color=(0,255,0), alpha=0.1):
         self.particles = particles
         self.main_particles = main_particles
         self.intermediate_particles = intermediate_particles
@@ -13,7 +16,6 @@ class square_particles_animator(wanimation):
         self.main_particle_color = main_particle_color
         self.intermediate_particle_color = intermediate_particle_color
         
-        self.square_side = square_side
         self.data_renderer = self.render
     
     def __len__(self):
@@ -42,11 +44,11 @@ class square_particles_animator(wanimation):
         
         main_particle = None
         if self.main_particles != None:
-            main_particle = self.main_particles[i] - self.square_side/2.0
+            main_particle = self.main_particles[i] - self.SQUARE_SIDE/2.0
         else:
-            main_particle = self.particles[i].mean(axis=0) - self.square_side/2.0
+            main_particle = self.particles[i].mean(axis=0) - self.SQUARE_SIDE/2.0
         
-        context.rectangle(main_particle[0], main_particle[2], self.square_side, self.square_side)
+        context.rectangle(main_particle[0], main_particle[2], self.SQUARE_SIDE, self.SQUARE_SIDE)
         context.set_source_rgb(*self.main_particle_color)
         context.set_line_width(1)
         context.stroke()

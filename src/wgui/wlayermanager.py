@@ -4,6 +4,12 @@ __all__ = ['wlayermanager']
 import gtk
 import pygtk
 import cairo
+import os
+import re
+
+def video_format_filename(i):
+    I=str(i)
+    return "frame-"+"0"*(5-len(I))+I+".png"
 
 class wlayermanager(gtk.DrawingArea):
     """
@@ -26,8 +32,9 @@ class wlayermanager(gtk.DrawingArea):
         """
         Used by renderer to render each layer
         """
+        context.save()
         layer.render(context,i)
-        context.paint_with_alpha(layer.alpha)
+        context.restore()
 
     def render(self,context,i):
         """
@@ -50,7 +57,13 @@ class wlayermanager(gtk.DrawingArea):
 
         """
         context=widget.window.cairo_create()
+
+        context.set_source_rgba(0,0,0,1)
+        context.rectangle(0,0,512,512)
+        context.fill()
+        
         self.render(context,self.current_frame)
+
     
     def __len__(self):
         """
@@ -64,11 +77,16 @@ class wlayermanager(gtk.DrawingArea):
         """
 
         """
+        assert re.match(".+\.(PNGVIN|pngvin)$",filename)
         #The index of the file is saved as the first element in the pair
-        surfaces=map(lambda frame:(frame,cairo.ImageSurface(FORMAT_ARGB32,WIDTH,HEIGHT)),xrange(len(self)))
+        surfaces=map(lambda frame:(frame,cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)),xrange(len(self)))
         contexts=map(lambda surface:(surface[0],cairo.Context(surface[1])),surfaces)
         map(lambda context:self.render(context[1],context[0]),contexts)
-        map(lambda surface:surface[1].write_to_png(filename+helper.video_format_filename(surface[0])),surfaces)
+        try:
+            os.mkdir(filename)
+        except:
+            print filename,"directory does already exist"
+        map(lambda surface:surface[1].write_to_png(filename+"/"+video_format_filename(surface[0])),surfaces)
 
     def motion(self,widget,event):
         """
