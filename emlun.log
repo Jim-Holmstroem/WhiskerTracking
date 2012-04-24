@@ -1,3 +1,6 @@
+2012-04-24
+Built CLI for TrackerBenchmark
+
 2012-04-20
 Improved on the benchmarking engine.
 Created a general framework for building trackers.
