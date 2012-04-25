@@ -1,0 +1,9 @@
+= wmedia
+== wlayer
+Baseclass as the interface for being added to wlayermanager
+== wimage
+Inits with the most different image types used in this code base.
+== wanimation
+Puts the data thru a rendered to display it on a wlayermanager
+== wvideo
+Inits with a list of things that wimage can init with, can be added to a wlayermanager
