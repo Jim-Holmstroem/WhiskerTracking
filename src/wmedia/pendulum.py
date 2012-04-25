@@ -1,5 +1,15 @@
 from wmedia.wanimation import wanimation
+from wmedia.wlayer import wlayer
 import math
+
+class PendulumLayer(wlayer):
+    def __init__(self, particle, alpha=1):
+        wlayer.__init__(self, alpha)
+        self.particle = particle
+        self.renderer = PendulumRenderer(400.0/512, 24.0/512)
+    
+    def render(self, context):
+        self.renderer.render(context, self.particle)
 
 class PendulumRenderer:
     
@@ -9,6 +19,8 @@ class PendulumRenderer:
         self.particle_alpha = particle_alpha
     
     def render(self, context, particle, color=(1, 1, 1)):
+        context.identity_matrix()
+        context.scale(512, 512)
         phi = particle[0]
         x = 0.5 + self.l*math.sin(phi)
         y = self.l*math.cos(phi)
@@ -17,26 +29,32 @@ class PendulumRenderer:
         context.arc(x, y, float(self.radius), 0., 2 * math.pi)
         context.fill()
 
-    def render_hypothesis(self, context, particle, color=(0, 0, 255)):
+    def render_hypothesis(self, context, particle, color=(255, 0, 0)):
+        context.identity_matrix()
+        context.scale(512, 512)
         phi = particle[0]
         x = 0.5 + self.l*math.sin(phi)
         y = self.l*math.cos(phi)
         
         context.set_source_rgb(*color)
         context.arc(x, y, float(self.radius), 0., 2 * math.pi)
+        
         context.stroke()
         
-    def render_particle(self, context, particle, color=(255, 0, 0)):
+    def render_particle(self, context, particle, color=(0, 255, 0)):
+        context.identity_matrix()
+        context.scale(512, 512)
         phi = particle[0]
         x = 0.5 + self.l*math.sin(phi)
         y = self.l*math.cos(phi)
         
         context.set_source_rgba(*color + (self.particle_alpha,))
+        context.set_line_width(0.005)
         context.arc(x, y, float(self.radius), 0., 2 * math.pi)
         context.stroke()
     
 class PendulumAnimator(wanimation):
-    def __init__(self, main_particles, particles, intermediate_particles, l, radius, main_particle_color=(0,0,255), particle_color=(255, 0, 0), intermediate_particle_color=(0,255,0), alpha=0.1):
+    def __init__(self, main_particles, particles, intermediate_particles, l, radius, main_particle_color=(0,255,0), particle_color=(255,0,0), intermediate_particle_color=(0,0,255), alpha=0.1):
         self.particles = particles
         self.main_particles = main_particles
         self.intermediate_particles = intermediate_particles

@@ -1,3 +1,4 @@
+from common.settings import make_video_path
 from wdb import create_database, delete_database, StateTransitionDatabase
 from wmedia import left_align_videoformat
 import cairo
@@ -15,12 +16,13 @@ def clear(ctx):
     ctx.identity_matrix() 
     ctx.scale(IMAGE_WIDTH, IMAGE_HEIGHT) # Normalizing the canvas
 
-def generate_pendulum(number_of_transitions, l, g=9.81, dt=0.001, radius=10):
+def generate_pendulum(number_of_transitions, l, g=9.81, dt=0.001, radius=24):
     """
     Generates number_of_transitions random movements of a pendulum with start
     angle theta_0 from the y axis
     """
     
+    amplitude = 40
     dataset = "pendulum"
     
     # State: [x, y, x', y']
@@ -33,7 +35,7 @@ def generate_pendulum(number_of_transitions, l, g=9.81, dt=0.001, radius=10):
     omega = math.sqrt(float(g)/l)
     T = 2*math.pi*1.0/omega
     
-    theta_0 = numpy.random.uniform(math.radians(-20), math.radians(20), (number_of_transitions, 1))
+    theta_0 = numpy.random.uniform(math.radians(-amplitude), math.radians(amplitude), (number_of_transitions, 1))
     t = numpy.random.uniform(0, T, (number_of_transitions, 1))
     
     from_phi = theta_0 * numpy.cos(omega*t)
@@ -44,26 +46,26 @@ def generate_pendulum(number_of_transitions, l, g=9.81, dt=0.001, radius=10):
     print "Done."
     
     print "Generating movement sequences for testing..."
-    num_movies = 10
-    num_frames = int(number_of_transitions * 3.0/7 /num_movies)   # The 70-30 principle
+    num_movies = 4
+    num_frames = 64
     
     for movie_id in xrange(num_movies):
         movie_name = dataset + "_" + str(movie_id)
-        save_dir = os.path.join("video", movie_name + ".pngvin")
+        save_dir = make_video_path(movie_name + ".pngvin")
         import shutil
         if os.path.exists(save_dir):
             shutil.rmtree(save_dir)
         os.makedirs(save_dir)
         
-        print "Rendering pngvin movie", movie_name
+        print "Rendering pngvin movie to %s"%(save_dir)
         
         surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT)
         ctx = cairo.Context(surface)
         
-        theta_0 = numpy.random.uniform(math.radians(-20),math.radians(20))
+        theta_0 = numpy.random.uniform(math.radians(-amplitude),math.radians(amplitude))
         t = numpy.atleast_2d(numpy.linspace(0, 3*T, num_frames)).T
         
-        phi = theta_0 * numpy.cos(omega*t)
+        phi = theta_0 * numpy.cos(omega*dt*t)
         
         for i in xrange(num_frames):
             x = (IMAGE_WIDTH/2 + l*numpy.sin(phi[i]))/IMAGE_WIDTH
@@ -89,4 +91,4 @@ if (__name__=='__main__'):
 #    render_simple()
 #    render_online()
 #    render_bounce()
-    generate_pendulum(1000, 400)
+    generate_pendulum(1000, 400, dt=0.1)
