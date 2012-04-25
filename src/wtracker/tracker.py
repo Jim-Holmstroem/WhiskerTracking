@@ -1,7 +1,8 @@
 __all__ = ["Tracker"]
 
-import numpy
 from pf import pf
+from wgui import wlayermanager
+import numpy
 
 class Tracker:
     ANIMATOR_CLASS = None
@@ -44,6 +45,7 @@ class Tracker:
             print "Tracked frame %i of %i"%(i+1, self.num_frames)
         
         print "Tracking complete."
+        print
         
         self.animator = self.make_animator(track, all_particles, all_intermediate_particles)
         
@@ -51,3 +53,10 @@ class Tracker:
     
     def render_results(self, context, frame_i):
         self.get_animator().render(context, frame_i)
+
+    def export_results(self, pngvin_dir):
+        print "Exporting results as PNGVIN video..."
+        wlayermanager((self.video, self.get_animator())).exportPNGVIN(pngvin_dir)
+        print "Export complete."
+        print
+        

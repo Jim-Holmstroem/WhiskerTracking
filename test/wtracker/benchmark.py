@@ -1,3 +1,5 @@
+from common import make_video_path
+from common.settings import make_run_path
 from wdb import StateTransitionDatabase
 from wgui.wlayermanager import wlayermanager
 from wgui.wwindow import wwindow
@@ -7,14 +9,15 @@ import numpy
 import os
 import wtracker
 
-from common import make_video_path
-
 class TrackerBenchmark:
     
     TEST_DATA_BASE_DIR = "video"
     
     def __init__(self, tracker_classes, video_name, database_name, num_particles=100):
         video_path = make_video_path(video_name + ".pngvin")
+        
+        self.video_name = video_name
+        self.database_name = database_name
         
         self.correct_states = numpy.load(os.path.join(video_path, "state_sequence.npy"))
         self.video = wvideo(video_path)
@@ -32,6 +35,7 @@ class TrackerBenchmark:
         
         print sum_diffs
         print "Finished tracking test"
+        print
     
     def animate(self, tracker_i):
         print "Animating test results"
@@ -44,6 +48,14 @@ class TrackerBenchmark:
         gtk.main()
         gtk.gdk.threads_leave()
         print "Done animating test results"
+        print
+    
+    def export_results(self):
+        for tracker in self.trackers:
+            pngvin_dir = make_run_path(self.video_name + "_" + tracker.__class__.__name__ + ".pngvin")
+            print "Saving results of tracker %s to %s"%(tracker.__class__.__name__, pngvin_dir)
+            tracker.export_results(pngvin_dir)
+        print
 
 def run_cli():
     """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] classes...
@@ -92,7 +104,9 @@ def run_cli():
             
     benchmark = TrackerBenchmark(tracker_classes, video_name, database_name, num_particles)
     benchmark.run()
+    benchmark.export_results()
     benchmark.animate(0)
 
 if __name__ == "__main__":
-    run_cli()
+    import cProfile
+    cProfile.run("run_cli()")
