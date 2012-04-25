@@ -1,4 +1,3 @@
-from square_tracker_bounce import BounceTracker
 from wdb import StateTransitionDatabase
 from wgui.wlayermanager import wlayermanager
 from wgui.wwindow import wwindow
@@ -6,7 +5,7 @@ from wmedia import wvideo
 import gtk
 import numpy
 import os
-import tracker
+import wtracker
 
 from common import make_video_path
 
@@ -50,8 +49,8 @@ def run_cli():
     """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
-    present in the tracker module. The benchmark is carried out with the specified video
-    and database as arguments.
+    present in the wtracker module. The benchmark is carried out with the
+    specified video and database as arguments.
     """
 
     import sys
@@ -76,8 +75,8 @@ def run_cli():
         if arg == "-n":
             num_particles = int(it.next())
 
-        elif arg in dir(tracker):
-            tracker_classes.append(getattr(tracker, arg))
+        elif arg in dir(wtracker):
+            tracker_classes.append(getattr(wtracker, arg))
         else:
             print "WARNING: Class not found in module tracker:", arg
 
