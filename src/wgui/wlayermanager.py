@@ -27,6 +27,9 @@ class wlayermanager(gtk.DrawingArea):
         self.connect("expose-event",self.expose)
         self.connect("motion-notify-event",self.motion)
         self.set_size_request(512,512)
+        
+        if not layers is None:
+            map(lambda l:self.add_layer(l), layers)
 
     def render_layer(self,context,layer,i):
         """
