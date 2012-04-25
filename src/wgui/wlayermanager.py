@@ -73,20 +73,20 @@ class wlayermanager(gtk.DrawingArea):
             return 0
         return max(map(lambda layer:len(layer),self.layers))
 
-    def exportPNGVIN(self,filename=None):
+    def exportPNGVIN(self,video_dir=None):
         """
 
         """
-        assert re.match(".+\.(PNGVIN|pngvin)$",filename)
+        assert re.match(".+\.(PNGVIN|pngvin)$",video_dir)
         #The index of the file is saved as the first element in the pair
         surfaces=map(lambda frame:(frame,cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)),xrange(len(self)))
         contexts=map(lambda surface:(surface[0],cairo.Context(surface[1])),surfaces)
         map(lambda context:self.render(context[1],context[0]),contexts)
         try:
-            os.mkdir(filename)
+            os.mkdir(video_dir)
         except:
-            print filename,"directory does already exist"
-        map(lambda surface:surface[1].write_to_png(filename+"/"+video_format_filename(surface[0])),surfaces)
+            print video_dir,"directory does already exist"
+        map(lambda surface:surface[1].write_to_png(os.path.join(video_dir, video_format_filename(surface[0])),surfaces))
 
     def motion(self,widget,event):
         """
