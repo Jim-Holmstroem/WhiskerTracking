@@ -29,6 +29,11 @@ class wimage(wlayer):
             self.init_with_filename(input_data)
         elif isinstance(input_data,cairo.ImageSurface):
             self.init_with_imagesurface(input_data)
+        elif isinstance(input_data, wlayer):
+            if isinstance(input_data, wimage):
+                self.init_with_array(input_data.data.copy())
+            else:
+                self.init_with_imagesurface(input_data.get_imagesurface())
         else:
             raise Exception("Invalid input type; not (ndarray/basestring/imagesurface")
     
