@@ -1,15 +1,15 @@
+__all__ = ["create_database", "create_database_if_not_exists", "delete_database", "StateTransitionDatabase"]
+
 from itertools import imap, izip, product
 from wmath import distribution
 import numpy
 import os
 import sqlite3
+from settings import *
+from common import make_data_path
 
-DATABASE_DIR = "data/transition-db"
-DEFAULT_EXTENSION = ".sqlite3"
-TABLE_NAME = "transitions_group_"
-PARAMETER_NAME = "theta_"
-PARAMETER_TYPE = "FLOAT NOT NULL"
-PREFIXES = ("from_", "to_")
+def make_db_path(database_name, database_dir=DB_DIR, database_extension=DB_EXTENSION):
+    return make_data_path(database_dir, database_name + database_extension)
 
 def euclidean_distance_inverse_squared(a, b):
     """UNTESTED Calculate 1/(the norm of (a-b))^2.
@@ -22,8 +22,8 @@ def euclidean_distance_inverse_squared(a, b):
     
     return 1.0/(zero_division_defense + (numpy.linalg.norm(a-b))**2)
 
-def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
-    db_file = os.path.join(database_dir, database_name + database_extension)
+def create_database(database_name, parameter_groups):
+    db_file = make_db_path(database_name)
     
     if not isinstance(parameter_groups, (list, tuple)):
         parameter_groups = (parameter_groups,)
@@ -31,8 +31,8 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
     if os.path.exists(db_file):
         raise IOError("File already exists: %s" % db_file)
     
-    if not os.path.exists(database_dir):
-        os.makedirs(database_dir)
+    if not os.path.exists(os.path.dirname(db_file)):
+        os.makedirs(os.path.dirname(db_file))
     
     con = sqlite3.connect(db_file)
     
@@ -60,14 +60,14 @@ def create_database(database_name, parameter_groups, database_dir=DATABASE_DIR, 
     
     print "Successfully created database " + db_file + "."
 
-def create_database_if_not_exists(database_name, parameter_groups, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
-    db_file = os.path.join(database_dir, database_name + database_extension)
+def create_database_if_not_exists(database_name, parameter_groups):
+    db_file = make_db_path(database_name)
 
     if not os.path.exists(db_file):
-        create_database(database_name, parameter_groups, database_dir, database_extension)
+        create_database(database_name, parameter_groups)
 
-def delete_database(database_name, database_dir=DATABASE_DIR, database_extension=DEFAULT_EXTENSION):
-    db_file = os.path.join(database_dir, database_name + database_extension)
+def delete_database(database_name):
+    db_file = make_db_path(database_name)
     
     if os.path.exists(db_file):
         print "Deleting database", db_file
@@ -77,9 +77,10 @@ def delete_database(database_name, database_dir=DATABASE_DIR, database_extension
         print "Did not delete database: file %s does not exist." % db_file
 
 class StateTransitionDatabase:
-    def __init__(self, db_name, db_dir=DATABASE_DIR, extension=DEFAULT_EXTENSION):
+    def __init__(self, db_name):
         
-        db_file = os.path.join(db_dir, db_name + extension)
+        db_file = make_db_path(db_name)
+        
         self.__con = sqlite3.connect(db_file)
         
         self.__param_groups = numpy.array([row[0] for row in self.__con.execute("SELECT number_of_parameters FROM parameter_group_definitions ORDER BY id ASC;").fetchall()])
