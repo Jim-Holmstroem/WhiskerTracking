@@ -1,15 +1,15 @@
-
 __all__ = ['wlayermanager']
 
 import gtk
-import pygtk
 import cairo
 import os
 import re
 
 def video_format_filename(i):
-    I=str(i)
-    return "frame-"+"0"*(5-len(I))+I+".png"
+    """Get a frame filename for the given integer
+    @return: "frame-" followed by i. i will be padded with zeroes to length 5.
+    """
+    return "frame-%05d.png"%(i)
 
 class wlayermanager(gtk.DrawingArea):
     """
