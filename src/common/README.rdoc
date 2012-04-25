@@ -1,0 +1,2 @@
+= Common methods
+Basic utils like pwd or wvideo-filename
