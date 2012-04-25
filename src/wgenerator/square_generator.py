@@ -76,6 +76,10 @@ class AcceleratingSquareGenerator(Generator):
             
         return wvideo(surfaces)
 
-if __name__ == "__main__":
+def run():
     ag = AcceleratingSquareGenerator("square_accelerating", [2, 2], 100)
     ag.generate()
+
+if __name__ == "__main__":
+    import cProfile
+    cProfile.run("run()")
