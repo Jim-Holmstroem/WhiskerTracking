@@ -3,6 +3,8 @@ __all__=['weighted_choice','argpick','argmin','argmax','binary_search']
 
 from random import uniform
 
+import collections
+
 '''
 Like python's builtin random.choice, but with weights.
 The function randomly chooses an integer i, 0 <= i < len(weights). Choosing the integer i has a probability equal to weights[i] / sum(weigths).
@@ -26,14 +28,50 @@ def weighted_choice(weights, choiceSet=None):
     assert False, "This should not happen."
 
 
+class function:
+    """
+    Usally very computional heavy function as example featureresponses or such that one wants to save for later use
+
+    Using numpy.savez (and some surrounding structure)
+
+    All the variables are vectors and the response is the value of the function for a product (as in algebra) of all the variables
+    """
+    def __init__(self,variables,f):
+        """
+
+        """
+        assert isinstance(variables,dict)
+        assert isinstance(f,collections.Callable)
+        self.variables=variables
+
+
+    def calculate(self):
+        pass
+
+    def load(self,filename):
+        """
+        Load from filename
+        """
+        pass
+
+    def save(self):
+
+        pass
+
+    def plot(self):
+        """
+        Plot with approriate labels on the variables and such
+        """
+        pass
+
+
+
 def argpick(picker,f,seq):
     return min(map(lambda s:(f(s),s),seq))[1]
-
 def argmin(f,seq):
     return argpick(min,f,seq)
 def argmax(f,seq):
     return argpick(max,f,seq)
-
 
 class spec_range():
     """

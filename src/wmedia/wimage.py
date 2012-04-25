@@ -9,7 +9,6 @@ from wmedia.wlayer import wlayer
 
 class wimage(wlayer):
     """
-
     Could be used as a layer but mainly used in wvideo as a videframe.
     Has a numpy array as basis 
     """
@@ -68,7 +67,6 @@ class wimage(wlayer):
         """
         Image.frombuffer('RGBA',tuple([self.array.shape[i] for i in (0,1)]),numpy.uint8(self.array),'raw',0,1).show()
 
-
     def __add__(self,other):
         if(other==None):
             return wimage(self.data) #self.data+0
@@ -84,17 +82,19 @@ class wimage(wlayer):
     def get_array(self):
         return self.data
 
+    def sum(self):
+        return numpy.sum(self.data)
+
     def render(self,context,i=None):
         """
         Argument i not used by wvideo but needed to be a wlayer
         """
-        #http://stackoverflow.com/questions/7610159/convert-pil-image-to-cairo-imagesurface
-        
         width,height=map(lambda i: self.data.shape[i],[0,1])
-    
         alpha=255.0*numpy.ones_like(self.data)
        
         rgba_data=numpy.concatenate((self.data,)*3+(alpha,),2)
         img=cairo.ImageSurface.create_for_data(numpy.cast['uint8'](rgba_data.copy()), cairo.FORMAT_ARGB32,width,height) #NOTE .copy() because of bug in numpy
         context.set_source_surface(img)
+        context.paint_with_alpha(self.alpha)
+
 
