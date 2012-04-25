@@ -1,5 +1,4 @@
 from square_tracker_bounce import BounceTracker
-from tracker.pendulum_tracker import PendulumTracker
 from wdb import StateTransitionDatabase
 from wgui.wlayermanager import wlayermanager
 from wgui.wwindow import wwindow
@@ -7,6 +6,7 @@ from wmedia import wvideo
 import gtk
 import numpy
 import os
+import tracker
 
 class TrackerBenchmark:
     
@@ -44,8 +44,54 @@ class TrackerBenchmark:
         gtk.gdk.threads_leave()
         print "Done animating test results"
 
+def run_cli():
+    """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] classes...
+    
+    Runs the benchmark for each of the named classes. All named classes must be
+    present in the tracker module. The benchmark is carried out with the specified video
+    and database as arguments.
+    """
+
+    import sys
+
+    if len(sys.argv) <= 1:
+        print run_cli.__doc__
+        sys.exit()
+
+    video_name = None
+    database_name = None
+    num_particles = 100
+
+    tracker_classes = []
+
+    it = iter(sys.argv)
+    it.next()
+
+    video_name = it.next()
+    database_name = it.next()
+
+    for arg in it:
+        if arg == "-n":
+            num_particles = int(it.next())
+
+        elif arg in dir(tracker):
+            tracker_classes.append(getattr(tracker, arg))
+        else:
+            print "WARNING: Class not found in module tracker:", arg
+
+    print "Using video: %s"%(video_name)
+    print "Using database: %s"%(database_name)
+    print "Using %i particles"%(num_particles)
+    
+    print
+    print "Benchmarking tracker classes:"
+    for c in tracker_classes:
+        print "\t%s"%(c.__name__)
+    print
+            
+    benchmark = TrackerBenchmark(tracker_classes, video_name, database_name, num_particles)
+    benchmark.run()
+    benchmark.animate(0)
+
 if __name__ == "__main__":
-    tracker_classes = [BounceTracker]
-    tester = TrackerBenchmark(tracker_classes, "square_accelerating_0", "square_accelerating", 10)
-    tester.run()
-    tester.animate(0)
+    run_cli()
