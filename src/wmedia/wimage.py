@@ -6,6 +6,7 @@ import numpy
 import cairo
 
 from wmedia.wlayer import wlayer
+from scipy.ndimage.filters import gaussian_filter
 
 class wimage(wlayer):
     """
@@ -35,7 +36,7 @@ class wimage(wlayer):
             else:
                 self.init_with_imagesurface(input_data.get_imagesurface())
         else:
-            raise Exception("Invalid input type; not (ndarray/basestring/imagesurface")
+            raise Exception("Invalid input type, not (ndarray/basestring/imagesurface):"+str(type(input_data)))
     
     def init_with_size(self,input_data):
         self.init_with_array(numpy.ndarray(input_data))
@@ -89,6 +90,12 @@ class wimage(wlayer):
 
     def sum(self):
         return numpy.sum(self.data)
+    
+    def blur(self,sigma):
+        """
+        Will blur this image NOTE doesnt return anything
+        """
+        return wimage(gaussian_filter(self.data,sigma))
 
     def render(self,context,i=None):
         """

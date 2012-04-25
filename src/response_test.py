@@ -7,7 +7,9 @@ from wmedia.wlayer import wlayer
 from wmedia.wimage import wimage
 from wmedia.wvideo import wvideo
 from wgui.wlayermanager import wlayermanager
-from wimageprocessing.imageprocessing import normalize
+from wimageprocessing.imageprocessing import normalize,abs_edge
+
+import pylab
 
 w,h=[512,512]
 
@@ -33,15 +35,19 @@ class response_circle(response_object):
         context.arc(self.pos[0],self.pos[1],64,0,2*math.pi)
         context.fill() 
 
-middle_img=response_circle((w/2,h/2)).get_wimage()
-x_img = map(lambda posx:response_circle((w/2+posx,h/2+posx)).get_wimage(), range(-128,128+1,8))
-correlation_x = map(lambda img:middle_img*img,x_img)
-response_x = map(lambda img: img.sum(),correlation_x)
+middle_img=response_circle((w/2,h/2)).get_wimage().transform(abs_edge).blur(8)
 
-for response in response_x:
-    print response
+x_range =range(-128,128+1,8)
+print len(x_range)
+
+x_mask = map(lambda posx:response_circle((w/2+posx,h/2)).get_wimage().transform(abs_edge), x_range)
+x_correlation = map(lambda img:middle_img*img,x_mask)
+x_response = map(lambda (mask,img): img.sum()/(255*mask.sum()),zip(x_mask,x_correlation))
+
+pylab.plot(x_range,x_response)
+pylab.show()
 
 lm=wlayermanager()
-lm.add_layer(wvideo(correlation_x).transform(normalize))
+lm.add_layer(wvideo(x_correlation).transform(normalize))
 lm.exportPNGVIN("test.pngvin")
 

@@ -1,9 +1,10 @@
 
-__all__= ['normalize','transform','histeq','histeqlocal','histogram','blur_gauss','dog']
+__all__= ['normalize','abs_edge','transform','histeq','histeqlocal','histogram','blur_gauss','dog']
 
 import numpy
 
 from ipmath import image_iterators
+from scipy.ndimage import filters
 
 """
 wip.function(img.array,argz...) #returns a copy with the result
@@ -21,14 +22,15 @@ overlaycurves(im,njetedge(im,1,3,'valid'));
 
 """
 
-
+def abs_edge(img,edge_filter=filters.prewitt):
+    return numpy.sqrt(sum(map(lambda i:edge_filter(img,axis=i)**2,[0,1])))
+    
 def normalize(img):
     """
     normalizes the image
     """
     min,max=numpy.min(img),numpy.max(img) #returns extrems
     return (255.0/(max-min))*(img-min)
-    
 
 def transform(img,function):
     """
@@ -60,11 +62,10 @@ def edge_response(img,detector):
 
 def blur_gauss(img,delta,delta_clip=5):
     """
-     
+         
     Argument delta_clip where to clip the gauss kernel
     """
-    
-    raise NotImplementedError()
+    raise Exception("filters.gaussian instead")
 
 def dog(img,deltas):
     """
