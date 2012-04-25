@@ -35,8 +35,7 @@ class response_circle(response_object):
         context.arc(self.pos[0],self.pos[1],64,0,2*math.pi)
         context.fill() 
 
-middle_img=response_circle((w/2,h/2)).get_wimage().transform(abs_edge)
-middle_img.blur(8)
+middle_img=response_circle((w/2,h/2)).get_wimage().transform(abs_edge).blur(8)
 
 x_range =range(-128,128+1,8)
 print len(x_range)

@@ -31,7 +31,7 @@ class wimage(wlayer):
         elif isinstance(input_data,cairo.ImageSurface):
             self.init_with_imagesurface(input_data)
         else:
-            raise Exception("Invalid input type; not (ndarray/basestring/imagesurface")
+            raise Exception("Invalid input type, not (ndarray/basestring/imagesurface):"+str(type(input_data)))
     
     def init_with_size(self,input_data):
         self.init_with_array(numpy.ndarray(input_data))
@@ -90,7 +90,7 @@ class wimage(wlayer):
         """
         Will blur this image NOTE doesnt return anything
         """
-        gaussian_filter(self.data,sigma,output=self.data)
+        return wimage(gaussian_filter(self.data,sigma))
 
     def render(self,context,i=None):
         """
