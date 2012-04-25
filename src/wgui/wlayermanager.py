@@ -82,11 +82,11 @@ class wlayermanager(gtk.DrawingArea):
         surfaces=map(lambda frame:(frame,cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)),xrange(len(self)))
         contexts=map(lambda surface:(surface[0],cairo.Context(surface[1])),surfaces)
         map(lambda context:self.render(context[1],context[0]),contexts)
-        try:
-            os.mkdir(video_dir)
-        except:
-            print video_dir,"directory does already exist"
-        map(lambda surface:surface[1].write_to_png(os.path.join(video_dir, video_format_filename(surface[0])),surfaces))
+        
+        if not os.path.exists(video_dir):
+            os.makedirs(video_dir)
+        
+        map(lambda surface:surface[1].write_to_png(os.path.join(video_dir, video_format_filename(surface[0]))), surfaces)
 
     def motion(self,widget,event):
         """
