@@ -13,6 +13,9 @@ VIDEO_DIRECTORY = "video"
 """Directory for data files, relative to ROOT_DIRECTORY"""
 DATA_DIRECTORY = "data"
 
+"""Directory for files generated when running the program, relative to ROOT_DIRECTORY"""
+RUN_DIRECTORY = "run"
+
 def make_path(*args):
     """Make the given path an absolute path by prepending ROOT_DIRECTORY
     @param args: A sequence of strings representing a hierarchy of directories.
@@ -34,3 +37,10 @@ def make_data_path(*args):
     @see: make_path
     """
     return make_path(DATA_DIRECTORY, *args)
+
+def make_run_path(*args):
+    """Make the given path an absolute path by prepending ROOT_DIRECTORY and
+    RUN_PATH
+    @see: make_path
+    """
+    return make_path(RUN_DIRECTORY, *args)

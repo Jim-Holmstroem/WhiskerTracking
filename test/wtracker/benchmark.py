@@ -8,12 +8,14 @@ import numpy
 import os
 import tracker
 
+from common import make_video_path
+
 class TrackerBenchmark:
     
     TEST_DATA_BASE_DIR = "video"
     
     def __init__(self, tracker_classes, video_name, database_name, num_particles=100):
-        video_path = os.path.join(self.TEST_DATA_BASE_DIR, video_name + ".pngvin")
+        video_path = make_video_path(video_name + ".pngvin")
         
         self.correct_states = numpy.load(os.path.join(video_path, "state_sequence.npy"))
         self.video = wvideo(video_path)

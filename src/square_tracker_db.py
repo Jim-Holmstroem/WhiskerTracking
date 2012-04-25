@@ -2,8 +2,9 @@ import numpy
 import os
 from PIL import ImageDraw
 from pf import pf
-from wmedia import video, left_align_videoformat
+from wmedia import wvideo as video, left_align_videoformat
 from wdb import StateTransitionDatabase
+from common import make_video_path, make_run_path
 
 def goodness(particle, image):
     x, y = particle
@@ -31,13 +32,13 @@ def sample(prev_particle):
 
 dataset = "square_simple"
 db = StateTransitionDatabase(dataset)
-save_img_dir = os.path.join("run", "square_tracker_db-"+dataset+".pngvin")
+save_img_dir = make_run_path("square_tracker_db-"+dataset+".pngvin")
 if(not os.path.exists(save_img_dir)):
     os.makedirs(save_img_dir)
 
 print("Rendering tracking images to " + save_img_dir)
     
-v = video(os.path.join("video", dataset+".pngvin")) # Dimensions: x, y, rgba
+v = video(make_video_path(dataset+".pngvin")) # Dimensions: x, y, rgba
 
 num_particles = 100
 #particles = numpy.random.uniform(0, max(v[0].get_copy_of_current_image().size)-1, (num_particles, 2))
@@ -56,7 +57,7 @@ for (i, frame) in enumerate(v):
     
     pos = particles.mean(axis=0)[:2]
     draw.point(pos.tolist(), fill="#0000FF")
-    img.save(os.path.join(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
+    img.save(make_video_path(save_img_dir, "frame-" + left_align_videoformat(i) + ".png"), "PNG")
     print("Successfully rendered frame " + str(i))
     
     particles = pf(particles, frame.get_array(), goodness, sampling_function=sample)

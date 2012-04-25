@@ -8,6 +8,8 @@ import numpy
 import os
 import wtracker
 
+from common import make_video_path, make_run_path
+
 class BounceTracker(wtracker.Tracker):
     
     def __init__(self, db, video):
@@ -56,13 +58,13 @@ class BounceTracker(wtracker.Tracker):
 def cProfile_test(movie_id):
     dataset = "square_accelerating"
     movie = dataset + "_" + str(movie_id)
-    save_img_dir = os.path.join("run", "square_tracker_bounce-%i.pngvin"%(movie_id))
+    save_img_dir = make_run_path("square_tracker_bounce-%i.pngvin"%(movie_id))
     if(not os.path.exists(save_img_dir)):
         os.makedirs(save_img_dir)
-    video = wvideo(os.path.join("video", movie+".pngvin")) # Dimensions: x, y, rgba
+    video = wvideo(make_video_path(movie+".pngvin")) # Dimensions: x, y, rgba
     db = StateTransitionDatabase(dataset)
     
-    correct_states = numpy.load(os.path.join("video", movie+".pngvin", "state_sequence.npy"))
+    correct_states = numpy.load(make_video_path(movie+".pngvin", "state_sequence.npy"))
     
     BounceTracker(db, video).run(correct_states[0,:], 100)
 

@@ -10,13 +10,14 @@ from scipy.ndimage import filters
 import math
 import numpy
 
+from common import make_video_path, make_run_path
 
 #selftest
 if __name__=="__main__":
     layermanager = wlayermanager()
     #layermanager.add_layer(wvideo("../video/square_simple.pngvin",0.5)) #load video from file
     
-    bounce=wvideo("../video/square_simple.pngvin",0.2)
+    bounce=wvideo(make_video_path("square_simple.pngvin"),0.2)
     #layermanager.add_layer(bounce) 
 
     blur5 = lambda img: filters.gaussian_filter(img,5)
@@ -43,7 +44,7 @@ if __name__=="__main__":
     #layermanager.add_layer(multiply.transform(normalize))
   
 
-    layermanager.exportPNGVIN("layermanager.pngvin")
+    layermanager.exportPNGVIN(make_run_path("layermanager.pngvin"))
 
 
     win=wwindow(layermanager)
