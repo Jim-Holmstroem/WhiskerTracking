@@ -62,11 +62,10 @@ def edge_response(img,detector):
 
 def blur_gauss(img,delta,delta_clip=5):
     """
-     
+         
     Argument delta_clip where to clip the gauss kernel
     """
-    
-    raise NotImplementedError()
+    raise Exception("filters.gaussian instead")
 
 def dog(img,deltas):
     """

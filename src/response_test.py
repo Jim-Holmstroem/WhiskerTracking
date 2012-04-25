@@ -36,6 +36,7 @@ class response_circle(response_object):
         context.fill() 
 
 middle_img=response_circle((w/2,h/2)).get_wimage().transform(abs_edge)
+middle_img.blur(8)
 
 x_range =range(-128,128+1,8)
 print len(x_range)
@@ -44,8 +45,8 @@ x_mask = map(lambda posx:response_circle((w/2+posx,h/2)).get_wimage().transform(
 x_correlation = map(lambda img:middle_img*img,x_mask)
 x_response = map(lambda (mask,img): img.sum()/(255*mask.sum()),zip(x_mask,x_correlation))
 
-#pylab.plot(x_range,x_response)
-#pylab.show()
+pylab.plot(x_range,x_response)
+pylab.show()
 
 lm=wlayermanager()
 lm.add_layer(wvideo(x_correlation).transform(normalize))

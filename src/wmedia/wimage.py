@@ -6,6 +6,7 @@ import numpy
 import cairo
 
 from wmedia.wlayer import wlayer
+from scipy.ndimage.filters import gaussian_filter
 
 class wimage(wlayer):
     """
@@ -84,6 +85,12 @@ class wimage(wlayer):
 
     def sum(self):
         return numpy.sum(self.data)
+    
+    def blur(self,sigma):
+        """
+        Will blur this image NOTE doesnt return anything
+        """
+        gaussian_filter(self.data,sigma,output=self.data)
 
     def render(self,context,i=None):
         """
