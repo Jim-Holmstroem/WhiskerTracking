@@ -1,10 +1,6 @@
-
 __init__ = ['wwindow']
 
 import gtk
-import pygtk
-
-from wgui.wlayermanager import wlayermanager
 
 class wwindow(gtk.Window):
     __version__="0.2"
