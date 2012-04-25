@@ -45,7 +45,7 @@ class Tracker:
         
         print "Tracking complete."
         
-        self.make_animator(track, all_particles, all_intermediate_particles)
+        self.animator = self.make_animator(track, all_particles, all_intermediate_particles)
         
         return track
     

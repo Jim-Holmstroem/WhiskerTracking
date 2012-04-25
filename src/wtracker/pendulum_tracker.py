@@ -17,7 +17,7 @@ class PendulumTracker(Tracker):
     def make_animator(self, main_particles, particles, intermediate_particles):
         l = 400.0/self.video.image_shape()[1]
         radius = 10.0/self.video.image_shape()[1]
-        self.animator = PendulumAnimator(main_particles, particles, intermediate_particles, l, radius)
+        return PendulumAnimator(main_particles, particles, intermediate_particles, l, radius)
     
 #    def render(self, context, particle):
 #        self.renderer.render(context, particle[0])

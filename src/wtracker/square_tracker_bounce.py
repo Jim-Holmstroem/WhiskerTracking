@@ -23,7 +23,7 @@ class BounceTracker(wtracker.Tracker):
         print "Startup complete."
         
     def make_animator(self, main_particles, particles, intermediate_particles):
-        self.animator = square_particles_animator(main_particles, particles, intermediate_particles)
+        return square_particles_animator(main_particles, particles, intermediate_particles)
         
     def goodness(self, particle, image):
         x, y = (particle[0], particle[2])
