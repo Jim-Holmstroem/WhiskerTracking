@@ -7,7 +7,7 @@ import cProfile
 import math
 import numpy
 import os
-__all__ = ["PendulumTracker"]
+#__all__ = ["PendulumTracker"]
 
 class PendulumTracker(Tracker):
     
@@ -38,6 +38,14 @@ class PendulumTracker(Tracker):
     
     def sample(self, prev_particle):
         return self.db.sample_weighted_average(prev_particle) + numpy.random.normal(0, math.radians(5), prev_particle.shape)
+
+class PendulumTrackerGoodnessSquared(PendulumTracker):
+    def goodness(self, particle, image):
+        return PendulumTracker.goodness(self, particle, image)**2
+    
+class PendulumTrackerGoodnessCubed(PendulumTracker):
+    def goodness(self, particle, image):
+        return PendulumTracker.goodness(self, particle, image)**3
     
 def cProfile_test(movie_id):
     dataset = "square_accelerating"

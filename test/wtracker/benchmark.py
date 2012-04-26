@@ -25,16 +25,41 @@ class TrackerBenchmark:
         self.num_particles = num_particles
 
         self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video), tracker_classes)
+
+    def _run_test(self, tracker):
+        print "Tracking with tracker class %s"%(tracker.__class__.__name__)
+        return tracker.run(self.correct_states[0], self.num_particles)
     
     def run(self):
         print "Running tracking test"
-        self.tracks = map(lambda tracker:tracker.run(self.correct_states[0], self.num_particles), self.trackers)
+        self.tracks = map(self._run_test, self.trackers)
         
         differences_from_correct = map(lambda track:numpy.abs(self.correct_states - track), self.tracks)
         sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
         
         print sum_diffs
         print "Finished tracking test"
+        print
+
+        self.evaluate_results(sum_diffs)
+
+    def evaluate_results(self, sum_diffs):
+        print "##################################################"
+        print "#                  TEST RESULTS                  #"
+        print "##################################################"
+        print
+        
+        diff_matrix = numpy.array(sum_diffs)
+        winner_indices = numpy.array(zip(*numpy.where((diff_matrix-diff_matrix.max(axis=0)) == 0)))[:,0]
+        print "Winners by parameter index:"
+        print
+        for i, winner in enumerate(winner_indices):
+            print "Parameter %i: %s with cumulative difference %f"%(i, self.trackers[winner].__class__.__name__, sum_diffs[winner][i])
+        print
+        
+        print "##################################################"
+        print "#               END OF TEST RESULTS              #"
+        print "##################################################"
         print
     
     def animate(self, tracker_i):
