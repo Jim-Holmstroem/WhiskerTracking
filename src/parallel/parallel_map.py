@@ -33,14 +33,17 @@ class MapWorker(multiprocessing.Process):
             try:
                 job = self.work_queue.get_nowait()
             except Queue.Empty:
-                print "Queue.empty"
-                break
+                #print "Queue.empty",self.work_queue.qsize()
+                if self.work_queue.qsize()>0:
+                    continue
+                else:
+                    break
             try:
                 job.data=self.map_function(job.data) #and preserve the in the MapJob
-            except MemoryError: #not totally bulletproof but handles it batter
-                print job.id,". OutOfMemory, retrying"
+            except MemoryError: #not totally bulletproof but handles it better
+                print job.id," OutOfMemory, retrying"
                 continue
-            print job.id,". work done"
+            #print job.id," work done"
             self.result_queue.put(job)
 
 def parallel_map(map_function,input_list,num_processors=4):
@@ -53,16 +56,31 @@ def parallel_map(map_function,input_list,num_processors=4):
     
     work_queue  =multiprocessing.Queue()
     result_queue=multiprocessing.Queue()
+    
+    try:
+        map(lambda job_id:work_queue.put(MapJob(job_id,input_list[job_id])),range(num_jobs)) #create a list with job_id to keep track
+    except Queue.Full:
+        #print "Queue.Full"
+        raise Exception("worker queue is full, this is not supported")
 
-    map(lambda job_id:work_queue.put(MapJob(job_id,input_list[job_id])),range(num_jobs)) #create a list with job_id to keep track
+    print work_queue.qsize() #only approx size
     workers = map(lambda proc:MapWorker(work_queue,result_queue,map_function).start(),range(num_processors)) #create, connect and start the workers to the queues
     output_list=[]
-    print "start fetching output"
+    #print "start fetching output"
+
+    #def getter(job_id):
+    #    print "getter(",job_id,")"
+    #    ans = result_queue.get()
+    #    print "gotten(",job_id,")"
+    #    return ans
+
     map(lambda job_id:output_list.append(result_queue.get()),range(num_jobs)) #fetch all the resulting data
-    print "done fetching output"
+    
+    #print "done fetching output"
+    
     for worker in workers:
         worker=[]
-    print "killed workers"
+    #print "killed workers"
     output_list=sorted(output_list,key=lambda job:job.id)
     output_list =  map(lambda v:v.data,output_list) #extract the data by removing id
 
@@ -71,16 +89,18 @@ def parallel_map(map_function,input_list,num_processors=4):
 if __name__ == "__main__":
     
     def workload(indata):
-        return numpy.sum(indata+numpy.array(range(5*10**7)))
+        return numpy.sum(indata+numpy.array(range(10**7)))
+
+    measure=time.time#time.clock didnt work to well for parallel for some reason
 
     print "start parallel"
-    ticp=time.clock()
-    answer_parallel=parallel_map(workload,range(16))
-    tacp=time.clock()
+    ticp=measure()
+    answer_parallel=parallel_map(workload,range(10),8)
+    tacp=measure()
     print "start serial"
-    tics=time.clock()
-    answer_serial=map(workload,range(16))
-    tacs=time.clock()
+    tics=measure()
+    answer_serial=map(workload,range(10))
+    tacs=measure()
 
     print "Parallel:",(tacp-ticp),"s"
     print "Serial:",(tacs-tics),"s"
