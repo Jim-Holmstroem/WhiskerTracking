@@ -86,6 +86,7 @@ def parallel_map(map_function,input_list,num_processors=4):
 
     return output_list
 
+
 if __name__ == "__main__":
     
     def workload(indata):
@@ -93,9 +94,11 @@ if __name__ == "__main__":
 
     measure=time.time#time.clock didnt work to well for parallel for some reason
 
+    pool=multiprocessing.Pool(8)
+
     print "start parallel"
     ticp=measure()
-    answer_parallel=parallel_map(workload,range(10),8)
+    answer_parallel=pool.map(workload,range(16))#parallel_map(workload,range(10),8)
     tacp=measure()
     print "start serial"
     tics=measure()

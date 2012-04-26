@@ -1,1 +1,14 @@
 = Parallel execution methods
+== parallel_map
+
+== multiprocessing.Pool.map
+When the workload is pickable one can use and some further constraints, see
+http://docs.python.org/library/multiprocessing.html
+
+    from multiprocessing import Pool
+    pool=Pool(processes=8)
+    def workload(input):
+        return heavycompute(input)
+    outputs = pool.map(workload,inputs)
+
+
