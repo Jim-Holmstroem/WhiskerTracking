@@ -33,8 +33,8 @@ class MapWorker(multiprocessing.Process):
             try:
                 job = self.work_queue.get_nowait()
             except Queue.Empty:
-                #print "Queue.empty",self.work_queue.qsize()
                 if self.work_queue.qsize()>0:
+                    time.sleep(0.001)
                     continue
                 else:
                     break
@@ -43,7 +43,6 @@ class MapWorker(multiprocessing.Process):
             except MemoryError: #not totally bulletproof but handles it better
                 print job.id," OutOfMemory, retrying"
                 continue
-            #print job.id," work done"
             self.result_queue.put(job)
 
 def parallel_map(map_function,input_list,num_processors=4):
