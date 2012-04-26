@@ -7,6 +7,8 @@ import multiprocessing, Queue
 import time
 
 import numpy
+import itertools
+
 
 class MapJob:
     """
@@ -45,7 +47,7 @@ class MapWorker(multiprocessing.Process):
                 continue
             self.result_queue.put(job)
 
-def parallel_map(map_function,input_list,num_processors=4):
+def parallel_map(map_function,input_list,num_processors=8):
     """
     @param input_list list<A>
     @param map_function f:A->B
@@ -86,6 +88,30 @@ def parallel_map(map_function,input_list,num_processors=4):
     return output_list
 
 
+class SimpleProcessor(multiprocessing.Process):
+    def __init__(self,function,input_list,idx):
+        multiprocessing.Process.__init__(self)
+        self.input_list=input_list
+        self.function=function
+        self.idx=idx
+
+    def run(self):
+        print "run"
+        self.output=list(map(lambda i:self.function(self.input_list[i]),self.idx))
+
+def parallel_homogenload_map(map_function,input_list,num_processors=8):
+    input_size=len(input_list)
+    workload_distribution=itertools.groupby(range(len(input_list)),lambda i:num_processors*i//input_size)
+    processes=map(lambda (proc_id,idx):SimpleProcessor(map_function,input_list,idx),workload_distribution)
+    print "start all"
+    map(lambda process:process.start(),processes) #start all
+    print "wait for all"
+    map(lambda process:process.join(),processes) #wait for all
+    print "all done"
+    print dir(processes[0])
+    return sum(map(lambda process:process.output,processes)) #get all the output and concatinate
+
+
 if __name__ == "__main__":
     
     def workload(indata):
@@ -95,6 +121,10 @@ if __name__ == "__main__":
 
     pool=multiprocessing.Pool(8)
 
+    print "start parallelhomogenload"
+    ticph=measure()
+    answer_parallelhomogen=parallel_homogenload_map(workload,range(16))#parallel_map(workload,range(10),8)
+    tacph=measure()
     print "start parallel"
     ticp=measure()
     answer_parallel=pool.map(workload,range(16))#parallel_map(workload,range(10),8)
@@ -104,6 +134,8 @@ if __name__ == "__main__":
     answer_serial=map(workload,range(10))
     tacs=measure()
 
+    
+    print "Parallel:",(tacph-ticph),"s"
     print "Parallel:",(tacp-ticp),"s"
     print "Serial:",(tacs-tics),"s"
 
