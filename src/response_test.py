@@ -37,7 +37,7 @@ class response_circle(response_object):
 
 middle_img=response_circle((w/2,h/2)).get_wimage().transform(abs_edge).blur(8)
 
-x_range =range(-128,128+1,8)
+x_range =range(-128,128+1,2)
 print len(x_range)
 
 x_mask = map(lambda posx:response_circle((w/2+posx,h/2)).get_wimage().transform(abs_edge), x_range)
