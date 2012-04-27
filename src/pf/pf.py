@@ -53,7 +53,7 @@ def pf(X_prev, observation, importance_function, sampling_function=default_sampl
 
     for rownum in xrange(len(X_prev)):
         X_bar[rownum] = sampling_function(X_prev[rownum]) # TODO
-        weights[rownum] = importance_function(X_prev[rownum], observation) # TODO
+        weights[rownum] = importance_function(X_bar[rownum], observation) # TODO
 
     if weights.sum() == 0:
         weights += 1.0/weights.size
