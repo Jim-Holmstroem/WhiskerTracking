@@ -1,4 +1,4 @@
-__all__ = ["BounceTracker"]
+__all__ = ["SquareTracker"]
 
 from common import make_video_path, make_run_path
 from scipy.ndimage import filters
@@ -10,7 +10,7 @@ import numpy
 import os
 import wtracker
 
-class BounceTracker(wtracker.Tracker):
+class SquareTracker(wtracker.Tracker):
     
     def __init__(self, db, video):
         wtracker.Tracker.__init__(self, db, video)
