@@ -1,8 +1,8 @@
-__all__ = ["square_particles_animator"]
+__all__ = ["SquareAnimator"]
 
 from wmedia.wanimation import wanimation
 
-class square_particles_animator(wanimation):
+class SquareAnimator(wanimation):
     
     SQUARE_SIDE = 50
     

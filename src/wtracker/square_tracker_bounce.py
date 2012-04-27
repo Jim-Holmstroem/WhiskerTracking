@@ -1,14 +1,14 @@
-from pf import pf
+__all__ = ["BounceTracker"]
+
+from common import make_video_path, make_run_path
 from scipy.ndimage import filters
 from wdb import StateTransitionDatabase
 from wmedia import wvideo
-from wmedia.square_particles_animator import square_particles_animator
+from wview import SquareAnimator
 import cProfile
 import numpy
 import os
 import wtracker
-
-from common import make_video_path, make_run_path
 
 class BounceTracker(wtracker.Tracker):
     
@@ -23,7 +23,7 @@ class BounceTracker(wtracker.Tracker):
         print "Startup complete."
         
     def make_animator(self, main_particles, particles, intermediate_particles):
-        return square_particles_animator(main_particles, particles, intermediate_particles)
+        return SquareAnimator(main_particles, particles, intermediate_particles)
         
     def goodness(self, particle, image):
         x, y = (particle[0], particle[2])
@@ -54,23 +54,3 @@ class BounceTracker(wtracker.Tracker):
         new_particle = new_particle_from_prev*prev_weight + (new_particle_from_db)*db_weight
         new_particle /= db_weight + prev_weight
         return new_particle
-    
-def cProfile_test(movie_id):
-    dataset = "square_accelerating"
-    movie = dataset + "_" + str(movie_id)
-    save_img_dir = make_run_path("square_tracker_bounce-%i.pngvin"%(movie_id))
-    if(not os.path.exists(save_img_dir)):
-        os.makedirs(save_img_dir)
-    video = wvideo(make_video_path(movie+".pngvin")) # Dimensions: x, y, rgba
-    db = StateTransitionDatabase(dataset)
-    
-    correct_states = numpy.load(make_video_path(movie+".pngvin", "state_sequence.npy"))
-    
-    BounceTracker(db, video).run(correct_states[0,:], 100)
-
-if __name__ == "__main__":
-#    cProfile.run("run(7)")
-#    cProfile.run("run(8)")
-#    cProfile.run("run(9)")
-    cProfile.run("cProfile_test(0)")
-    
