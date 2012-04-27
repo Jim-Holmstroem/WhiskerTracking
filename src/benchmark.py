@@ -50,7 +50,7 @@ class TrackerBenchmark:
         print
         
         diff_matrix = numpy.array(sum_diffs)
-        winner_indices = numpy.array(zip(*numpy.where((diff_matrix-diff_matrix.max(axis=0)) == 0)))[:,0]
+        winner_indices = numpy.array(zip(*numpy.where((diff_matrix-diff_matrix.min(axis=0)) == 0)))[:,0]
         print "Winners by parameter index:"
         print
         for i, winner in enumerate(winner_indices):
