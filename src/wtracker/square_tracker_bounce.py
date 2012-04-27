@@ -58,3 +58,19 @@ class SquareTracker(wtracker.Tracker):
         self.video = self.original_video
         Tracker.export_results(self, *args)
         self.video = self.blurred_video
+
+class SquareTrackerBetterGoodness(SquareTracker):
+    def __init__(self, *args):
+        Tracker.__init__(self, *args)
+    def export_results(self, *args):
+        Tracker.export_results(self, *args)
+    
+    def goodness(self, arg):#particle, image):
+        particle, image = arg
+        mask = wimage(SquareLayer(particle))
+        processed_image = wimage(image)
+        
+        mask_sum = mask.sum()
+        if mask_sum == 0:
+            return 0
+        return (mask*processed_image).sum()/(255*mask_sum)
