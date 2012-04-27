@@ -47,7 +47,7 @@ class MapWorker(multiprocessing.Process):
                 continue
             self.result_queue.put(job)
 
-def parallel_map(map_function,input_list,num_processors=8):
+def parallel_map(map_function,input_list,num_processors=multiprocessing.cpu_count()):
     """
     @param input_list list<A>
     @param map_function f:A->B
@@ -64,7 +64,7 @@ def parallel_map(map_function,input_list,num_processors=8):
         #print "Queue.Full"
         raise Exception("worker queue is full, this is not supported")
 
-    print work_queue.qsize() #only approx size
+#    print work_queue.qsize() #only approx size
     workers = map(lambda proc:MapWorker(work_queue,result_queue,map_function).start(),range(num_processors)) #create, connect and start the workers to the queues
     output_list=[]
     #print "start fetching output"
@@ -99,7 +99,7 @@ class SimpleProcessor(multiprocessing.Process):
         print "run"
         self.output=list(map(lambda i:self.function(self.input_list[i]),self.idx))
 
-def parallel_homogenload_map(map_function,input_list,num_processors=8):
+def parallel_homogenload_map(map_function,input_list,num_processors=multiprocessing.cpu_count()):
     input_size=len(input_list)
     workload_distribution=itertools.groupby(range(len(input_list)),lambda i:num_processors*i//input_size)
     processes=map(lambda (proc_id,idx):SimpleProcessor(map_function,input_list,idx),workload_distribution)
