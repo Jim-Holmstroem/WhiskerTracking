@@ -96,26 +96,16 @@ def run_cli():
         print run_cli.__doc__
         sys.exit()
 
-    video_name = None
-    database_name = None
     num_particles = 100
 
-    tracker_classes = []
+    from common import cliutils
+    cli_result = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] TRACKER_CLASSES...")
 
-    it = iter(sys.argv)
-    it.next()
-
-    video_name = it.next()
-    database_name = it.next()
-
-    for arg in it:
-        if arg == "-n":
-            num_particles = int(it.next())
-
-        elif arg in dir(wtracker):
-            tracker_classes.append(getattr(wtracker, arg))
-        else:
-            print "WARNING: Class not found in module tracker:", arg
+    video_name = cli_result["VIDEO_NAME"]
+    database_name = cli_result["DATABASE_NAME"]
+    if "PARTICLES" in cli_result.keys():
+        num_particles = int(cli_result["PARTICLES"])
+    tracker_classes = [getattr(wtracker, c) for c in cli_result["TRACKER_CLASSES"]]
 
     print "Using video: %s"%(video_name)
     print "Using database: %s"%(database_name)
