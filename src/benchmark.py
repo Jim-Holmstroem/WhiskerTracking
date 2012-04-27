@@ -35,26 +35,24 @@ class TrackerBenchmark:
         self.tracks = map(self._run_test, self.trackers)
         
         differences_from_correct = map(lambda track:numpy.abs(self.correct_states - track), self.tracks)
-        sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
+        self.sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
         
-        print sum_diffs
+        print self.sum_diffs
         print "Finished tracking test"
         print
 
-        self.evaluate_results(sum_diffs)
-
-    def evaluate_results(self, sum_diffs):
+    def evaluate_results(self):
         print "##################################################"
         print "#                  TEST RESULTS                  #"
         print "##################################################"
         print
         
-        diff_matrix = numpy.array(sum_diffs)
+        diff_matrix = numpy.array(self.sum_diffs)
         winner_indices = numpy.array(zip(*numpy.where((diff_matrix-diff_matrix.min(axis=0)) == 0)))[:,0]
         print "Winners by parameter index:"
         print
         for i, winner in enumerate(winner_indices):
-            print "Parameter %i: %s with cumulative difference %f"%(i, self.trackers[winner].__class__.__name__, sum_diffs[winner][i])
+            print "Parameter %i: %s with cumulative difference %f"%(i, self.trackers[winner].__class__.__name__, self.sum_diffs[winner][i])
         print
         
         print "##################################################"
@@ -118,10 +116,13 @@ def run_cli():
     print
             
     benchmark = TrackerBenchmark(tracker_classes, video_name, database_name, num_particles)
-    benchmark.run()
+    
+    import cProfile
+    cProfile.runctx("benchmark.run()", globals(), locals())
+
     benchmark.export_results()
+    benchmark.evaluate_results()
     benchmark.animate(0)
 
 if __name__ == "__main__":
-    import cProfile
-    cProfile.run("run_cli()")
+    run_cli()
