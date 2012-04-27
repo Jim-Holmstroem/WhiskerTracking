@@ -1,10 +1,31 @@
-__all__ = ["SquareAnimator"]
-
+from wmedia.wlayer import wlayer
 from wmedia.wanimation import wanimation
+
+class SquareLayer(wlayer):
+    def __init__(self, particle, alpha=1):
+        wlayer.__init__(self, alpha)
+        self.particle = particle
+        self.renderer = SquareRenderer(50)
+    
+    def render(self, context):
+        self.renderer.render(context, (self.particle[0], self.particle[2]))
+
+class SquareRenderer:
+    def __init__(self, square_side):
+        self.square_side = square_side
+    
+    def render(self, context, pos, color=(255,255,255), filled=True, stroke_width=1, alpha=1.0):
+        context.rectangle(pos[0]-self.square_side/2, pos[1]-self.square_side/2, self.square_side, self.square_side)
+        context.set_source_rgba(*(color+(alpha,)))
+        if filled:
+            context.fill()
+        else:
+            context.set_line_width(stroke_width)
+            context.stroke()
 
 class SquareAnimator(wanimation):
     
-    SQUARE_SIDE = 50
+    renderer = SquareRenderer(50)
     
     def __init__(self, main_particles, particles, intermediate_particles=None, main_particle_color=(0,0,255), particle_color=(255, 0, 0), intermediate_particle_color=(0,255,0), alpha=0.1):
         self.particles = particles
@@ -26,31 +47,18 @@ class SquareAnimator(wanimation):
         return 0
     
     def render(self, context, i):
-        context.save()
-        
-#        context.scale(512,512)
-
         if self.intermediate_particles != None:
-            context.set_source_rgba(*(self.intermediate_particle_color + (self.alpha,)))
             for row in self.intermediate_particles[i]:
-                context.rectangle(row[0], row[2], 1, 1)
-                context.fill()
+                self.renderer.render(context, (row[0], row[2]), self.intermediate_particle_color, filled=False, alpha=0.1)
         
         if self.particles != None:
-            context.set_source_rgba(*(self.particle_color + (self.alpha,)))
             for row in self.particles[i]:
-                context.rectangle(row[0], row[2], 1, 1)
-                context.fill()
+                self.renderer.render(context, (row[0], row[2]), self.particle_color, filled=False, alpha=0.1)
         
         main_particle = None
         if self.main_particles != None:
-            main_particle = self.main_particles[i] - self.SQUARE_SIDE/2.0
+            main_particle = self.main_particles[i]
         else:
-            main_particle = self.particles[i].mean(axis=0) - self.SQUARE_SIDE/2.0
+            main_particle = self.particles[i].mean(axis=0)
         
-        context.rectangle(main_particle[0], main_particle[2], self.SQUARE_SIDE, self.SQUARE_SIDE)
-        context.set_source_rgb(*self.main_particle_color)
-        context.set_line_width(1)
-        context.stroke()
-        
-        context.restore()
+        self.renderer.render(context, (main_particle[0], main_particle[2]), self.main_particle_color, filled=False, alpha=0.5)

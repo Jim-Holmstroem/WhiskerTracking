@@ -1,13 +1,9 @@
-__all__ = ["SquareTracker"]
-
-from common import make_video_path, make_run_path
 from scipy.ndimage import filters
-from wdb import StateTransitionDatabase
-from wmedia import wvideo
+from wmedia import wimage
+from wtracker.tracker import Tracker
 from wview import SquareAnimator
-import cProfile
+from wview.square import SquareLayer
 import numpy
-import os
 import wtracker
 
 class SquareTracker(wtracker.Tracker):
@@ -17,8 +13,11 @@ class SquareTracker(wtracker.Tracker):
         print("Starting up...")
         
         print("Blurring video...")
-        self.video = self.video.transform(lambda img: filters.gaussian_filter(img, 20))
+        self.blurred_video = self.video.transform(lambda img: filters.gaussian_filter(img, 20))
         print("Video blurred.")
+
+        self.video = self.blurred_video        
+        self.original_video = self.video
         
         print "Startup complete."
         
@@ -54,3 +53,8 @@ class SquareTracker(wtracker.Tracker):
         new_particle = new_particle_from_prev*prev_weight + (new_particle_from_db)*db_weight
         new_particle /= db_weight + prev_weight
         return new_particle
+    
+    def export_results(self, *args):
+        self.video = self.original_video
+        Tracker.export_results(self, *args)
+        self.video = self.blurred_video
