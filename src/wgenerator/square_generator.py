@@ -55,29 +55,30 @@ class AcceleratingSquareGenerator(Generator):
         
         return states
 
-    def generate_testing_movie(self, states):
-        surfaces = [cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT) for i in xrange(len(states))]
+    def generate_testing_movie(self, all_squares_states):
+        surfaces = [cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT) for i in xrange(len(all_squares_states[0]))]
         contexts = [cairo.Context(surface) for surface in surfaces]
         
-        for state, context in izip(states, contexts):
-
+        for context in contexts:
             context.scale(IMAGE_WIDTH, IMAGE_HEIGHT) # Normalize the canvas
 
-            x = (state[0]-self.SQUARE_SIDE/2)/IMAGE_WIDTH
-            y = (state[2]-self.SQUARE_SIDE/2)/IMAGE_HEIGHT
-            
             context.rectangle(0, 0, 1, 1)
             context.set_source_rgb(0,0,0)
             context.fill()
-            
-            context.set_source_rgb(1, 1, 1)
-            context.rectangle(x, y, float(self.SQUARE_SIDE)/IMAGE_WIDTH, float(self.SQUARE_SIDE)/IMAGE_WIDTH)
-            context.fill()
+
+        for states in all_squares_states:
+            for state, context in izip(states, contexts):
+                x = (state[0]-self.SQUARE_SIDE/2)/IMAGE_WIDTH
+                y = (state[2]-self.SQUARE_SIDE/2)/IMAGE_HEIGHT
+                
+                context.set_source_rgb(1, 1, 1)
+                context.rectangle(x, y, float(self.SQUARE_SIDE)/IMAGE_WIDTH, float(self.SQUARE_SIDE)/IMAGE_WIDTH)
+                context.fill()
             
         return wvideo(surfaces)
 
 def run():
-    ag = AcceleratingSquareGenerator("square_accelerating", [2, 2], 1000)
+    ag = AcceleratingSquareGenerator("square_accelerating", [2, 2], 2, 1000)
     ag.generate()
 
 if __name__ == "__main__":
