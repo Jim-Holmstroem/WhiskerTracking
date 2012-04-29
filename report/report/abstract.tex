@@ -1,0 +1,17 @@
+The interest in studying rodent whiskers has recently seen a significant increase, particularly in the field of neurophysiology. As a result, there is a need for automatic tracking of whisker movements. Currently available commercial solutions either are extremely expensive, place great restrictions on the experiment or break down when whiskers cross or overlap.
+
+This thesis proposes a proof-of-concept implementation of a probabilistic tracking system. This solution uses a technique known as the \emph{Particle Filter} to propagate a whisker model between frames of high speed video. In each frame, the next state of the model is predicted by comparing the model with a database of training data.
+
+The main strengths of the proposed solution is that it successfully tracks multiple whiskers at once, even when they cross or overlap, and does not notably restrict the experiment. However, it is not yet accurate enough for the intended use.
+
+----
+
+The purpose for this thesis is to implement an mockup of an portable 
+program capable of reilably tracking multiply rodent whiskers 
+in good conditioned video and to evaluate different mathematical 
+models for the whiskers and snout. 
+
+The backbone algorithm used 
+for tracking is the particle filter which works on statistical basis which
+is used for the purpose of refinding the object closeby it's last known location
+and to reduce the complexity for the search down to feasible values.

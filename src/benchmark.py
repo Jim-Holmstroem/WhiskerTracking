@@ -25,16 +25,39 @@ class TrackerBenchmark:
         self.num_particles = num_particles
 
         self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video), tracker_classes)
+
+    def _run_test(self, tracker):
+        print "Tracking with tracker class %s"%(tracker.__class__.__name__)
+        return tracker.run(self.correct_states[0], self.num_particles)
     
     def run(self):
         print "Running tracking test"
-        self.tracks = map(lambda tracker:tracker.run(self.correct_states[0], self.num_particles), self.trackers)
+        self.tracks = map(self._run_test, self.trackers)
         
         differences_from_correct = map(lambda track:numpy.abs(self.correct_states - track), self.tracks)
-        sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
+        self.sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
         
-        print sum_diffs
+        print self.sum_diffs
         print "Finished tracking test"
+        print
+
+    def evaluate_results(self):
+        print "##################################################"
+        print "#                  TEST RESULTS                  #"
+        print "##################################################"
+        print
+        
+        diff_matrix = numpy.array(self.sum_diffs)
+        winner_indices = numpy.array(zip(*numpy.where((diff_matrix-diff_matrix.min(axis=0)) == 0)))[:,0]
+        print "Winners by parameter index:"
+        print
+        for i, winner in enumerate(winner_indices):
+            print "Parameter %i: %s with cumulative difference %f"%(i, self.trackers[winner].__class__.__name__, self.sum_diffs[winner][i])
+        print
+        
+        print "##################################################"
+        print "#               END OF TEST RESULTS              #"
+        print "##################################################"
         print
     
     def animate(self, tracker_i):
@@ -71,26 +94,16 @@ def run_cli():
         print run_cli.__doc__
         sys.exit()
 
-    video_name = None
-    database_name = None
     num_particles = 100
 
-    tracker_classes = []
+    from common import cliutils
+    cli_result = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] TRACKER_CLASSES...")
 
-    it = iter(sys.argv)
-    it.next()
-
-    video_name = it.next()
-    database_name = it.next()
-
-    for arg in it:
-        if arg == "-n":
-            num_particles = int(it.next())
-
-        elif arg in dir(wtracker):
-            tracker_classes.append(getattr(wtracker, arg))
-        else:
-            print "WARNING: Class not found in module tracker:", arg
+    video_name = cli_result["VIDEO_NAME"]
+    database_name = cli_result["DATABASE_NAME"]
+    if "PARTICLES" in cli_result.keys():
+        num_particles = int(cli_result["PARTICLES"])
+    tracker_classes = [getattr(wtracker, c) for c in cli_result["TRACKER_CLASSES"]]
 
     print "Using video: %s"%(video_name)
     print "Using database: %s"%(database_name)
@@ -103,10 +116,13 @@ def run_cli():
     print
             
     benchmark = TrackerBenchmark(tracker_classes, video_name, database_name, num_particles)
-    benchmark.run()
+    
+    import cProfile
+    cProfile.runctx("benchmark.run()", globals(), locals())
+
     benchmark.export_results()
+    benchmark.evaluate_results()
     benchmark.animate(0)
 
 if __name__ == "__main__":
-    import cProfile
-    cProfile.run("run_cli()")
+    run_cli()
