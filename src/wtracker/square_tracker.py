@@ -16,8 +16,8 @@ class SquareTracker(wtracker.Tracker):
         self.blurred_video = self.video.transform(lambda img: filters.gaussian_filter(img, 20))
         print("Video blurred.")
 
-        self.video = self.blurred_video        
         self.original_video = self.video
+        self.video = self.blurred_video
         
         print "Startup complete."
         
