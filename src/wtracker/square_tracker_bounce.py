@@ -1,29 +1,28 @@
-from pf import pf
 from scipy.ndimage import filters
-from wdb import StateTransitionDatabase
-from wmedia import wvideo
-from wmedia.square_particles_animator import square_particles_animator
-import cProfile
+from wmedia import wimage
+from wtracker.tracker import Tracker
+from wview import SquareAnimator
+from wview.square import SquareLayer
 import numpy
-import os
 import wtracker
 
-from common import make_video_path, make_run_path
-
-class BounceTracker(wtracker.Tracker):
+class SquareTracker(wtracker.Tracker):
     
     def __init__(self, db, video):
         wtracker.Tracker.__init__(self, db, video)
         print("Starting up...")
         
         print("Blurring video...")
-        self.video = self.video.transform(lambda img: filters.gaussian_filter(img, 20))
+        self.blurred_video = self.video.transform(lambda img: filters.gaussian_filter(img, 20))
         print("Video blurred.")
+
+        self.video = self.blurred_video        
+        self.original_video = self.video
         
         print "Startup complete."
         
     def make_animator(self, main_particles, particles, intermediate_particles):
-        return square_particles_animator(main_particles, particles, intermediate_particles)
+        return SquareAnimator(main_particles, particles, intermediate_particles)
         
     def goodness(self, particle, image):
         x, y = (particle[0], particle[2])
@@ -55,22 +54,23 @@ class BounceTracker(wtracker.Tracker):
         new_particle /= db_weight + prev_weight
         return new_particle
     
-def cProfile_test(movie_id):
-    dataset = "square_accelerating"
-    movie = dataset + "_" + str(movie_id)
-    save_img_dir = make_run_path("square_tracker_bounce-%i.pngvin"%(movie_id))
-    if(not os.path.exists(save_img_dir)):
-        os.makedirs(save_img_dir)
-    video = wvideo(make_video_path(movie+".pngvin")) # Dimensions: x, y, rgba
-    db = StateTransitionDatabase(dataset)
-    
-    correct_states = numpy.load(make_video_path(movie+".pngvin", "state_sequence.npy"))
-    
-    BounceTracker(db, video).run(correct_states[0,:], 100)
+    def export_results(self, *args):
+        self.video = self.original_video
+        Tracker.export_results(self, *args)
+        self.video = self.blurred_video
 
-if __name__ == "__main__":
-#    cProfile.run("run(7)")
-#    cProfile.run("run(8)")
-#    cProfile.run("run(9)")
-    cProfile.run("cProfile_test(0)")
+class SquareTrackerBetterGoodness(SquareTracker):
+    def __init__(self, *args):
+        Tracker.__init__(self, *args)
+    def export_results(self, *args):
+        Tracker.export_results(self, *args)
     
+    def goodness(self, arg):#particle, image):
+        particle, image = arg
+        mask = wimage(SquareLayer(particle))
+        processed_image = wimage(image)
+        
+        mask_sum = mask.sum()
+        if mask_sum == 0:
+            return 0
+        return (mask*processed_image).sum()/(255*mask_sum)

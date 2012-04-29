@@ -2,7 +2,7 @@ from tracker import Tracker
 from wdb import StateTransitionDatabase
 from wimageprocessing.imageprocessing import abs_edge
 from wmedia import wvideo, wimage
-from wmedia.pendulum import PendulumLayer, PendulumAnimator
+from wview.pendulum import PendulumLayer, PendulumAnimator
 import cProfile
 import math
 import numpy

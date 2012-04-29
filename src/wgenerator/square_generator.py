@@ -77,7 +77,7 @@ class AcceleratingSquareGenerator(Generator):
         return wvideo(surfaces)
 
 def run():
-    ag = AcceleratingSquareGenerator("square_accelerating", [2, 2], 100)
+    ag = AcceleratingSquareGenerator("square_accelerating", [2, 2], 1000)
     ag.generate()
 
 if __name__ == "__main__":
