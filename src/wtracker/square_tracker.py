@@ -8,8 +8,8 @@ import wtracker
 
 class SquareTracker(wtracker.Tracker):
     
-    def __init__(self, db, video):
-        wtracker.Tracker.__init__(self, db, video)
+    def __init__(self, *args):
+        wtracker.Tracker.__init__(self, *args)
         print("Starting up...")
         
         print("Blurring video...")
