@@ -102,6 +102,20 @@ Feature extraction vs. feature selection (bik)
 
 
 
+========================================
+
+IMPORTANT
+
+
+Just like the up-transformation in SVMs we get a higher probability for seperation for different objects if we (try) transform the 2D image object into our higher dimensinoal model. 
+
+
+
+
+========================================
+
+
+
 
 
 ============= The handling of uniform (seen from prop.dist in featurespace) like base-position/angle ===================
