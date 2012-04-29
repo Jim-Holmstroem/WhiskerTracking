@@ -1,0 +1,226 @@
+\newcommand{\xtmN}[4]{
+  \left\{#1_{#2}^{#3}\right\}_{#2=1}^{#4}
+}
+\newcommand{\interval}[2]{
+  \left[#1, #2\right]
+}
+\newcommand{\bel}[1]{
+  bel\left(#1\right)
+}
+
+\subsection{The particle filter}
+\subsubsection{Introduction}
+The core of tracking engine used is a technique known as the \emph{particle filter}. The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses to approximate continuous probability distributions \cite{ProbRob}. The main idea can be outlined as follows.
+
+Suppose we have a system described by the state $x_t$ at time $t$. $x_t$ can be thought of as a vector of state parameters. Suppose that we know the previous state $x_{t-1}$ and have an observation $z_t$ of the system at the current time. In general, it is difficult to accurately determine $x_t$ from the observation alone, and the observation may suffer from interference. Therefore, we cannot directly read $x_t$ from $z_t$. However, we can estimate $x_t$ if we know the following things about the system:
+
+\begin{itemize}
+\item A probability function $p$, where $p\left(x_t | x_{t-1}\right)$ is the probability that the current state is $x_t$ if the previous state was $x_{t-1}$.
+\item A probability function $q$, where $q\left(z_t | x_t\right)$ is the probability that we observe $z_t$ if the current state is $x_t$.
+\end{itemize}
+
+Using $p$ and knowing $x_{t-1}$, we can generate a set of hypotheses $\xtmN{\bar{x}}{t}{m}{N}$ for the current state $x_t$. Using $q$ and knowing $z_t$, we can evaluate how likely the hypotheses are. If it is likely to observe $z_t$ if the current state is $x_t$, then $x_t$ is probably a good estimate of the current state. With this information, we select the most probable hypotheses and let them be our estimate of the current system state.
+
+The particle filter works recursively in two steps:
+
+\begin{enumerate}
+\item The \emph{sampling step} is the generation of the hypotheses, known as \emph{particles}, from the previous state $x_{t-1}$. The belief $\bel{x_{t-1}}$, see below, is used as an estimate for $x_{t-1}$. What makes this recursive is the fact that $\bel{x_t}$ is calculated using $\bel{x_{t-1}}$.
+
+\item The \emph{resampling step} is the final selection of the most probable particles. After resampling the set $\bar{X_t} := \xtmN{\bar{x}}{t}{m}{N}$ we get the \emph{belief} $\bel{x_t}$, which often includes multiple copies of the most probable particles. This set is used as an estimate for $x_t$, and is used to estimate $x_{t+1}$.
+\end{enumerate}
+
+In the next section, the particle filter algorithm will be stated. Implementing the filter in itself is only a matter of implementing the stated pseudocode, and is not difficult. The difficult part is designing the probability functions $p$ and $q$ for the given system. A probabilistic implementation of these functions is proposed in chapters TODO.
+
+
+\subsubsection{Formal description of the particle filter}
+Here the particle filter algorithm is stated. An elaboration on what this actually does and why is offered below.
+%TODO pseudo algorithm for the 
+%Sample instead of draw
+
+\begin{codebox}
+\Procname{$\proc{Distribution-Sample}(X_t,p)$}
+\li \ForEach $\id{x_t}$ \In $\id{X_t}$
+\li     \Do
+            $sample \id{x_{t+1}} \sim p\left(x_{t+1}|x_t\right)$
+        \End
+\li \Return $\id{X_{t+1}}$
+\end{codebox}
+\begin{codebox}
+\Procname{$\proc{Importance}(X,q,z)$}
+\li \ForEach $\id{x}$ \In $\id{X}$ 
+\li     \Do
+            $w \gets q\left(z|x\right)$
+        \End
+\li \Return $W$
+\end{codebox}
+\begin{codebox}
+\Procname{$\proc{Weighted-Sample}(X,W)$}
+\li \ForEach $x$ \In $X$
+\li     \Do
+            $sample ~ x' \propto W$   
+        \End
+\li \Return $X'$
+\end{codebox}
+\begin{codebox}
+\Procname{$\proc{Particle-Filter} (X_{t-1},z_t)$}
+\li $X_t \gets \proc{Distribution-Sample}(X_{t-1},p)$
+\li $W_t \gets \proc{Importance}(X_{t-1},q,z_t)$
+\li $X_t \gets \proc{Weighted-Sample}(X_t,W_t)$
+\li \Return $X_t$
+\end{codebox}
+
+\begin{codebox}
+\Procname{$\proc{Particle-Filter} (X_{t-1}, z_t)$}
+\li Let $\bar{X_t} = \emptyset$.
+\li For $m:=1$ to $\left|X_{t-1}\right|$:
+\li \Do Draw $x_t^m$ with probability $p\left(x_t^m | x_{t-1}^m\right)$.
+\li Let $w_t^m := q\left(z_t | x_t^m\right)$.
+\li Add $(x_t^m, w_t^m)$ to $\bar{X_t}$.
+\End
+\li Let $X_t := \emptyset$.
+\li For $m:=1$ to $\left|X_{t-1}\right|$:
+\li \Do
+    Draw $x_t^m$ with probability proportional to $w_t^m$
+    \li Add $x_t^m$ to $X_t$.
+    \End
+\li Return $X_t$.
+\end{codebox}
+
+
+We draw a set $\bar{X}_t = \xtmN{x}{m}{t}{N}$ of samples from $p$. These samples roughly represent a probability distribution for the current state $x_t$, but we have yet to consider our observation. Therefore, we will create a new probability distribution weighted by how probable the observation $z_t$ is. For each $x_t^m$, we let $w_t^m := q\left(z_t | x_t\right)$. This defines a discrete probability distribution where $x_t^m$ is assumed with a probability proportional to $w_t^m$. From this final distribution we again draw $N$ samples $X_t$, which will be our estimate of the current state. The elements $x_t^m$ are referred to as \emph{particles} and the set $X_t$ as the \emph{belief at time $t$}.
+
+In this thesis, $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set $X_{t-1}$ of $N$ particles. In this case, $x_t^m$ is sampled with probability $p\left(x_t^m | x_{t-1}^m\right)$.
+
+
+
+\subsubsection{Curse of dimensonality}
+
+
+% """
+%The "Curse of dimensionality", is a term coined by Bellman to describe the
+%problem caused by the exponential increase in volume associated with adding
+%extra dimensions to a (mathematical) space. One implication of the curse of
+%dimensionality is that some methods for numerical solution of the Bellman
+%equation require vastly more computer time when there are more state variables
+%in the value function.
+
+%For example, 100 evenly-spaced sample points suffice to sample a unit interval
+%with no more than 0.01 distance between points; an equivalent sampling of a
+%10-dimensional unit hypercube with a lattice with a spacing of 0.01 between
+%adjacent points would require 1020 sample points: thus, in some sense, the
+%10-dimensional hypercube can be said to be a factor of 1018 "larger" than the
+%unit interval. (Adapted from an example by R. E. Bellman, see below.)
+% """
+
+from:
+"R. Bellman, Adaptive control Processes, p.94, Princeton University Press, NJ,
+1961."
+
+“In view of all that we have said in the foregoing
+sections, the many obstacles we appear to have
+surmounted. What casts the pall over our victory
+celebration? It is the curse of dimensionality, a
+malediction that has plagued the scientist from
+earliest days.”
+
+
+show curse of dimensionallity with a simple like in bik12.lecture7
+1D->2D
+either maintain density samples increases drastically
+or maintain samples and density decreases drastically
+2D->3D
+even worse
+
+To have a sample density of C we need $O(C^n)$ samples for n-dimensional data,
+that is the number of samples grows exponential on the number of dimensions.
+And a consequence of this is that in order to approximate some
+function defined in higher dimensional space one needs many more samples.
+
+One more thing with the high dimensional space is the large boundaries 
+of the sample-set then from lower dimensional space which results in orders of
+magnitude higher chance for an point one want to approximate to fall outside
+the sample-set and needs to be extrapolated instead of interpolate which is
+much better.
+
+% """
+%
+% Number of states grows exponentially in n (assuming fixed number of
+% discretization levels per coordinate)
+%
+% """
+
+%
+%"""
+% One solution on how to make the effects of the curse of dimensionality is to
+% make a directed search..
+%"""
+%
+
+%
+%"""
+% Bellmans dynamic programming (DP) requires knowledge of transition
+% probablities of the dynamic system from ones state to the next
+%"""
+%
+
+
+
+
+The 8 DOF in our model produces vast amounts of space in our feature space and this has the consequence that we need proportional to $n^8$ datapoints to fill it to an specified density c.
+
+For instance, we would need $4^8=65536$ samples just to make a grid with 4 samples in each DOF which in many cases (aspecially for hand labeled data). 
+
+This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionality".
+
+One way to somewhat overcome this emptyness in space is to have a dynamic (active?) algorithm that adopts the sample density 
+according to the models relative frequency in that area and this results in, for a given amount of samples, its more likely 
+for an sampled model to occure in a more densly pre-sampled (pre-sampled?) area, in fact this method when doing it right (ideally) 
+gives: given a set of samples the overall density for all the samples in the sampledatabase would be optimal) [proof for this will be given in <blabla>]
+... (use the world hypotesis instead of sample, or perhaps sampled-hypotesis)
+(below is perhaps somewhat redudant, but one can pick bits and pieces from both)
+So having a bias towards trying out more plausible hypotesis for the models innerstate is better than 
+doing a naive exhausted search tru the entire feature space, this could only be used if you have $\le$ 3 DOF as in for example finding straight edges with houghtransformation[ref].
+...
+One method that uses prior knowledge of the models PDF and a pretrained database containing knowledge on how to approximate the models PDF in the next timestep is particle filter which is an (instance?) of the ideal bayesian filter.
+
+
+
+
+
+
+
+
+
+\subsection{Particle filtering whisker movements}
+Here we propose a way to model whiskers as a dynamic system.
+
+\subsection{Kinematic whisker models}
+
+In all our models we have separated the head from the whiskers since they have
+such different kinematic properties and actually are attached to each other.
+
+==The first model
+Assumptions:
+>Material is linear elastic
+>Small deformations (probably the biggest assumption, which dont actually hold
+in our case)
+
+The equation of elastic line ... [Grundläggande Hållfasthetslära - Hans Lundh
+p94 (7.6)]
+
+The force that comes from the head moving on the base of the whisker is just 
+sucked up by the Boundaryvalues and it will still be valid assumptions for the
+elasticline to hold.
+
+Under just a few assumptions that the material is linear elastic and the
+deformations are small we have the ...
+
+
+============== MODELS =================
+
+One possible model is to borrow the model for beam under small 
+deformations from the theory of strength of materials,
+after all the whisker is a beam but we dont have small 
+deformations at all but we assume that the model will approximatly hold ony way.
+
+

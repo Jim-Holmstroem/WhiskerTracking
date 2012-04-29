@@ -1,3 +1,69 @@
+2012-04-24
+Built CLI for TrackerBenchmark
+
+2012-04-20
+Improved on the benchmarking engine.
+Created a general framework for building trackers.
+Created generators of test cases for and a tracker for simple pendulums.
+
+2012-04-19
+Refactored test generators.
+Built a framework for testing trackers and displaying results.
+
+2012-04-18
+(Log written 2012-04-19)
+Worked more on the square tracker. Decreasing "dt" in the tracked data made it
+work a bit better.
+Also realized a significant improvement to the database could be done, and
+implemented this. The result was that no cartesian products need to be computed
+and manipulated, which takes complexity down from exponential in the number of
+independent parameter groups to linear.
+
+2012-04-17
+Performed our INSWIN presentation.
+Implemented some of Jim's work into the square tracker, and worked on trying to get it to work. Not much progress.
+
+2012-04-16
+(Log written 2012-04-17)
+Prepared our INSWIN presentation.
+
+2012-04-13
+Rushed the report for presenting on the workshop. Made quite some progress, actually.
+
+2012-04-12
+Worked on the theory part of the report.
+Wrote informal text on the particle filter.
+Started on illustration for the whisker parameterization.  
+
+2012-04-11
+(Log written 2012-04-12)
+Wrote a little on the report, mostly the theory part.
+Worked on making square_tracker_bounce, didn't make much apparent progress. 
+
+2012-04-04
+Worked more on the database, got a bunch of stuff working.
+
+2012-04-03
+Worked on the database refactoring. Made unit tests for wdb.
+
+2012-03-30
+(Log written 2012-04-03)
+Worked on generation of bouncing squares.
+Started working on splitting the database backend into groups of independent parameters.
+
+2012-03-29
+(Log written 2012-03-30)
+Tweaked bouncing squares generator.
+Started working on optimizing database queries and implementing the PF on the bouncing squares.
+
+2012-03-26
+Wrote a bit on the report together with Jim.
+Generated falling, bouncing squares and ran the DB tracker on them. Horribly bad results and time performance.
+
+2012-03-23
+(Log written 2012-03-26)
+Improved some docstrings. Fiddled a bit with the square trackers. Talked with Jim a bit about the project in general.
+
 2012-03-09
 Continued work on the database:
 - Improved generation of database in the square generator

@@ -1,3 +1,5 @@
+__all__= ['distribution']
+
 import numpy
 from random import random
 

@@ -1,0 +1,50 @@
+%<teh structure comes from:\verb|http://en.wikipedia.org/wiki/Video_tracking|, find better references>
+
+To track something in a dynamic system with uncertainties one needs a tracker and a localizer. The purpose of a tracker is to narrow the search range, see section \ref{curseOfDimensionality}, so that only the currently relevant hypotheses are included in the search. For the tracker get some perception of the system one needs a localizer. $tracker_{localizer}(...)$
+%Among many different approaches to tracking, the most widely used ones are:
+
+
+\subsection{Tracking}
+\subsubsection*{Recursive bayesian estimator /Bayesian filter}
+A theoretical basis for the tracking filters, can't be realized in real life.
+\subsubsection{Kalman Filter}
+A more analytic version of the Bayesian filter
+
+\begin{tabular}[h]{rl}
+Assumptions: & Normal distributed data, linear process\\ %TODO use the word process for updatefunction
+Pros: & Fast\\
+Cons: & Can't deal with multimodal distributions and may perform\\
+& poorly with distributions that are not approximately normal\\
+& distributed.
+\end{tabular}
+
+\subsubsection*{Particle Filter}
+A Monte Carlo version of the Bayesian filter which 
+%TODO Particle filter: useful for sampling the underlying state-space distribution of nonlinear and non-Gaussian processes."
+
+\begin{tabular}[h]{rl}
+  Assumptions: & Not much (or?)\\
+  Pros: & Can deal with multimodal distributions.\\
+  Cons: & Slow
+\end{tabular}
+
+There are many variants of both kalman filter and particle filter but only the basic ones will be covered in this thesis.
+
+\subsection{Localization}
+\subsubsection*{Contour tracking(/based?)}
+Matching edges in the image to the edges in the thing you want to match
+
+\subsubsection*{Blob tracking(/based?)}
+TODO
+\subsubsection*{Visual feature matching}
+TODO
+\subsubsection*{Kernel-based tracking}
+TODO
+
+%=== Kalman filter
+%"Kalman filter: an optimal recursive Bayesian filter for linear functions subjected to Gaussian noise" -Wiki
+%{ASSUMPTIONS: normal-distrubuted data, linear functions}
+%{PROS: [faster?]}
+
+For this thesis, the particle filter was chosen. There are a number of reasons for this. First, the behavior of the feature space for a system of whiskers was not known, which eliminates parameterized filters like the Kalman filter. Second, there was no strict constraint on the running time of the program, meaning heavier computational tasks can be afforded.
+

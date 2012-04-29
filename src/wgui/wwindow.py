@@ -1,50 +1,43 @@
-import gtk
-import pygtk
+__init__ = ['wwindow']
 
-from wlayermanager import *
-from wimagelayer import *
-from wtestlayer import *
+import gtk
 
 class wwindow(gtk.Window):
-
-    __version__="0.1"
-    __program_name="WhiskerTracking"
-    def __init__(self,layermanager):
+    __version__="0.2"
+    program_name="WhiskerTracking"
+    
+    def __init__(self,layermanager=None,controller=None):
+        self.layermanager=layermanager
+        self.controller=controller
+        
         gtk.Window.__init__(self)
-        self.set_title(self.__program_name+" - v"+self.__version__)
+        self.set_title(self.program_name+" - v"+self.__version__)
         self.connect("destroy",gtk.main_quit)
-        
-        vbox = gtk.VBox(False,0)
-        hbox = gtk.HBox(False,0)
-        
-        vbox.add(layermanager)
+        vbox=gtk.VBox(False,0)
+        hbox=gtk.HBox(False,0)
 
-        vbox.add(gtk.HScale(gtk.Adjustment(0,0,32,1,1,1)))
-        
+        if layermanager:
+            vbox.add(layermanager)
+        else:
+            error=gtk.image_new_from_stock("gtk-dialog-error",gtk.ICON_SIZE_DIALOG)
+            error.set_size_request(512,512)
+            vbox.add(error)
+
+        timeline=gtk.Adjustment(0,0,len(layermanager),1,1,1)
+        timeline.connect("value-changed",self.timeline_changed)
+        timescale=gtk.HScale(timeline)
+        timescale.set_digits(0)
+
+        vbox.add(timescale)
         hbox.add(vbox)
 
+        if controller:
+            hbox.add(controller)
+        else:
+            hbox.add(gtk.image_new_from_stock("gtk-dialog-error",gtk.ICON_SIZE_DIALOG))
 
-        btn = gtk.Button("Knappis")
-        #TODO button to activate som plotting of values in current frame`
-
-        hbox.add(btn)
-        
-        
         self.add(hbox)
-        
         self.show_all()
 
-
-
-
-if __name__=="__main__":
-    
-    layermanager = wlayermanager()
-    layermanager.add_layer(wimagelayer())
-    layermanager.add_layer(wtestlayer())
-    
-    win=wwindow(layermanager)
-   
-    gtk.gdk.threads_enter()
-    gtk.main()
-    gtk.gdk.threads_leave()
+    def timeline_changed(self,adjustment):
+        self.layermanager.set_current_frame(int(adjustment.get_value()))

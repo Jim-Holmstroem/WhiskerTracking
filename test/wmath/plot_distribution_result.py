@@ -1,12 +1,13 @@
 import numpy
-import pylab
+import matplotlib.pyplot as plot
+from math import exp, pi, sqrt
 from wmath import distribution
 
 class Tester:
     i=0
 
     def test(self, weights, num_samples=10000):
-        pylab.figure(self.i)
+        plot.figure(self.i)
         self.i+=1
         
         weights = weights/float(weights.sum())
@@ -16,8 +17,8 @@ class Tester:
         
         frequencies = numpy.array([sample.count(i) for i in xrange(weights.size)])
         
-        pylab.plot(numpy.arange(weights.size), weights/float(sum(weights)))
-        pylab.plot(numpy.arange(weights.size), frequencies/float(sum(frequencies)), "b*")
+        plot.plot(numpy.arange(weights.size), weights/float(sum(weights)))
+        plot.plot(numpy.arange(weights.size), frequencies/float(sum(frequencies)), "b*")
 
 t=Tester()
 
@@ -36,5 +37,8 @@ test(numpy.array([1]*25+[0]*25))
 ### Alternator ###
 test(numpy.array([0,1]*25))
 
+### Gauss ###
+test(numpy.array([1/(sqrt(2*pi)) * exp(-(x*x)/2) for x in numpy.linspace(-5, 5, 50)]))
+
 ### Plot the results ###
-pylab.show()
+plot.show()

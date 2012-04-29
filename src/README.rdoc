@@ -1,0 +1,64 @@
+Start by having a standard for structuring the single Python files. I
+like to have mine organized like this:
+
+- (shebang)
+- encoding declaration
+- module docstring
+- __all__ symbol export list
+- imports
+- standard library
+- third-party
+- project specific
+- author, version, date and copyright information
+- globals (logging setup, constants, etc.)
+- utility functions
+- classes
+- "main" function (some like to have this at the top)
+- if __name__ ==  '__main__': clause
+
+For sub-packages, like to have the following layout:
+
+  mainpackage/
+      subpackage2/
+          test/test_subpackage2.py
+          __init__.py
+          base.py
+          exceptions.py
+          module1.py
+          module1.py
+                  
+
+I have an __all__ symbol export list in all module file, so then in in
+__init__.py I can do:
+
+  from base import *
+  from exception import *
+  from module1 import this, that
+  from module2 import foo, bar
+
+without worrying about import too much and in my main package I can
+use:
+
+  from package import this, bar
+
+And in e.g. package.module1 I can do
+
+  from package.exceptions import SomeError
+
+without having to worry about circular imports.
+
+where to put the executables 
+    mydistro/
+        bin/
+            script1
+        mainpackage/
+
+and in that script:
+
+    #!/usr/bin/env python
+
+    from mainpackage import run
+    # or
+    # from mainpackage.command.mycommand import run
+    run()
+
