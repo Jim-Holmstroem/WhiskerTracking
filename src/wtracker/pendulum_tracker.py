@@ -2,7 +2,7 @@ from tracker import Tracker
 from wdb import StateTransitionDatabase
 from wimageprocessing.imageprocessing import abs_edge
 from wmedia import wvideo, wimage
-from wmedia.pendulum import PendulumLayer, PendulumAnimator
+from wview.pendulum import PendulumLayer, PendulumAnimator
 import cProfile
 import math
 import numpy
@@ -11,8 +11,8 @@ import os
 
 class PendulumTracker(Tracker):
     
-    def __init__(self, db, video):
-        Tracker.__init__(self, db, video)
+    def __init__(self, *args):
+        Tracker.__init__(self, *args)
         self.l = 400.0/self.video.image_shape()[1]
         self.radius = 24.0/self.video.image_shape()[1]
         self.renderer = PendulumLayer(self.l, self.radius)

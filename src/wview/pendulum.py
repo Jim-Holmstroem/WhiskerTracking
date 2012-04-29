@@ -18,41 +18,21 @@ class PendulumRenderer:
         self.radius = radius
         self.particle_alpha = particle_alpha
     
-    def render(self, context, particle, color=(1, 1, 1)):
+    def render(self, context, particle, color=(255,255,255), filled=True, stroke_width=1, alpha=1.0):
         context.identity_matrix()
         context.scale(512, 512)
         phi = particle[0]
         x = 0.5 + self.l*math.sin(phi)
         y = self.l*math.cos(phi)
         
-        context.set_source_rgb(*color)
+        context.set_source_rgba(*(color + (alpha,)))
         context.arc(x, y, float(self.radius), 0., 2 * math.pi)
-        context.fill()
+        if filled:
+            context.fill()
+        else:
+            context.set_line_width(0.005)
+            context.stroke()
 
-    def render_hypothesis(self, context, particle, color=(255, 0, 0)):
-        context.identity_matrix()
-        context.scale(512, 512)
-        phi = particle[0]
-        x = 0.5 + self.l*math.sin(phi)
-        y = self.l*math.cos(phi)
-        
-        context.set_source_rgb(*color)
-        context.arc(x, y, float(self.radius), 0., 2 * math.pi)
-        
-        context.stroke()
-        
-    def render_particle(self, context, particle, color=(0, 255, 0)):
-        context.identity_matrix()
-        context.scale(512, 512)
-        phi = particle[0]
-        x = 0.5 + self.l*math.sin(phi)
-        y = self.l*math.cos(phi)
-        
-        context.set_source_rgba(*color + (self.particle_alpha,))
-        context.set_line_width(0.005)
-        context.arc(x, y, float(self.radius), 0., 2 * math.pi)
-        context.stroke()
-    
 class PendulumAnimator(wanimation):
     def __init__(self, main_particles, particles, intermediate_particles, l, radius, main_particle_color=(0,255,0), particle_color=(255,0,0), intermediate_particle_color=(0,0,255), alpha=0.1):
         self.particles = particles
@@ -77,11 +57,11 @@ class PendulumAnimator(wanimation):
     def render(self, context, i):
         if self.intermediate_particles != None:
             for row in self.intermediate_particles[i]:
-                self.renderer.render_particle(context, row, self.intermediate_particle_color)
+                self.renderer.render_particle(context, row, self.intermediate_particle_color, filled=False, alpha=0.1)
         
         if self.particles != None:
             for row in self.particles[i]:
-                self.renderer.render_particle(context, row, self.particle_color)
+                self.renderer.render_particle(context, row, self.particle_color, filled=False, alpha=0.1)
         
         main_particle = None
         if self.main_particles != None:
@@ -89,4 +69,4 @@ class PendulumAnimator(wanimation):
         else:
             main_particle = self.particles[i].mean(axis=0)
         
-        self.renderer.render_hypothesis(context, main_particle, self.main_particle_color)
+        self.renderer.render_hypothesis(context, main_particle, self.main_particle_color, filled=False, alpha=0.5)

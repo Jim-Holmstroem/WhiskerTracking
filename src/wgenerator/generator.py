@@ -7,11 +7,12 @@ import numpy
 import os
 
 class Generator:
-    def __init__(self, dataset, parameter_groups, number_of_transitions=1000, debug=False, number_of_movies=10, dt=1):
+    def __init__(self, dataset, parameter_groups, number_of_objects, number_of_transitions=1000, debug=False, number_of_movies=4, dt=1):
         delete_database(dataset)
         create_database(dataset, parameter_groups)
         self.dataset = dataset
         self.db = StateTransitionDatabase(dataset)
+        self.number_of_objects = number_of_objects
         self.number_of_transitions = number_of_transitions
         self.number_of_movies = number_of_movies
         self.dt = dt
@@ -43,9 +44,9 @@ class Generator:
             
             wlm = wlayermanager()
             
-            states = self.generate_testing_sequence(num_frames)
-            numpy.save(os.path.join(save_dir, "state_sequence.npy"), states)
-            print "State sequence calculated..."
+            states = [self.generate_testing_sequence(num_frames) for i in xrange(self.number_of_objects)]
+            map(numpy.save, (os.path.join(save_dir, "state_sequence_%i.npy"%i) for i in xrange(len(states))), states)
+            print "State sequences calculated..."
             
             wlm.add_layer(self.generate_testing_movie(states))
             print "Movie generated..."
