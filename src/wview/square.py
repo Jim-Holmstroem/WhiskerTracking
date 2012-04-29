@@ -14,7 +14,7 @@ class SquareRenderer:
     def __init__(self, square_side):
         self.square_side = square_side
     
-    def render(self, context, pos, color=(255,255,255), filled=True, stroke_width=1, alpha=1.0):
+    def render(self, context, pos, color=(255,255,255), filled=True, stroke_width=2, alpha=1.0):
         context.rectangle(pos[0]-self.square_side/2, pos[1]-self.square_side/2, self.square_side, self.square_side)
         context.set_source_rgba(*(color+(alpha,)))
         if filled:
@@ -61,4 +61,4 @@ class SquareAnimator(wanimation):
         else:
             main_particle = self.particles[i].mean(axis=0)
         
-        self.renderer.render(context, (main_particle[0], main_particle[2]), self.main_particle_color, filled=False, alpha=0.5)
+        self.renderer.render(context, (main_particle[0], main_particle[2]), self.main_particle_color, filled=False, alpha=1)
