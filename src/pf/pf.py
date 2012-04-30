@@ -9,6 +9,7 @@ def default_sampler(X_prev):
 Randomly chooses samples from X with replacement, weighted according to weights.
 '''
 def default_resample(X, weights):
+    raise Exception("Shouldn't be used")
     X_new = numpy.zeros_like(X)
     for row in X_new:
         row = weighted_choice(weights, X)
