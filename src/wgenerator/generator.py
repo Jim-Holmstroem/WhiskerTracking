@@ -7,9 +7,9 @@ import numpy
 import os
 
 class Generator:
-    def __init__(self, dataset, parameter_groups, number_of_objects, number_of_transitions=1000, debug=False, number_of_movies=4, dt=1):
+    def __init__(self, dataset, number_of_objects=1, number_of_transitions=1000, debug=False, number_of_movies=4, dt=1):
         delete_database(dataset)
-        create_database(dataset, parameter_groups)
+        create_database(dataset, self.PARAMETER_GROUPS)
         self.dataset = dataset
         self.db = StateTransitionDatabase(dataset)
         self.number_of_objects = number_of_objects

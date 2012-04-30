@@ -46,6 +46,8 @@ class SquareGenerator(Generator):
 
 class AcceleratingSquareGenerator(SquareGenerator):
 
+    PARAMETER_GROUPS = [2, 2]
+
     X_STD = IMAGE_WIDTH/15.0
     Y_STD = IMAGE_HEIGHT/15.0
     
@@ -78,7 +80,7 @@ class AcceleratingSquareGenerator(SquareGenerator):
         return states
 
 def run():
-    ag = AcceleratingSquareGenerator("square_accelerating", [2, 2], 2, 1000)
+    ag = AcceleratingSquareGenerator("square_accelerating", 2, 1000)
     ag.generate()
 
 if __name__ == "__main__":
