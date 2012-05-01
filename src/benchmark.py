@@ -105,11 +105,10 @@ def run_cli():
     from common import cliutils
     cli_result = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] TRACKER_CLASSES...")
 
-    video_name = cli_result["VIDEO_NAME"]
-    database_name = cli_result["DATABASE_NAME"]
-    if "PARTICLES" in cli_result.keys():
-        num_particles = int(cli_result["PARTICLES"])
-    tracker_classes = [getattr(wtracker, c) for c in cli_result["TRACKER_CLASSES"]]
+    video_name, database_name, class_names = cli_result[0]
+    if "PARTICLES" in cli_result[1].keys():
+        num_particles = int(cli_result[1]["PARTICLES"])
+    tracker_classes = [getattr(wtracker, c) for c in class_names]
 
     print "Using video: %s"%(video_name)
     print "Using database: %s"%(database_name)
