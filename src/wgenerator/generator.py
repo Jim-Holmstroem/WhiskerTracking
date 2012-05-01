@@ -8,15 +8,18 @@ import os
 
 class Generator:
     def __init__(self, dataset, number_of_objects=1, number_of_transitions=1000, number_of_frames=64, number_of_movies=4, debug=False, dt=1):
+        if isinstance(debug, str):
+            debug = (debug == "True")
+
         delete_database(dataset)
         create_database(dataset, self.PARAMETER_GROUPS)
         self.dataset = dataset
         self.db = StateTransitionDatabase(dataset)
-        self.number_of_objects = number_of_objects
-        self.number_of_transitions = number_of_transitions
-        self.number_of_frames = number_of_frames
-        self.number_of_movies = number_of_movies
-        self.dt = dt
+        self.number_of_objects = int(number_of_objects)
+        self.number_of_transitions = int(number_of_transitions)
+        self.number_of_frames = int(number_of_frames)
+        self.number_of_movies = int(number_of_movies)
+        self.dt = float(dt)
 
     def generate(self):
         print "Generating training database with %i transitions..."%(self.number_of_transitions)
