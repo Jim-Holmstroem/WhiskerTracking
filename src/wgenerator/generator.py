@@ -7,13 +7,14 @@ import numpy
 import os
 
 class Generator:
-    def __init__(self, dataset, number_of_objects=1, number_of_transitions=1000, debug=False, number_of_movies=4, dt=1):
+    def __init__(self, dataset, number_of_objects=1, number_of_transitions=1000, number_of_frames=64, number_of_movies=4, debug=False, dt=1):
         delete_database(dataset)
         create_database(dataset, self.PARAMETER_GROUPS)
         self.dataset = dataset
         self.db = StateTransitionDatabase(dataset)
         self.number_of_objects = number_of_objects
         self.number_of_transitions = number_of_transitions
+        self.number_of_frames = number_of_frames
         self.number_of_movies = number_of_movies
         self.dt = dt
 
@@ -26,8 +27,6 @@ class Generator:
         print "Generating testing movies..."
         print
 
-        num_frames = int(self.number_of_transitions * 3.0/7 /self.number_of_movies)   # The 70-30 principle
-        
         for movie_i in xrange(self.number_of_movies):
             print "Generating movie %i of %i..."%(movie_i+1, self.number_of_movies)
             save_dir = make_video_path("%s_%i.pngvin"%(self.dataset, movie_i))
@@ -44,7 +43,7 @@ class Generator:
             
             wlm = wlayermanager()
             
-            states = [self.generate_testing_sequence(num_frames) for i in xrange(self.number_of_objects)]
+            states = [self.generate_testing_sequence(self.number_of_frames) for i in xrange(self.number_of_objects)]
             map(numpy.save, (os.path.join(save_dir, "state_sequence_%i.npy"%i) for i in xrange(len(states))), states)
             print "State sequences calculated..."
             
