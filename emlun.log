@@ -1,3 +1,9 @@
+2012-05-02
+(Log written at 00:20, 2012-05-03)
+Committed some slamm things I'd been working on.
+Integrated "simple" and "online" square generators into the generator system.
+Started working on mechanical model of whiskers using variational calculus.
+
 2012-05-01
 (Log written 2012-05-02)
 Refactorizations. Added CLI for generators.
