@@ -22,12 +22,16 @@ class Generator:
         self.dt = float(dt)
 
     def generate(self):
+        print
+        print "Launching generator %s"%(self.__class__.__name__)
+        print
+        
         print "Generating training database with %i transitions..."%(self.number_of_transitions)
         self.db.add_transitions(*self.generate_training_transitions())
         print "Training database generated."
         print
 
-        print "Generating testing movies..."
+        print "Generating testing movies with %i objects..."%(self.number_of_objects)
         print
 
         for movie_i in xrange(self.number_of_movies):
@@ -46,15 +50,18 @@ class Generator:
             
             wlm = wlayermanager()
             
+            print "Calculating state sequences..."
             states = [self.generate_testing_sequence(self.number_of_frames) for i in xrange(self.number_of_objects)]
             map(numpy.save, (os.path.join(save_dir, "state_sequence_%i.npy"%i) for i in xrange(len(states))), states)
-            print "State sequences calculated..."
+            print "State sequences calculated."
             
+            print "Generating movie..."
             wlm.add_layer(self.generate_testing_movie(states))
-            print "Movie generated..."
+            print "Movie generated."
             
+            print "Saving movie to %s"%(save_dir)
             wlm.exportPNGVIN(save_dir)
-            print "Movie saved to", save_dir
+            print "Movie saved."
             
             print "Finished generating movie %i of %i"%(movie_i+1, self.number_of_movies)
             print
