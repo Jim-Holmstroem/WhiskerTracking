@@ -1,5 +1,3 @@
-from common import make_path, DATA_DIRECTORY
-
 DB_DIR = "transition-db"
 DB_EXTENSION = ".sqlite3"
 
