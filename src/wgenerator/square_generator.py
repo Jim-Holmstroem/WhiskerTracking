@@ -7,7 +7,7 @@ import cairo
 import math
 import numpy
 
-__all__ = ["AcceleratingSquareGenerator", "SimpleSquareGenerator"]
+__all__ = ["AcceleratingSquareGenerator", "SimpleSquareGenerator" , "OnlineSquareGenerator"]
 
 def velocities(states, accel_func):
     stack = []
@@ -139,6 +139,35 @@ class SimpleSquareGenerator(AcceleratingSquareGenerator):
             for state, context in izip(states, contexts):
                 self.renderer.render(context, (state[0], state[2]), state[4])
 
+        return wvideo(surfaces)
+
+class OnlineSquareGenerator(SimpleSquareGenerator):
+
+    LINE_WIDTH = 5
+
+    def generate_testing_movie(self, all_squares_states):
+        surfaces = [cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT) for i in xrange(len(all_squares_states[0]))]
+        contexts = [cairo.Context(surface) for surface in surfaces]
+        
+        for context in contexts:
+            #context.scale(IMAGE_WIDTH, IMAGE_HEIGHT) # Normalize the canvas
+
+            context.rectangle(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT)
+            context.set_source_rgb(0,0,0)
+            context.fill()
+
+        for states in all_squares_states:
+            for state, context in izip(states, contexts):
+                self.renderer.render(context, (state[0], state[2]), state[4])
+
+                # Render line
+                context.identity_matrix()
+                context.set_source_rgb(1,1,1)
+                context.move_to(0,0)
+                context.line_to(IMAGE_WIDTH,IMAGE_HEIGHT)
+                context.set_line_width(self.LINE_WIDTH)
+                context.stroke()
+        
         return wvideo(surfaces)
 
 def run():
