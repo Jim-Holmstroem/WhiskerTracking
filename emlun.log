@@ -1,3 +1,25 @@
+2012-05-01
+(Log written 2012-05-02)
+Refactorizations. Added CLI for generators.
+
+2012-04-30
+(Log written 2012-05-02)
+Refactorizations.
+
+2012-04-29
+(Log written 2012-05-02)
+Worked on the abstract.
+Minor refactorizations.
+Made generators capable of generating movies with multiple objects, and made the benchmark track them all in sequence.
+
+2012-04-27
+Built generalized cliutils and made TrackerBenchmark use it.
+Fixed an error in pf: weights were calculated for X_{t-1} and not for X_t.
+Worked a bit on parallellizing tracking.
+
+(The following written 2012-05-02
+Added SquareTrackerBetterGoodness which uses Jim's image response thingies
+
 2012-04-24
 Built CLI for TrackerBenchmark
 
