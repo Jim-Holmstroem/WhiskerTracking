@@ -28,7 +28,7 @@ class SquareTracker(wtracker.Tracker):
         x, y = (particle[0], particle[2])
         
         if x < 0 or y < 0 or y >= image.shape[0] or x >= image.shape[1]:
-            return 0
+            return numpy.array([0])
         
         return image[y,x]**3
     

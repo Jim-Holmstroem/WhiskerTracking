@@ -52,16 +52,25 @@ class SquareAnimator(wanimation):
     def render(self, context, i):
         if self.intermediate_particles != None:
             for row in self.intermediate_particles[i]:
-                self.renderer.render(context, (row[0], row[2]), angle=row[4], color=self.intermediate_particle_color, filled=False, alpha=0.1)
+                angle = 0
+                if len(row) >= 5:
+                    angle = row[4]
+                self.renderer.render(context, (row[0], row[2]), angle=angle, color=self.intermediate_particle_color, filled=False, alpha=0.1)
         
         if self.particles != None:
             for row in self.particles[i]:
-                self.renderer.render(context, (row[0], row[2]), angle=row[4], color=self.particle_color, filled=False, alpha=0.1)
+                angle = 0
+                if len(row) >= 5:
+                    angle = row[4]
+                self.renderer.render(context, (row[0], row[2]), angle=angle, color=self.particle_color, filled=False, alpha=0.1)
         
         main_particle = None
         if self.main_particles != None:
             main_particle = self.main_particles[i]
         else:
             main_particle = self.particles[i].mean(axis=0)
-        
-        self.renderer.render(context, (main_particle[0], main_particle[2]), angle=main_particle[4], color=self.main_particle_color, filled=False, alpha=1)
+
+        angle = 0
+        if len(row) >= 5:
+            angle = row[4]
+        self.renderer.render(context, (main_particle[0], main_particle[2]), angle=angle, color=self.main_particle_color, filled=False, alpha=1)
