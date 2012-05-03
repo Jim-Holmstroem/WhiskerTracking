@@ -1,6 +1,7 @@
 __all__ = ["create_database", "create_database_if_not_exists", "delete_database", "StateTransitionDatabase"]
 
 from itertools import imap, izip, product
+from parallel import parallel_map
 from wmath import distribution
 import numpy
 import os
@@ -120,6 +121,8 @@ class StateTransitionDatabase:
                 where_clause_parts.append("%s%s%i BETWEEN ? AND ?"%(PREFIXES[0], PARAMETER_NAME, param))
             query += " AND ".join(where_clause_parts) + ";"
             self.__select_rectangle_queries.append(query)
+        
+        parallel_map(self.get_all_transitions, xrange(len(self.__param_groups)))
         
     def add_transitions(self, from_states, to_states):
         '''Add new transitions to the database.
