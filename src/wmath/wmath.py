@@ -5,6 +5,7 @@ from random import uniform
 
 import collections
 from Queue import Queue
+import math
 
 
 '''
@@ -31,7 +32,7 @@ def weighted_choice(weights, choiceSet=None):
 
 
 
-def render_points(fx,fy,dfx,dfy,Dl,length,thickness=(lambda l:1)):
+def render_points(fx,fy,dfx,dfy,dl,l_tot,thickness=(lambda l:1)):
     """
     @param fx,fy the parametric function
     @param dfx,dfy the derivative of the parametric function
@@ -42,11 +43,15 @@ def render_points(fx,fy,dfx,dfy,Dl,length,thickness=(lambda l:1)):
     """
     l=0
     t=0
-    df=lambda t:math.sqrt(dfx**2+dfy**2)
-    while(l<length):
-        print "bajs"
-
-print render_points(lambda t:t,lambda t:t**2,lambda t:1,lambda t:2*t,0.1,5)
+    df=lambda t:math.sqrt(dfx(t)**2+dfy(t)**2)
+    while(l<l_tot):
+        dt=dl/df(t)
+        t+=dt
+        yield str(fx(t))+","+str(fy(t))+";"
+        l+=dl
+       
+for points in render_points(lambda t:t,lambda t:t**2,lambda t:1,lambda t:2*t,0.1,5):
+    print points
 
 class function:
     """
