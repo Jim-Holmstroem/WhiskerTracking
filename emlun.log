@@ -1,3 +1,6 @@
+2012-05-03
+Worked on the mechanical model of whiskers. Tried plotting splines against real whiskers, it seems 4th order polynomials are good enough for representing whiskers.
+
 2012-05-02
 (Log written at 00:20, 2012-05-03)
 Committed some slamm things I'd been working on.
