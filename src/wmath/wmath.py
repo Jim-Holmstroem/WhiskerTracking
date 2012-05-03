@@ -4,6 +4,8 @@ __all__=['weighted_choice','argpick','argmin','argmax','binary_search']
 from random import uniform
 
 import collections
+from Queue import Queue
+
 
 '''
 Like python's builtin random.choice, but with weights.
@@ -26,6 +28,28 @@ def weighted_choice(weights, choiceSet=None):
                 return choiceSet[i]
 
     assert False, "This should not happen."
+
+
+
+def render_points(fx,fy,dfx,dfy,Dl,length,thickness=(lambda l:1)):
+    """
+    @param fx,fy the parametric function
+    @param dfx,dfy the derivative of the parametric function
+    @param Dl the wanted steplength
+    @param wanted totallength
+
+    Returns approriate points from t=0:t_length of the parametricfunction
+    """
+    l=0
+    t=0
+    df=lambda t:math.sqrt(dfx**2+dfy**2)
+    while(l<length):
+        print "bajs"
+
+print render_points(lambda t:t,lambda t:t**2,lambda t:1,lambda t:2*t,0.1,5)
+
+
+
 
 
 class function:
