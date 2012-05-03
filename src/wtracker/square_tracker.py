@@ -24,7 +24,8 @@ class SquareTracker(wtracker.Tracker):
     def make_animator(self, main_particles, particles, intermediate_particles):
         return SquareAnimator(main_particles, particles, intermediate_particles)
         
-    def goodness(self, particle, image):
+    def goodness(self, arg):#particle, image):
+        particle, image = arg
         x, y = (particle[0], particle[2])
         
         if x < 0 or y < 0 or y >= image.shape[0] or x >= image.shape[1]:
