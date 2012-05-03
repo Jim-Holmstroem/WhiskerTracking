@@ -48,7 +48,6 @@ def render_points(fx,fy,dfx,dfy,l,l_tot,thickness=(lambda l:1)):
 
 print render_points(lambda t:t,lambda t:t**2,lambda t:1,lambda t:2*t,0.1,5)
 
-
 class function:
     """
     Usally very computional heavy function as example featureresponses or such that one wants to save for later use
