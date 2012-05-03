@@ -14,7 +14,7 @@ a = A\y;
 X = 0:640;
 Y = a(1) + a(2)*X + a(3)*X.^2 + a(4)*X.^3 + a(5)*X.^4;
 
-I = imread('/misc/projects/whisker/video/m8_multi-frames/frame-0739.png');
+I = plot_spline_load_image();
 figure(1);
 clf;
 imshow(I);
