@@ -13,9 +13,12 @@ class SquareLayer(wlayer):
 class SquareRenderer:
     def __init__(self, square_side):
         self.square_side = square_side
+        self.rect_tuple = (-self.square_side/2, -self.square_side/2, self.square_side, self.square_side)
     
-    def render(self, context, pos, color=(255,255,255), filled=True, stroke_width=2, alpha=1.0):
-        context.rectangle(pos[0]-self.square_side/2, pos[1]-self.square_side/2, self.square_side, self.square_side)
+    def render(self, context, pos, angle=0, color=(255,255,255), filled=True, stroke_width=2, alpha=1.0):
+        context.translate(*pos)
+        context.rotate(angle)
+        context.rectangle(*self.rect_tuple)
         context.set_source_rgba(*(color+(alpha,)))
         if filled:
             context.fill()
@@ -49,16 +52,25 @@ class SquareAnimator(wanimation):
     def render(self, context, i):
         if self.intermediate_particles != None:
             for row in self.intermediate_particles[i]:
-                self.renderer.render(context, (row[0], row[2]), self.intermediate_particle_color, filled=False, alpha=0.1)
+                angle = 0
+                if len(row) >= 5:
+                    angle = row[4]
+                self.renderer.render(context, (row[0], row[2]), angle=angle, color=self.intermediate_particle_color, filled=False, alpha=0.1)
         
         if self.particles != None:
             for row in self.particles[i]:
-                self.renderer.render(context, (row[0], row[2]), self.particle_color, filled=False, alpha=0.1)
+                angle = 0
+                if len(row) >= 5:
+                    angle = row[4]
+                self.renderer.render(context, (row[0], row[2]), angle=angle, color=self.particle_color, filled=False, alpha=0.1)
         
         main_particle = None
         if self.main_particles != None:
             main_particle = self.main_particles[i]
         else:
             main_particle = self.particles[i].mean(axis=0)
-        
-        self.renderer.render(context, (main_particle[0], main_particle[2]), self.main_particle_color, filled=False, alpha=1)
+
+        angle = 0
+        if len(row) >= 5:
+            angle = row[4]
+        self.renderer.render(context, (main_particle[0], main_particle[2]), angle=angle, color=self.main_particle_color, filled=False, alpha=1)

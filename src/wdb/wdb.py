@@ -77,6 +77,7 @@ def delete_database(database_name):
         print "Did not delete database: file %s does not exist." % db_file
 
 class StateTransitionDatabase:
+    all_transitions = None
     def __init__(self, db_name):
         
         db_file = make_db_path(db_name)
@@ -138,6 +139,11 @@ class StateTransitionDatabase:
         
         self.__con.commit()
     
+    def get_all_transitions(self, parameter_group):
+        if self.all_transitions is None:
+            self.all_transitions = [numpy.array(self.__con.execute(self.__select_all_queries[group]).fetchall()) for group in xrange(len(self.__param_groups))]
+        return self.all_transitions[parameter_group]
+    
     def get_transitions_in_rectangle(self, param_group, origin, max_diffs):
         """Return all transitions in the database sufficiently close to origin.
         """
@@ -174,7 +180,7 @@ class StateTransitionDatabase:
         split_particle = self.__split_by_parameter_groups(prev_particle)
         selected = []
         for group, subparticle in enumerate(split_particle):
-            from_states, to_states = self.__split_transition(numpy.array(self.__con.execute(self.__select_all_queries[group]).fetchall()))
+            from_states, to_states = self.__split_transition(self.get_all_transitions(group))
             standard_deviations = numpy.std(from_states, axis=0)
             
             # HACK: Prevent division by zero
@@ -190,8 +196,3 @@ class StateTransitionDatabase:
             selected.append(numpy.average(to_states, axis=0, weights=weights))
         return numpy.hstack(selected)
 #            from_states, to_states = self.__split_transition(self.get_transitions_in_rectangle(group, subparticle, max_diffs))
-
-if __name__ == "__main__":
-    delete_database("lol")
-    create_database("lol", [2,3,4])
-    db = StateTransitionDatabase("square_bounce")
