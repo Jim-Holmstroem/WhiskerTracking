@@ -7,20 +7,22 @@ class GWhiskerLayer(wlayer):
     def __init__(self, particle, alpha=1):
         wlayer.__init__(self, alpha)
         self.particle = particle
-        self.renderer = GWhiskerRenderer(2,30)
+        self.renderer = GWhiskerRenderer(64,256,16)
     
     def render(self, context):
         self.renderer.render(context, self.particle)
 
 class GWhiskerRenderer:
-    def __init__(self, dl, length, particle_alpha=0.1):
+    def __init__(self, dl, length,width, particle_alpha=0.1):
         self.dl = dl
         self.length=length 
+        self.width=width
         self.particle_alpha = particle_alpha
     
     def render(self, context, particle, color=(255,255,255), stroke_width=1, alpha=1.0):
         context.identity_matrix()
         context.set_source_rgba(*(color + (alpha,)))
+
         context.set_line_width(2.0)
 
         points=render_points(
@@ -28,12 +30,15 @@ class GWhiskerRenderer:
             lambda t: particle[0]*t**3+particle[1]*t**2+particle[2]*t+particle[3],
             lambda t: 1,
             lambda t: 3*particle[0]*t**2+2*particle[1]*t+particle[2],
-            10,
-            100)
+            self.dl,
+            self.length)
         
         map(lambda (x,y,l):context.line_to(x,y),points)
         context.stroke() 
 
+        context.arc(0,particle[3],3,-math.pi,math.pi)
+        context.fill()
+        
 
 """
 class GWhiskerAnimator(wanimation):

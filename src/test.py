@@ -10,12 +10,11 @@ from common import make_video_path
 
 from wview.gwhisker import GWhiskerLayer 
 
-
 #selftest
 if __name__=="__main__":
     layermanager = wlayermanager()
 
-    whisker=wvideo(map(lambda b:GWhiskerLayer((0,float(b)/10,0,150)),range(-36,36)))
+    whisker=wvideo(map(lambda b:GWhiskerLayer((0,float(b)/1024,0,256)),range(-8,8+1)))
     layermanager.add_layer(whisker)
   
     layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
