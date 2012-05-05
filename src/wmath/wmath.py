@@ -38,11 +38,10 @@ def render_points(fx,fy,dfx,dfy,dl,l_tot,t=0):
     @param Dl the wanted steplength
     @param wanted totallength
 
-    NOTE. doesnt return the starting point, for easier rendering and such, easy to append if needed.
-
     Returns approriate points from t=0:t_length of the parametricfunction
     """
     l=0
+    yield (fx(t),fy(t),l)
     while(l<l_tot):
         df=lambda t:sqrt(dfx(t)**2+dfy(t)**2)
         dt=dl/max(df(t),0.000000001) #to avoid divide by zero (mostly att start)
