@@ -7,23 +7,31 @@ class GWhiskerLayer(wlayer):
     def __init__(self, particle, alpha=1):
         wlayer.__init__(self, alpha)
         self.particle = particle
-        self.renderer = GWhiskerRenderer(64,256,16)
+        self.renderer = GWhiskerRenderer(8,256,16)
     
     def render(self, context):
         self.renderer.render(context, self.particle)
 
 class GWhiskerRenderer:
     def __init__(self, dl, length,width, particle_alpha=0.1):
-        self.dl = dl
-        self.length=length 
-        self.width=width
+        self.dl = float(dl)
+        self.length=float(length) 
+        self.width=float(width)
         self.particle_alpha = particle_alpha
     
     def render(self, context, particle, color=(255,255,255), stroke_width=1, alpha=1.0):
         context.identity_matrix()
         context.set_source_rgba(*(color + (alpha,)))
 
-        context.set_line_width(2.0)
+        context.set_line_width(self.width)
+        def fragment_renderer(data):
+            context.line_to(data[0],data[1])
+            context.stroke()
+            w=self.width*(1-data[2]/self.length)
+            context.arc(data[0],data[1],w/2,-math.pi,math.pi) #to remove the space between segments
+            context.fill()
+            context.move_to(data[0],data[1])
+            context.set_line_width(w)
 
         points=render_points(
             lambda t: t,
@@ -33,12 +41,10 @@ class GWhiskerRenderer:
             self.dl,
             self.length)
         
-        map(lambda (x,y,l):context.line_to(x,y),points)
-        context.stroke() 
+        map(fragment_renderer,points)
 
         context.arc(0,particle[3],3,-math.pi,math.pi)
         context.fill()
-        
 
 """
 class GWhiskerAnimator(wanimation):
