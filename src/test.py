@@ -14,7 +14,7 @@ from wview.gwhisker import GWhiskerLayer
 if __name__=="__main__":
     layermanager = wlayermanager()
 
-    whisker=wvideo(map(lambda b:GWhiskerLayer((0,float(b)/1024,0,256)),range(-8,8+1)))
+    whisker=wvideo(map(lambda b:GWhiskerLayer((0,float(b)/2048,0,256)),range(-16,16+1)))
     layermanager.add_layer(whisker)
   
     layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
