@@ -19,30 +19,23 @@ KD-tree
 
 bayes optimal as in bik12, is this applicable ?
 
-
 Can something be considered to be an heuristic?
 
 ============================================
 Seperate filter (as in image filter) and filter (as in tracker)
 
-
 =============================================
 At HMM-figure write note about the start guess "distribution" p(z_1)
-
 
 ==========================================
 PF vs condensation
 
-
 ==========================================
 (not even considering)Non adaptive [ref:probrob] since we dont have realtime issues
-
 
 ===========================================
 
 Prove particle approx for PDF's (lim analysis?) and show this by example, also show the PDF-multiplication we are doing in the PF with example (and proof?)
-
-
 
 ===================== PF as searchblablabla =================
 
@@ -81,6 +74,11 @@ Point out the connection between physical kinematic system (present the main for
 Borrow the word reduce from complexity theory and use it as: reducing the problem to an innerstate of an dynamicsystem
 
 
+====================== Image theory ===================
+
+ and leaves us with questions like what are edge?
+
+edge model
 
 ================= Own Contributions =============
 <<Vart ska dethär in?>>
@@ -88,51 +86,34 @@ Borrow the word reduce from complexity theory and use it as: reducing the proble
 
 Given PF a model of whiskers ...
 
-
-
 ================== Scope ==================
 <<>>
+
+The program is only intended to run on grayscale video, so no color image processing except for transforming the video down to grayscale is handled.
 
 Since the video-sequences we are intending to run on is grayscale-only we simply 
 transform all the images down to grayscale which wont affect the results even if
 the image happens to be in color.
 
-
-
-
 ========================================
 
 Feature extraction vs. feature selection (bik)
-
-
 
 ========================================
 
 IMPORTANT
 
-
 Just like the up-transformation in SVMs we get a higher probability for seperation for different objects if we (try) transform the 2D image object into our higher dimensinoal model. 
-
-
-
 
 ========================================
 
 >>Ground truth
 
-
-
-
+One problem is that defining a measure on what could be a good fit and the fact on what is really the "ground truth"
 
 ============= The handling of uniform (seen from prop.dist in featurespace) like base-position/angle ===================
 
-
-
-
-
-
 "In its rawest form"
-
 
 =============== WRAPUP ===================
 
@@ -143,15 +124,10 @@ compared to do a simple muckup in MATLAB(R) or such since some builtin
 functionallity is missing and also having problems like missaligned buffers 
 or having to write an adapter between images and matrices as an example.
 
-
-
-
 ==========================================
 Do an exhausted search for something low dimensional like the snot and then plot all the datapoints over time for a sequence in the video.
 Will be very high dimensional so perhaps some projection will be good but keep time as an axis
 The goal is to see the "worm" lingering tru the timeline (is it possible to do an variant of density-based clustering of this data to first find the path tru time of these worms given an head of the worm (a startpoint at t_0) and then "tracking" the timeworm? and ofcourse trying to find E[] of the timeworm)
-
-
 
 ================Analysis====================
 can one just do analysis with a cost function, like cost=compution and to maximize accuracy/computations by using an directed search, even so much that we basically lowers the complexity of the algorithm
@@ -159,8 +135,6 @@ Is it possible to do somewhat of of complexity analysis of this?
 Worstcase data? better data (assumptions in realdata?)
 without directed search (AKA uniform distribution pick) O(n^k)
 searching in an gaussianclock? searching in an flat gaussian clock, that is in an gaussian clock that has perfekt dependacies in some direction (that is no (or almost no) data in that dimension)
-
-
 
 ==========================================
 Bra grejer att referera till i encylopdian:
@@ -226,9 +200,7 @@ the predicted and true values."
 >>Measurement scales (categoral vs numeric) and some problems that comes with it.
 >>Mixturemodel \sum w_iP(x|D_i) where D_j is different PDFs, kinda like discrete transforms DTF but for ditributions
 >>>Model evaluation (do our analysis by this) and do <model selection>, NOTE do we have a mixup with the word model here, what exactly is a model, is our model the same thing?
-
 >Model space (hypothesis space)
-
 
 =============================================
 Basically PF just guides the search and thereby making the algorithm much more effective computionally (effective=acc/compution) and becomes more local and therefore finding the closest match
@@ -253,8 +225,6 @@ that is an hypotesis is just given parameters on the model
 what then is the model evaluation as described in the encyclopedia in our case?
 ================================================
 
-
-
 =============== RANDOM ===================
 
 +, having signature R->R
@@ -275,13 +245,6 @@ what then is the model evaluation as described in the encyclopedia in our case?
 Its work a bit in the same way as feature selection the more uncertain you are if a feature parameter is correct the more you spread the search there
 (Is it possible for the algorithm to sense when you are unceratain of the value for some parameter and lay extra effort until you have it ?) an example would be if one could dynamically choose the number of particles needed depending on how sure you are about the result (after all this isnt a realtime application)
 
-
-
-
-
-===========================================
 ===========================================
 According to "Att genomföra projektarbeten"
-
-
 
