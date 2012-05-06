@@ -26,6 +26,10 @@ Can something be considered to be an heuristic?
 Seperate filter (as in image filter) and filter (as in tracker)
 
 
+=============================================
+At HMM-figure write note about the start guess "distribution" p(z_1)
+
+
 ==========================================
 PF vs condensation
 

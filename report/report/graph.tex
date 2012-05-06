@@ -29,36 +29,28 @@ http://tex.stackexchange.com/q/45734/213 of Ichibann.
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
   thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
 
-  \node[main node] (1) {$Z_1$};
-  \node[main node] (2) [right of=1] {$Z_2$};
-  \node[main node] (3) [right of=2] {$Z_3$};
-  \node[main node] (4) [right of=3] {$Z_4$};
-  \node[main node] (u1) [below of=1] {$u_1$};
-  \node[main node] (u2) [below of=2] {$u_2$};
-  \node[main node] (u3) [below of=3] {$u_3$};
-  \node[main node] (u4) [below of=4] {$u_4$};
+  \node[main node] (z1) [label=above:$p(z_1)$] {$Z_1$};
+  \node[main node] (z2) [right of=z1,label=above:$p(z_2|z_1)$] {$Z_2$};
+  \node[main node] (z3) [right of=z2,label=above:$p(z_3|z_2)$] {$Z_3$};
+  \node (dots) [right of=z3] {$\ldots$};
+  \node[main node] (zn) [right of=dots,label=above:$p(z_n|z_{n-1})$] {$Z_n$};
+
+  \node[main node] (u1) [below of=z1,label=below:$p(u_1|z_1)$] {$u_1$};
+  \node[main node] (u2) [below of=z2,label=below:$p(u_2|z_2)$] {$u_2$};
+  \node[main node] (u3) [below of=z3,label=below:$p(u_3|z_3)$] {$u_3$};
+  \node[main node] (un) [below of=zn,label=below:$p(u_n|z_n)$] {$u_n$};
 
   \path[every node/.style={font=\sffamily\small}]
-    (1) edge node [right] {} (2)
-    (2) edge node [right] {} (3)
-    (3) edge node [right] {} (4);
+    (z1) edge node [right] {} (z2)
+    (z2) edge node [right] {} (z3)
+    (z3) edge node [right] {} (dots)
+    (dots) edge node [right] {} (zn);
 
   \path[every node/.style={font=\sffamily\small}]
-    (1) edge node [below] {} (u1)
-    (2) edge node [below] {} (u2)
-    (3) edge node [below] {} (u3)
-    (4) edge node [below] {} (u4);
+    (z1) edge node [below] {} (u1)
+    (z2) edge node [below] {} (u2)
+    (z3) edge node [below] {} (u3)
+    (zn) edge node [below] {} (un);
 
-%    (1) edge node [left] {0.6} (4)
-%        edge [bend right] node[left] {0.3} (2)
-%        edge [loop above] node {0.1} (1)
-%    (2) edge node [right] {0.4} (1)
-%        edge node {0.3} (4)
-%        edge [loop left] node {0.4} (2)
-%        edge [bend right] node[left] {0.1} (3)
-%    (3) edge node [right] {0.8} (2)
-%        edge [bend right] node[right] {0.2} (4)
-%    (4) edge node [left] {0.2} (3)
-%        edge [loop right] node {0.6} (4)
 \end{tikzpicture}
 \end{document}
