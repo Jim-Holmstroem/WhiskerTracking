@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\usetikzlibrary{arrows}
+\begin{document}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+  thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+  \node[main node] (Z1) [label=left:$p(Z_1)$] {$Z_1$};
+  \node[main node] (Z2) [below of=Z1,label=left:$p(Z_2|Z_1)$] {$Z_2$};
+  \node[main node] (Z3) [below of=Z2,label=left:$p(Z_3|Z_2)$] {$Z_3$};
+  
+  %evolution rule
+
+  \node (dots) [below of=Z3] {$\vdots$};
+  \node[main node] (Zn) [below of=dots,label=left:$p(Z_n|Z_{n-1})$] {$Z_n$};
+
+  \node[main node] (u1) [right of=Z1,label=below:$p(u_1|Z_1)$] {$u_1$};
+  \node[main node] (u2) [right of=Z2,label=below:$p(u_2|Z_2)$] {$u_2$};
+  \node[main node] (u3) [right of=Z3,label=below:$p(u_3|Z_3)$] {$u_3$};
+  \node (udots) [right of=dots] {$\vdots$};
+  \node[main node] (un) [right of=Zn,label=below:$p(u_n|Z_n)$] {$u_n$};
+
+  \path[every node/.style={font=\sffamily\small}]
+    (Z1) edge node [left] {Physics} (Z2)
+    (Z2) edge node [left] {Physics} (Z3)
+    (Z3) edge node [left] {Physics} (dots)
+    (dots) edge node [left] {Physics} (Zn);
+
+  \path[every node/.style={font=\sffamily\small}]
+    (Z1) edge node [above] {Observe} (u1)
+    (Z2) edge node [above] {Observe} (u2)
+    (Z3) edge node [above] {Observe} (u3)
+    (Zn) edge node [above] {Observe} (un);
+
+\end{tikzpicture}
+\end{document}

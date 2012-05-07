@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\usetikzlibrary{arrows}
+\begin{document}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+  thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+  \node[main node] (z1) [label=above:$p(z_1)$] {$Z_1$};
+  \node[main node] (z2) [right of=z1,label=above:$p(z_2|z_1)$] {$Z_2$};
+  \node[main node] (z3) [right of=z2,label=above:$p(z_3|z_2)$] {$Z_3$};
+  
+  %evolution rule
+
+  \node (dots) [right of=z3] {$\ldots$};
+  \node[main node] (zn) [right of=dots,label=above:$p(z_n|z_{n-1})$] {$Z_n$};
+
+  \node[main node] (u1) [below of=z1,label=below:$p(u_1|z_1)$] {$u_1$};
+  \node[main node] (u2) [below of=z2,label=below:$p(u_2|z_2)$] {$u_2$};
+  \node[main node] (u3) [below of=z3,label=below:$p(u_3|z_3)$] {$u_3$};
+  \node[main node] (un) [below of=zn,label=below:$p(u_n|z_n)$] {$u_n$};
+
+  \path[every node/.style={font=\sffamily\small}]
+    (z1) edge node [right,above] {Physics} (z2)
+    (z2) edge node [right,above] {Physics} (z3)
+    (z3) edge node [right,above] {Physics} (dots)
+    (dots) edge node [right,above] {Physics} (zn);
+
+  \path[every node/.style={font=\sffamily\small}]
+    (z1) edge node [below] {} (u1)
+    (z2) edge node [below] {} (u2)
+    (z3) edge node [below] {} (u3)
+    (zn) edge node [below] {} (un);
+
+\end{tikzpicture}
+\end{document}
