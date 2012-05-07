@@ -4,24 +4,28 @@ import math
 from wmath import render_points
 
 class GWhiskerLayer(wlayer):
-    def __init__(self, particle, alpha=1):
+    def __init__(self, particle, alpha=1,rotation=0.,translate=(0,0)):
         wlayer.__init__(self, alpha)
         self.particle = particle
-        self.renderer = GWhiskerRenderer(8,256,16)
+        self.renderer = GWhiskerRenderer(8,256,16,rotation,translate)
     
     def render(self, context):
         self.renderer.render(context, self.particle)
 
 class GWhiskerRenderer:
-    def __init__(self, dl, length,width, particle_alpha=0.1):
+    def __init__(self, dl, length,width, rotation=0,translate=(0,0),particle_alpha=0.1):
         self.dl = float(dl)
         self.length=float(length) 
         self.width=float(width)
+        self.rotation=rotation
+        self.translate=translate
         self.particle_alpha = particle_alpha
     
     def render(self, context, particle, color=(255,255,255), stroke_width=1, alpha=1.0):
         context.identity_matrix()
-        context.set_source_rgba(*(color + (alpha,)))
+        context.translate(*(self.translate))
+        context.rotate(self.rotation)
+        contex.set_source_rgba(*(color + (alpha,)))
 
         context.set_line_width(self.width)
         def fragment_renderer(data):
