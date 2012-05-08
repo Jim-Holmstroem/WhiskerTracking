@@ -11,6 +11,7 @@ def default_sampler(X_prev):
 Randomly chooses samples from X with replacement, weighted according to weights.
 '''
 def default_resample(X, weights):
+    raise Exception("Shouldn't be used")
     return numpy.array(map(weighted_choice, weights, X))
 
 '''

@@ -1,9 +1,13 @@
 
-__all__=['weighted_choice','argpick','argmin','argmax','binary_search']
+__all__=['weighted_choice','render_points','argpick','argmin','argmax','binary_search']
 
 from random import uniform
 
 import collections
+from Queue import Queue
+from math import sqrt,sin,cos,tan,pi
+
+import pylab
 
 '''
 Like python's builtin random.choice, but with weights.
@@ -27,6 +31,45 @@ def weighted_choice(weights, choiceSet=None):
 
     assert False, "This should not happen."
 
+def render_points(fx,fy,dfx,dfy,dl,l_tot,t=0):
+    """
+    @param fx,fy the parametric function
+    @param dfx,dfy the derivative of the parametric function
+    @param Dl the wanted steplength
+    @param wanted totallength
+
+    Returns approriate points from t=0:t_length of the parametricfunction
+    """
+    l=0
+    yield (fx(t),fy(t),l)
+    while(l<l_tot):
+        df=lambda t:sqrt(dfx(t)**2+dfy(t)**2)
+        dt=dl/max(df(t),0.000000001) #to avoid divide by zero (mostly att start)
+        t+=dt
+        l+=dl
+        yield (fx(t),fy(t),l)
+
+"""
+points = list(render_points(
+        lambda t:2*cos(t)+cos(8*t),
+        lambda t:2*sin(t)+sin(8*t),
+        lambda t:-2*sin(t)-8*sin(8*t),
+        lambda t:2*cos(t)+8*cos(8*t),
+        0.05,
+        50))
+"""
+"""
+points = list(render_points(
+        lambda t:cos(t),
+        lambda t:sin(t),
+        lambda t:sin(t),
+        lambda t:-cos(t),
+        0.1,
+        2*pi,
+        ))
+"""
+#pylab.plot(map(lambda point:point[0],points),map(lambda point:point[1],points),'+')
+#pylab.show()
 
 class function:
     """
@@ -43,7 +86,6 @@ class function:
         assert isinstance(variables,dict)
         assert isinstance(f,collections.Callable)
         self.variables=variables
-
 
     def calculate(self):
         pass
@@ -63,8 +105,6 @@ class function:
         Plot with approriate labels on the variables and such
         """
         pass
-
-
 
 def argpick(picker,f,seq):
     return min(map(lambda s:(f(s),s),seq))[1]

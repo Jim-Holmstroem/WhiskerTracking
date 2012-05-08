@@ -1,0 +1,28 @@
+\begin{thebibliography}{1}
+
+\bibitem{funkhouser}
+{Funkhouser T}, {Tsingos N}, {Carlbom I}, {Elko G}, {Sondhi M}, {West J E},
+  et~al.
+\newblock A beam tracing method for interactive architectural acoustics.
+\newblock Acoustical Society of America. 2004;p. 739--756.
+
+\bibitem{sjoberg}
+{Sjöberg P}.
+\newblock Real-Time Audio Simulation with Implicit Surfaces using Sphere
+  Tracing on the GPU.
+\newblock University of Skövde, School of Humanities and Informatics; 2011.
+
+\bibitem{CPUcoGPU}
+{Gjermundsen A}.
+\newblock CPU and GPU Co-processing for Sound.
+\newblock Norwegian University of Science and Technology, Department of
+  Computer and Information Science; 2010.
+
+\bibitem{rect_decomp}
+{Raghuvanshi N}, {Narain R}, {Lin C}.
+\newblock Efficient and Accurate Sound Propagation Using Adaptive Rectangular
+  Decomposition.
+\newblock IEEE Transactions on Visualization and Computer Graphics. 2009
+  September;15:789 -- 801.
+
+\end{thebibliography}
