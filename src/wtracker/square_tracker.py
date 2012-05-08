@@ -22,7 +22,7 @@ class SquareTracker(wtracker.Tracker):
         print "Startup complete."
         
     def make_animator(self, main_particles, particles, intermediate_particles):
-        return SquareAnimator(main_particles, particles, intermediate_particles)
+        return SquareAnimator(main_particles[:,::2], particles[:,:,::2], intermediate_particles[:,:,::2])
         
     def goodness(self, arg):#particle, image):
         particle, image = arg
@@ -68,7 +68,7 @@ class SquareTrackerBetterGoodness(SquareTracker):
     
     def goodness(self, arg):#particle, image):
         particle, image = arg
-        mask = wimage(SquareLayer(particle))
+        mask = wimage(SquareLayer(particle[::2]))
         processed_image = wimage(image)
         
         mask_sum = mask.sum()

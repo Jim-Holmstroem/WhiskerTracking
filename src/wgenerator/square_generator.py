@@ -31,8 +31,8 @@ class SquareGenerator(Generator):
 
     renderer = SquareRenderer(50)
 
-    def generate_testing_movie(self, all_squares_states):
-        surfaces = [cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT) for i in xrange(len(all_squares_states[0]))]
+    def generate_testing_movie(self, all_squares_positions):
+        surfaces = [cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH, IMAGE_HEIGHT) for i in xrange(len(all_squares_positions[0]))]
         contexts = [cairo.Context(surface) for surface in surfaces]
         
         for context in contexts:
@@ -42,9 +42,9 @@ class SquareGenerator(Generator):
             context.set_source_rgb(0,0,0)
             context.fill()
 
-        for states in all_squares_states:
-            for state, context in izip(states, contexts):
-                self.renderer.render(context, (state[0], state[2]))
+        for positions in all_squares_positions:
+            for pos, context in izip(positions, contexts):
+                self.renderer.render(context, pos)
         
         return wvideo(surfaces)
 
@@ -83,7 +83,10 @@ class AcceleratingSquareGenerator(SquareGenerator):
             states[i,:] = state
             state = timestep(state, self.accel_func)
         
-        return states
+        return numpy.array(states)
+    
+    def generate_testing_movie(self, all_squares_states):
+        return SquareGenerator.generate_testing_movie(self, all_squares_states[:,:,::2])
 
 class SimpleSquareGenerator(AcceleratingSquareGenerator):
     """

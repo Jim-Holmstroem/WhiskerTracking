@@ -57,6 +57,9 @@ class Tracker:
             print "Tracking complete."
             print
 
+            all_particles = numpy.array(all_particles)
+            all_intermediate_particles = numpy.array(all_intermediate_particles)
+
             self.tracks[obj_i] = track
             self.animators[obj_i] = self.make_animator(track, all_particles, all_intermediate_particles)
     
