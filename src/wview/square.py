@@ -16,6 +16,7 @@ class SquareRenderer:
         self.rect_tuple = (-self.square_side/2, -self.square_side/2, self.square_side, self.square_side)
     
     def render(self, context, pos, angle=0, color=(255,255,255), filled=True, stroke_width=2, alpha=1.0):
+        context.identity_matrix()
         context.translate(*pos)
         context.rotate(angle)
         context.rectangle(*self.rect_tuple)
