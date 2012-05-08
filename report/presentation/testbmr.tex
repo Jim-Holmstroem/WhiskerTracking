@@ -1,0 +1,86 @@
+\documentclass[]{beamer}
+% Class options include: notes, notesonly, handout, trans,
+%                        hidesubsections, shadesubsections,
+%                        inrow, blue, red, grey, brown
+
+% Theme for beamer presentation.
+\usepackage{beamerthemesplit} 
+% Other themes include: beamerthemebars, beamerthemelined, 
+%                       beamerthemetree, beamerthemetreebars  
+
+\title{Probabilistic Tracking of Multiple Whiskers}
+\author{Jim Holmstr\"{o}m, Emil Lundberg}                 % Enter your name between curly braces
+\institute{CSC,KTH}      % Enter your institute name between curly braces
+\date{\today}                    % Enter the date or \today between curly braces
+
+\begin{document}
+
+% Creates title page of slide show using above information
+\begin{frame}
+  \titlepage
+\end{frame}
+\note{Talk for 30 minutes} % Add notes to yourself that will be displayed when
+                           % typeset with the notes or notesonly class options
+\section[Outline]{}
+
+% Creates table of contents slide incorporating
+% all \section and \subsection commands
+\begin{frame}
+  \tableofcontents
+\end{frame}
+
+
+
+
+\section{Simple slide with three points shown all at once}
+
+\begin{frame}
+  \frametitle{Simple slide with three points shown all at once}   % Insert frame title between curly braces
+
+  \begin{itemize}
+  \item Point 1
+  \item Point 2
+  \item Point 3
+  \end{itemize}
+\end{frame}
+\note[enumerate]       % Add notes to yourself that will be displayed when
+{                      % typeset with the notes or notesonly class options
+\item Note for Point 1   
+\item Note for Point 2   
+}
+
+\subsection{Simple slide with three points shown in succession}
+
+\begin{frame}
+  \frametitle{Simple slide with three points shown in succession}   % Insert frame title between curly braces
+
+  \begin{itemize}
+  \item<1-> Point 1 (Click ``Next Page'' to see Point 2) % Use Next Page to go to Point 2
+  \item<2-> Point 2  % Use Next Page to go to Point 3
+  \item<3-> Point 3
+  \end{itemize}
+\end{frame}
+\note{Speak clearly}  % Add notes to yourself that will be displayed when
+                      % typeset with the notes or notesonly class options
+
+
+\section{Slide with two columns: items and a graphic}
+
+\begin{frame}
+  \frametitle{Slide with two columns: items and a graphic}   % Insert frame title between curly braces
+  \begin{columns}[c]
+  \column{2in}  % slides are 3in high by 5in wide
+  \begin{itemize}
+  \item<1-> First item
+  \item<2-> Second item
+  \item<3-> ...
+  \end{itemize}
+  \column{2in}
+  \framebox{Insert graphic here % e.g. \includegraphics[height=2.65in]{graphic}
+  }
+  \end{columns}
+\end{frame}
+\note{The end}       % Add notes to yourself that will be displayed when
+		     % typeset with the notes or notesonly class options
+
+\end{document}
