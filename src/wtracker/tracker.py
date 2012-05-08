@@ -36,6 +36,7 @@ class Tracker:
 
         for obj_i, start_state in enumerate(self.start_states):
             print "Tracking object %i of %i"%(obj_i+1, len(self.start_states))
+            print "Start state for object %i is %s."%(obj_i, start_state)
 
             particles = numpy.array([start_state]*self.num_particles)
         
@@ -63,7 +64,8 @@ class Tracker:
         from wgui import wlayermanager
         
         print "Exporting results as PNGVIN video..."
-        wl = wlayermanager(self.video)
+        wl = wlayermanager()
+        wl.add_layer(self.video)
         map(wl.add_layer, self.animators)
         wl.exportPNGVIN(pngvin_dir)
         print "Export complete."
