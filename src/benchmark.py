@@ -1,5 +1,6 @@
 from common import make_video_path
 from common.settings import make_run_path
+from itertools import repeat
 from wdb import StateTransitionDatabase
 from wgui.wlayermanager import wlayermanager
 from wgui.wwindow import wwindow
@@ -19,35 +20,40 @@ class TrackerBenchmark:
         self.video_name = video_name
         self.database_name = database_name
         
-        self.correct_states = numpy.load(os.path.join(video_path, "state_sequence.npy"))
+        self.num_objects = 0
+        while os.path.exists(os.path.join(video_path, "state_sequence_%i.npy"%(self.num_objects))):
+            self.num_objects += 1
+
+        self.correct_states = [numpy.load((os.path.join(video_path, "state_sequence_%i.npy"%i))) for i in xrange(self.num_objects)]
         self.video = wvideo(video_path)
         self.db = StateTransitionDatabase(database_name)
-        self.num_particles = num_particles
 
-        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video), tracker_classes)
+        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video, [self.correct_states[i][0] for i in xrange(self.num_objects)], num_particles), tracker_classes)
 
     def _run_test(self, tracker):
         print "Tracking with tracker class %s"%(tracker.__class__.__name__)
-        return tracker.run(self.correct_states[0], self.num_particles)
+        tracker.run()
+        return (tracker.get_track(i) for i in xrange(self.num_objects))
     
     def run(self):
         print "Running tracking test"
         self.tracks = map(self._run_test, self.trackers)
-        
-        differences_from_correct = map(lambda track:numpy.abs(self.correct_states - track), self.tracks)
-        self.sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
-        
-        print self.sum_diffs
         print "Finished tracking test"
         print
 
     def evaluate_results(self):
+        raise NotImplementedError("Broken because of changes")
         print "##################################################"
         print "#                  TEST RESULTS                  #"
         print "##################################################"
         print
         
-        diff_matrix = numpy.array(self.sum_diffs)
+        differences_from_correct = map(lambda track:numpy.abs(self.correct_states - track), self.tracks)
+        sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
+        
+        print self.sum_diffs
+
+        diff_matrix = numpy.array(sum_diffs)
         winner_indices = numpy.array(zip(*numpy.where((diff_matrix-diff_matrix.min(axis=0)) == 0)))[:,0]
         print "Winners by parameter index:"
         print
@@ -64,7 +70,7 @@ class TrackerBenchmark:
         print "Animating test results"
         layer_manager = wlayermanager()
         layer_manager.add_layer(self.video)
-        layer_manager.add_layer(self.trackers[tracker_i].get_animator())
+        map(layer_manager.add_layer, (self.trackers[tracker_i].get_animator(i) for i in xrange(self.num_objects)))
         
         win = wwindow(layer_manager)
         gtk.gdk.threads_enter()
@@ -99,11 +105,10 @@ def run_cli():
     from common import cliutils
     cli_result = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] TRACKER_CLASSES...")
 
-    video_name = cli_result["VIDEO_NAME"]
-    database_name = cli_result["DATABASE_NAME"]
-    if "PARTICLES" in cli_result.keys():
-        num_particles = int(cli_result["PARTICLES"])
-    tracker_classes = [getattr(wtracker, c) for c in cli_result["TRACKER_CLASSES"]]
+    video_name, database_name, class_names = cli_result[0]
+    if "PARTICLES" in cli_result[1].keys():
+        num_particles = int(cli_result[1]["PARTICLES"])
+    tracker_classes = [getattr(wtracker, c) for c in class_names]
 
     print "Using video: %s"%(video_name)
     print "Using database: %s"%(database_name)
@@ -121,8 +126,8 @@ def run_cli():
     cProfile.runctx("benchmark.run()", globals(), locals())
 
     benchmark.export_results()
-    benchmark.evaluate_results()
-    benchmark.animate(0)
+#    benchmark.evaluate_results()
+#    benchmark.animate(0)
 
 if __name__ == "__main__":
     run_cli()

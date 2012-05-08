@@ -2,3 +2,6 @@
 /run/
 /video
 *.swp
+.project
+.pydevproject
+*.pngvin

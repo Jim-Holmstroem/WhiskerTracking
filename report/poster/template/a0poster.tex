@@ -1,0 +1,115 @@
+\documentclass{a0poster}
+\usepackage{geometry}
+\geometry{paper=a0paper}
+\geometry{hmarginratio=1:1}
+\geometry{vmarginratio=1:1}
+\geometry{hmargin=25mm}
+\geometry{vmargin=25mm}
+\usepackage[pdftex]{graphicx}
+%\usepackage{curves}
+%\usepackage{algorithmic}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+%\usepackage{color, graphicx}
+\usepackage{lipsum}
+\usepackage{multicol}
+\usepackage{subfigure}
+%\usepackage{textpos}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{rotating}
+
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+
+%paket från kex
+%\usepackage[T1]{fontenc}
+%\usepackage{textcomp}
+%\usepackage{lmodern}
+\usepackage[swedish, english]{babel} 
+%\usepackage[pdftex]{graphicx}
+%\usepackage{wrapfig}
+%\usepackage{float}
+%\usepackage{cite}
+%\usepackage{subfigure}
+%%% define new commands %%%
+
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\res}{res}
+\DeclareMathOperator{\meas}{meas}
+
+\def\tol{{\textsc{tol}}}
+\providecommand{\D}[1]{\,\mathrm{d}#1}
+
+\newcommand{\mysmall}{\small}
+\newcommand{\mynormalsize}{\normalsize}
+\newcommand{\myFontSize}{\large}
+\newcommand{\myTitleFontSize}{\Huge}
+\newcommand{\mySubTitleFontSize}{\Large}
+\newcommand{\mySubSubTitleFontSize}{\small}
+\newcommand{\setLineThickness}{\linethickness{4mm}}
+\newcommand{\myrule}{\rule{\textwidth}{3pt}}
+
+%%% set new tolerances %%%%
+
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\floatpagefraction}{0.35}
+\setcounter{totalnumber}{5}
+
+%%% options for multcol
+\setlength{\columnsep}{25mm}
+
+%%% begin document %%%
+
+\begin{document}
+
+\begin{tabular}{ll}
+
+	\begin{minipage}{425mm}
+
+		{\Huge\bf Simulering av ljudvågor med tillämpning inom datorspel}\\[10mm]
+		{\Large\bf Alexander Aurell, \;Daniel von Witting,\\[3mm]
+		Kandidatexamensarbete vid Numerisk Analys, KTH} \\
+
+
+		\vspace*{5mm}
+
+Idag är vi väldigt vana vid realistiska 3D grafikmotorer i tv- och datorspel. Detta inkluderar interaktiva miljöer och objekt, som tillfredsställande simulerar verkligheten. Ljudet har däremot inte följt samma utveckling och det krävs i dagsläget omfattande ansträngningar för designers och programmerare för att åstadkomma en acceptabel ljudupplevelse. En av de stora svårigheterna är begränsningarna på beräkningstid och lagringsutrymme. En ljudsimulering i ett datorspel måste kunna göras i realtid om det ska vara praktiskt användbar. Tanken med detta kandidatexamensarbete är att studera hurvida det är möjligt att skapa en ljudmotor baserad på den linjära akustiska vågekvationen och därmed skapa en realism som både förhöjer upplevelsen och underlättar implementeringen.
+
+
+	\end{minipage}
+
+\end{tabular}
+
+\vspace*{25mm}
+
+\begin{minipage}{\linewidth}
+
+	\begin{multicols*}{2}
+
+		\input{Bakgrund}
+		
+		\input{Metod}
+		
+		\input{Abc}
+		
+		\input{Diffraktion}
+		
+
+		\bibliographystyle{vancouver}
+		\bibliography{a0poster}
+
+	\end{multicols*}
+
+\end{minipage}
+
+
+\end{document}

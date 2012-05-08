@@ -8,31 +8,25 @@ class CliVariable:
 def extract_variables(argv, cli_definition):
     """Parse the list of strings argv as a command defined by cli_definition.
     
-    Returns a dictionary of variables with names as specified by cli_definition.
+    Returns a tuple and a dictionary of variables as specified by cli_definition.
+
+    ---
     
     Example 1:
     argv = ["foo", "bar", "test.txt"]
     cli_definition = "OPERAND1 OPERAND2 [-n ITERATIONS] FILE"
     
-    Returned dictionary:
-    {
-      OPERAND1:"foo",
-      OPERAND2:"bar",
-      FILE:test.txt
-    }
+    Returned:
+    (("foo", "bar", "test.txt"), { "FILE":"test.txt" })
+    
+    ---
 
     Example 2:
     argv = ["foo", "bar", "-n", "17", "test.txt", "Class1", "Class2"]
     cli_definition = "OPERAND1 OPERAND2 [-n ITERATIONS] FILE CLASSES..."
     
-    Returned dictionary:
-    {
-      "OPERAND1":"foo",
-      "OPERAND2":"bar",
-      "ITERATIONS":"17"
-      "FILE":test.txt,
-      "CLASSES":["Class1", "Class2"]
-    }
+    Returned:
+    (("foo", "bar", "test.txt", ("Class1", "Class2")), {"FILE": "test.txt"})
     """
 
     required_variables = []
@@ -58,27 +52,33 @@ def extract_variables(argv, cli_definition):
     varit = iter(required_variables)
     curVar = varit.next()
 
-    result = {}
+    result_args = []
+    result_kwargs = {}
 
     it = iter(argv)
     for arg in it:
         if arg in optional_variables.keys():
             narg = it.next()
+            val = None
             if optional_variables[arg].is_list:
-                result[optional_variables[arg].name] = [narg] + [i for i in it]
+                val = tuple([narg] + [i for i in it])
             else:
-                result[optional_variables[arg].name] = narg
+                val = narg
+            result_kwargs[optional_variables[arg].name] = val
         else:
+            val = None
             if curVar.is_list:
-                result[curVar.name] = [arg] + [i for i in it]
+                val = tuple([arg] + [i for i in it])
             else:
-                result[curVar.name] = arg
+                val = arg
+            result_args.append(val)
+
             try:
                 curVar = varit.next()
             except StopIteration:
                 curVar = None
 
-    return result
+    return (tuple(result_args), result_kwargs)
 
 if __name__ == "__main__":
     import sys

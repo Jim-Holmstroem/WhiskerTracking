@@ -11,8 +11,8 @@ import os
 
 class PendulumTracker(Tracker):
     
-    def __init__(self, db, video):
-        Tracker.__init__(self, db, video)
+    def __init__(self, *args):
+        Tracker.__init__(self, *args)
         self.l = 400.0/self.video.image_shape()[1]
         self.radius = 24.0/self.video.image_shape()[1]
         self.renderer = PendulumLayer(self.l, self.radius)
@@ -23,8 +23,9 @@ class PendulumTracker(Tracker):
 #    def render(self, context, particle):
 #        self.renderer.render(context, particle[0])
 #    
-    def goodness(self, particle, image):
+    def goodness(self, arg):#particle, image):
 #        return 1
+        particle, image = arg
         mask = wimage(PendulumLayer(particle))
         processed_image = wimage(image)
         
@@ -40,12 +41,12 @@ class PendulumTracker(Tracker):
         return self.db.sample_weighted_average(prev_particle) + numpy.random.normal(0, math.radians(5), prev_particle.shape)
 
 class PendulumTrackerGoodnessSquared(PendulumTracker):
-    def goodness(self, particle, image):
-        return PendulumTracker.goodness(self, particle, image)**2
+    def goodness(self, arg):#particle, image):
+        return PendulumTracker.goodness(self, arg)**2#)particle, image)**2
     
 class PendulumTrackerGoodnessCubed(PendulumTracker):
-    def goodness(self, particle, image):
-        return PendulumTracker.goodness(self, particle, image)**3
+    def goodness(self, arg):#particle, image):
+        return PendulumTracker.goodness(self, arg)**3#particle, image)**3
     
 def cProfile_test(movie_id):
     dataset = "square_accelerating"

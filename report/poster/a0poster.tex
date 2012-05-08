@@ -1,0 +1,115 @@
+\documentclass{a0poster}
+\usepackage{geometry}
+\geometry{paper=a0paper}
+\geometry{hmarginratio=1:1}
+\geometry{vmarginratio=1:1}
+\geometry{hmargin=25mm}
+\geometry{vmargin=25mm}
+\usepackage[pdftex]{graphicx}
+% \usepackage{curves}
+% \usepackage{algorithmic}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+% \usepackage{color, graphicx}
+\usepackage{lipsum}
+\usepackage{multicol}
+\usepackage{subfigure}
+% \usepackage{textpos}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{rotating}
+
+\usepackage{mathptmx}
+\usepackage[scaled=.90]{helvet}
+\usepackage{courier}
+
+% paket från kex
+% \usepackage[T1]{fontenc}
+% \usepackage{textcomp}
+% \usepackage{lmodern}
+\usepackage[swedish, english]{babel} 
+% \usepackage[pdftex]{graphicx}
+% \usepackage{wrapfig}
+% \usepackage{float}
+% \usepackage{cite}
+% \usepackage{subfigure}
+%%% define new commands %%%
+
+\DeclareMathOperator{\sgn}{sgn}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\diag}{diag}
+\DeclareMathOperator{\supp}{supp}
+\DeclareMathOperator{\res}{res}
+\DeclareMathOperator{\meas}{meas}
+
+\def\tol{{\textsc{tol}}}
+\providecommand{\D}[1]{\,\mathrm{d}#1}
+
+\newcommand{\mysmall}{\small}
+\newcommand{\mynormalsize}{\normalsize}
+\newcommand{\myFontSize}{\large}
+\newcommand{\myTitleFontSize}{\Huge}
+\newcommand{\mySubTitleFontSize}{\Large}
+\newcommand{\mySubSubTitleFontSize}{\small}
+\newcommand{\setLineThickness}{\linethickness{4mm}}
+\newcommand{\myrule}{\rule{\textwidth}{3pt}}
+
+%%% set new tolerances %%%%
+
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\bottomfraction}{0.95}
+\renewcommand{\floatpagefraction}{0.35}
+\setcounter{totalnumber}{5}
+
+%%% options for multcol
+\setlength{\columnsep}{25mm}
+
+%%% begin document %%%
+
+\begin{document}
+
+\begin{tabular}{ll}
+
+  \begin{minipage}{425mm}
+
+    {\Huge\bf Probabilistic Tracking of Multiple Rodent Whiskers In Monocular Video Sequences}\\[10mm]
+    {\Large\bf Jim Holmström, \; Emil Lundberg\\[3mm]
+      Bachelor's Thesis at CSC, KTH} \\
+
+
+    \vspace*{5mm}
+
+    \input{abstract}
+
+  \end{minipage}
+
+\end{tabular}
+
+\vspace*{25mm}
+
+\begin{minipage}{\linewidth}
+
+  \begin{multicols*}{2}
+    
+    \input{background}
+    
+    \input{markov}
+    
+    \input{whiskers}
+
+    \input{algorithm}
+    
+    \input{database}
+
+    \bibliographystyle{vancouver}
+    \bibliography{a0poster}
+
+  \end{multicols*}
+
+\end{minipage}
+
+
+\end{document}
