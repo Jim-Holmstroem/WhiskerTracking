@@ -54,6 +54,8 @@ class AcceleratingSquareGenerator(SquareGenerator):
 
     X_STD = IMAGE_WIDTH/15.0
     Y_STD = IMAGE_HEIGHT/15.0
+    VX_STD = IMAGE_WIDTH/200.0
+    VY_STD = IMAGE_HEIGHT/200.0
     
     def accel_func(self, a):
         return numpy.array((0, 0, 0, 0.1))
@@ -61,9 +63,9 @@ class AcceleratingSquareGenerator(SquareGenerator):
     def generate_training_transitions(self):
     
         from_states = numpy.vstack((numpy.zeros(self.number_of_transitions),
-                                    numpy.random.normal(0, self.X_STD, self.number_of_transitions),
+                                    numpy.random.normal(0, self.VX_STD, self.number_of_transitions),
                                     numpy.zeros(self.number_of_transitions),
-                                    numpy.random.normal(0, self.Y_STD, self.number_of_transitions)
+                                    numpy.random.normal(0, self.VY_STD, self.number_of_transitions)
                                     )).T
         to_states = timestep(from_states, self.accel_func, dt=self.dt)
         
@@ -71,9 +73,9 @@ class AcceleratingSquareGenerator(SquareGenerator):
     
     def generate_testing_sequence(self, num_frames):
         state = numpy.hstack((numpy.random.normal(IMAGE_WIDTH/2.0, self.X_STD),
-                              numpy.random.normal(0, IMAGE_WIDTH/200.),
+                              numpy.random.normal(0, self.VX_STD),
                               numpy.random.normal(IMAGE_HEIGHT/2.0, self.Y_STD,),
-                              numpy.random.normal(0, IMAGE_HEIGHT/200.)))
+                              numpy.random.normal(0, self.VY_STD)))
         state = numpy.reshape(state, (1,)+state.shape)
         states = numpy.zeros((num_frames, state.size))
         

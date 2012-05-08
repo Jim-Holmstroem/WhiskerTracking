@@ -11,10 +11,7 @@ def default_sampler(X_prev):
 Randomly chooses samples from X with replacement, weighted according to weights.
 '''
 def default_resample(X, weights):
-    X_new = numpy.zeros_like(X)
-    for row in X_new:
-        row = weighted_choice(weights, X)
-    return X_new
+    return numpy.array(map(weighted_choice, weights, X))
 
 '''
 Better version of default_resample, uses wmath.distribution instead which is
