@@ -35,10 +35,10 @@ class SquareTracker(wtracker.Tracker):
     
     def sample(self, prev_particle):
         
-        new_particle_from_prev = prev_particle.copy()
-        new_particle_from_prev[0] += prev_particle[1]*0.5
-        new_particle_from_prev[2] += prev_particle[3]*0.5
-        new_particle_from_prev = new_particle_from_prev + numpy.random.normal(loc=0, scale=5, size=prev_particle.shape)
+        # new_particle_from_prev = prev_particle.copy()
+        # new_particle_from_prev[0] += prev_particle[1]
+        # new_particle_from_prev[2] += prev_particle[3]
+        # new_particle_from_prev = new_particle_from_prev + numpy.random.normal(loc=0, scale=5, size=prev_particle.shape)
         
         prev_particle_copy = prev_particle.copy()
         prev_particle_copy[0] = 0
@@ -48,12 +48,13 @@ class SquareTracker(wtracker.Tracker):
         new_particle_from_db[2] += prev_particle[2]
     #    new_particle_from_db += numpy.random.normal(0, scale=[3, 3], size=new_particle_from_db.shape)
         
-        db_weight = 2
-        prev_weight = 1
+#        db_weight = 1
+#        prev_weight = 1
         
-        new_particle = new_particle_from_prev*prev_weight + (new_particle_from_db)*db_weight
-        new_particle /= db_weight + prev_weight
-        return new_particle
+#        new_particle = new_particle_from_prev*prev_weight + (new_particle_from_db)*db_weight
+#        new_particle /= db_weight + prev_weight
+#        return new_particle
+        return new_particle_from_db
     
     def export_results(self, *args):
         self.video = self.original_video

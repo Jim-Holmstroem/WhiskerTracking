@@ -122,7 +122,8 @@ class StateTransitionDatabase:
             query += " AND ".join(where_clause_parts) + ";"
             self.__select_rectangle_queries.append(query)
         
-        parallel_map(self.get_all_transitions, xrange(len(self.__param_groups)))
+        #parallel_map(self.get_all_transitions, xrange(len(self.__param_groups)))
+        map(self.get_all_transitions, xrange(len(self.__param_groups)))
         
     def add_transitions(self, from_states, to_states):
         '''Add new transitions to the database.
