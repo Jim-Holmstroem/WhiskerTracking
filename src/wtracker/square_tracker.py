@@ -43,7 +43,7 @@ class SquareTracker(wtracker.Tracker):
         prev_particle_copy = prev_particle.copy()
         prev_particle_copy[0] = 0
         prev_particle_copy[2] = 0
-        new_particle_from_db = self.db.sample_weighted_average(prev_particle_copy)
+        new_particle_from_db = numpy.random.normal(self.db.sample_weighted_average(prev_particle_copy), 16)
         new_particle_from_db[0] += prev_particle[0]
         new_particle_from_db[2] += prev_particle[2]
     #    new_particle_from_db += numpy.random.normal(0, scale=[3, 3], size=new_particle_from_db.shape)
@@ -79,8 +79,6 @@ class SquareTrackerBetterGoodness(SquareTracker):
 
 class SquareWithoutVelocityTracker(SquareTrackerBetterGoodness):
 
-    INIT_STD = 15
-
     def make_animator(self, main_particles, particles, intermediate_particles):
         return SquareAnimator(main_particles, particles, intermediate_particles)
         
@@ -95,4 +93,4 @@ class SquareWithoutVelocityTracker(SquareTrackerBetterGoodness):
         return (mask*processed_image).sum()/(255*mask_sum)
 
     def sample(self, prev_particle):
-        return self.db.sample_weighted_average(prev_particle)
+        return numpy.random.normal(self.db.sample_weighted_average(prev_particle), 15)

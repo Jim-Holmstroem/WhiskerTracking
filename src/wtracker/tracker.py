@@ -4,7 +4,6 @@ from pf import pf
 import numpy
 
 class Tracker:
-    INIT_STD = 1
     
     def __init__(self, db, video, start_states, num_particles):
         self.db = db
@@ -38,7 +37,7 @@ class Tracker:
             print "Tracking object %i of %i"%(obj_i+1, len(self.start_states))
             print "Start state for object %i is %s."%(obj_i, start_state)
 
-            particles = numpy.random.normal(numpy.array([start_state]*self.num_particles), self.INIT_STD)
+            particles = numpy.array([start_state]*self.num_particles)
         
             track = numpy.zeros((self.num_frames, start_state.size))
             track[0,:] = start_state
