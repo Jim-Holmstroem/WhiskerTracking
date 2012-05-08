@@ -7,7 +7,7 @@ import cairo
 import math
 import numpy
 
-__all__ = ["AcceleratingSquareGenerator", "SimpleSquareGenerator" , "OnlineSquareGenerator"]
+__all__ = ["AcceleratingSquareGenerator", "AcceleratingSquareWithoutVelocityGenerator", "SimpleSquareGenerator" , "OnlineSquareGenerator"]
 
 def velocities(states, accel_func):
     stack = []
@@ -87,6 +87,43 @@ class AcceleratingSquareGenerator(SquareGenerator):
     
     def generate_testing_movie(self, all_squares_states):
         return SquareGenerator.generate_testing_movie(self, all_squares_states[:,:,::2])
+
+class AcceleratingSquareWithoutVelocityGenerator(SquareGenerator):
+
+    PARAMETER_GROUPS = [1, 1]
+
+    X_STD = IMAGE_WIDTH/15.0
+    Y_STD = IMAGE_HEIGHT/15.0
+    VX_STD = IMAGE_WIDTH/200.0
+    VY_STD = IMAGE_HEIGHT/200.0
+    
+    def accel_func(self, a):
+        return numpy.array((0, 0, 0, 0.1))
+    
+    def generate_training_transitions(self):
+    
+        from_states = numpy.vstack((numpy.random.uniform(0, IMAGE_WIDTH, self.number_of_transitions),
+                                    numpy.random.normal(0, self.VX_STD, self.number_of_transitions),
+                                    numpy.random.uniform(0, IMAGE_HEIGHT, self.number_of_transitions),
+                                    numpy.random.normal(0, self.VY_STD, self.number_of_transitions)
+                                    )).T
+        to_states = timestep(from_states, self.accel_func, dt=self.dt)
+        
+        return from_states[:,::2], to_states[:,::2]
+    
+    def generate_testing_sequence(self, num_frames):
+        state = numpy.hstack((numpy.random.normal(IMAGE_WIDTH/2.0, self.X_STD),
+                              numpy.random.normal(0, self.VX_STD),
+                              numpy.random.normal(IMAGE_HEIGHT/2.0, self.Y_STD,),
+                              numpy.random.normal(0, self.VY_STD)))
+        state = numpy.reshape(state, (1,)+state.shape)
+        states = numpy.zeros((num_frames, state.size))
+        
+        for i in xrange(num_frames):
+            states[i,:] = state
+            state = timestep(state, self.accel_func)
+        
+        return states[:,::2]
 
 class SimpleSquareGenerator(AcceleratingSquareGenerator):
     """

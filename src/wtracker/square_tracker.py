@@ -76,3 +76,23 @@ class SquareTrackerBetterGoodness(SquareTracker):
         if mask_sum == 0:
             return 0
         return (mask*processed_image).sum()/(255*mask_sum)
+
+class SquareWithoutVelocityTracker(SquareTrackerBetterGoodness):
+
+    INIT_STD = 15
+
+    def make_animator(self, main_particles, particles, intermediate_particles):
+        return SquareAnimator(main_particles, particles, intermediate_particles)
+        
+    def goodness(self, arg):#particle, image):
+        particle, image = arg
+        mask = wimage(SquareLayer(particle))
+        processed_image = wimage(image)
+        
+        mask_sum = mask.sum()
+        if mask_sum == 0:
+            return 0
+        return (mask*processed_image).sum()/(255*mask_sum)
+
+    def sample(self, prev_particle):
+        return self.db.sample_weighted_average(prev_particle)
