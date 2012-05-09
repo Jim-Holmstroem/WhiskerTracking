@@ -199,4 +199,3 @@ class StateTransitionDatabase:
             
             selected.append(numpy.average(to_states, axis=0, weights=weights))
         return numpy.hstack(selected)
-#            from_states, to_states = self.__split_transition(self.get_transitions_in_rectangle(group, subparticle, max_diffs))
