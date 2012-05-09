@@ -87,11 +87,13 @@ class TrackerBenchmark:
         print
 
 def run_cli():
-    """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] classes...
+    """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
-    specified video and database as arguments.
+    specified video and database as arguments. The video and database are
+    fetched from VIDEO_DIRECTORY and DATABASE_DIRECTORY, as specified in
+    common.settings.
     """
 
     import sys
