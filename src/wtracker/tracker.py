@@ -14,6 +14,8 @@ class Tracker:
 
         self.tracks = [None]*len(start_states)
         self.animators = [None]*len(start_states)
+        self.resampled_particles = [None]*len(start_states)
+        self.preresampled_particles = [None]*len(start_states)
     
     def goodness(self, particle, image):
         raise NotImplementedError("This class is abstract!")
@@ -21,7 +23,7 @@ class Tracker:
     def sample(self, prev_particle):
         raise NotImplementedError("This class is abstract!")
     
-    def make_animator(self, main_particles, particles, intermediate_particles):
+    def make_animators(self):
         raise NotImplementedError("This class is abstract!")
 
     def get_track(self, i):
@@ -37,30 +39,29 @@ class Tracker:
             print "Tracking object %i of %i"%(obj_i+1, len(self.start_states))
             print "Start state for object %i is %s."%(obj_i, start_state)
 
+            self.preresampled_particles[obj_i] = numpy.zeros((self.num_frames, self.num_particles, start_state.size))
+            self.resampled_particles[obj_i] = numpy.zeros((self.num_frames, self.num_particles, start_state.size))
+
             particles = numpy.array([start_state]*self.num_particles)
         
             track = numpy.zeros((self.num_frames, start_state.size))
             track[0,:] = start_state
-            all_particles = [None]*self.num_frames
-            all_intermediate_particles = [None]*self.num_frames
-            all_particles[0] = particles
-            all_intermediate_particles[0] = particles
+            self.preresampled_particles[obj_i][0] = particles
+            self.resampled_particles[obj_i][0] = particles
             
             for i, frame in enumerate(self.video[1:], 1):
                 particles, intermediate_particles = pf(particles, frame.get_array(), self.goodness, sampling_function=self.sample)
                 track[i,:] = particles.mean(axis=0)
-                all_particles[i] = particles
-                all_intermediate_particles[i] = intermediate_particles
+                self.resampled_particles[obj_i][i] = particles
+                self.preresampled_particles[obj_i][i] = intermediate_particles
                 print "Tracked frame %i of %i"%(i+1, self.num_frames)
         
             print "Tracking complete."
             print
 
-            all_particles = numpy.array(all_particles)
-            all_intermediate_particles = numpy.array(all_intermediate_particles)
-
             self.tracks[obj_i] = track
-            self.animators[obj_i] = self.make_animator(track, all_particles, all_intermediate_particles)
+
+        self.animators = self.make_animators()
     
     def export_results(self, pngvin_dir):
         from wgui import wlayermanager
