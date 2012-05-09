@@ -49,11 +49,11 @@ pf
 '''
 def pf(X_prev, observation, importance_function, sampling_function=default_sampler, resampling_function=better_resample):
 
-    X_bar = numpy.array(map(sampling_function, X_prev))
+    X_bar = numpy.array(map(sampling_function, X_prev)) # TODO: vectorize this
     weights = numpy.array(map(importance_function, zip(X_bar, repeat(observation, len(X_bar)))))
     
     if weights.sum() == 0:
-        weights += 1.0/weights.size
+        weights = numpy.ones_like(weights) / float(weights.size)
     else:
         weights /= float(weights.sum())
     
