@@ -20,6 +20,10 @@ def run_cli():
     import wgenerator
 
     args, kwargs = cliutils.extract_variables(sys.argv[1:], "GENERATOR_CLASS DATASET_NAME [-o number_of_objects] [-n number_of_transitions] [-f number_of_frames] [-m number_of_movies] [--dt dt] [--debug debug]")
+    
+    if len(args) < 2:
+        print "ERROR: Generator class or dataset name was not specified."
+        sys.exit(1)
 
     generator = getattr(wgenerator, args[0])(*args[1:], **kwargs)
     generator.generate()
