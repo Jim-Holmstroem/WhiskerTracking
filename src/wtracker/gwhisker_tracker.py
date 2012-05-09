@@ -2,9 +2,12 @@ import numpy
 import wtracker
 
 from wmedia import wimage
+from wgenerator import GWhiskerGenerator
 from wview import GWhiskerAnimator, GWhiskerLayer
 
 class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
+
+    STDEVS = [max(a)/5.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)]
 
     def make_animators(self):
 
@@ -24,4 +27,4 @@ class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
         return (mask*processed_image).sum()/(255*mask_sum)
     
     def sample(self, prev_particle):
-        return numpy.random.normal(self.db.sample_weighted_average(prev_particle), 0.1)
+        return self.db.sample_weighted_average(prev_particle) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))

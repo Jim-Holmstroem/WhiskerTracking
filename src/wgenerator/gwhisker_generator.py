@@ -12,7 +12,7 @@ class GWhiskerGenerator(Generator):
 
     A_LIMITS = (-0.00002, 0.00002)
     B_LIMITS = (-0.005, 0.005)
-    C_LIMITS = (-1, 1)
+    C_LIMITS = (-1.0, 1.0)
 
     WHISKER_DL = 5
     WHISKER_LENGTH = 150
