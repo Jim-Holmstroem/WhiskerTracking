@@ -8,7 +8,7 @@ from wmedia import wvideo
 from wview import GWhiskerRenderer
 
 class GWhiskerGenerator(Generator):
-    PARAMETER_GROUPS = [4]
+    PARAMETER_GROUPS = [3]
 
     A_LIMITS = (-0.00002, 0.00002)
     B_LIMITS = (-0.005, 0.005)
@@ -42,7 +42,7 @@ class GWhiskerGenerator(Generator):
         b = numpy.random.uniform(*self.B_LIMITS, size=(self.number_of_transitions, 1))/3
         c = numpy.random.uniform(*self.C_LIMITS, size=(self.number_of_transitions, 1))/3
 
-        from_states = numpy.hstack((a, b, c, numpy.zeros_like(a)))
+        from_states = numpy.hstack((a, b, c))
         to_states = self.timestep(from_states, numpy.random.uniform(0, math.pi*2))
         
         return from_states, to_states
@@ -52,7 +52,7 @@ class GWhiskerGenerator(Generator):
         b = numpy.random.uniform(*self.B_LIMITS)
         c = numpy.random.uniform(*self.C_LIMITS)
         
-        state = numpy.hstack((a, b, c, 0))
+        state = numpy.hstack((a, b, c))
         state = numpy.reshape(state, (1,)+state.shape)
         states = numpy.zeros((num_frames, state.size))
 

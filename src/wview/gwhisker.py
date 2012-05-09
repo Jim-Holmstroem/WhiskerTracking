@@ -40,7 +40,7 @@ class GWhiskerRenderer:
 
         points=render_points(
             lambda t: t,
-            lambda t: particle[0]*t**3+particle[1]*t**2+particle[2]*t+particle[3],
+            lambda t: particle[0]*t**3+particle[1]*t**2+particle[2]*t,
             lambda t: 1,
             lambda t: 3*particle[0]*t**2+2*particle[1]*t+particle[2],
             self.dl,
@@ -48,7 +48,7 @@ class GWhiskerRenderer:
         
         map(fragment_renderer,points)
 
-        context.arc(0,particle[3],3,-math.pi,math.pi)
+        context.arc(0,0,3,-math.pi,math.pi)
         if filled:
             context.fill()
         else:
