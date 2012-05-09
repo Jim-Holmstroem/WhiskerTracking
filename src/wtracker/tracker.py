@@ -10,6 +10,7 @@ class Tracker:
         self.video = video
         self.num_frames = len(self.video)
         self.start_states = start_states
+        self.num_objects = len(self.start_states)
         self.num_particles = num_particles
 
         self.tracks = [None]*len(start_states)
