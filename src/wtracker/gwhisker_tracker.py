@@ -1,3 +1,6 @@
+DEBUG = False
+if DEBUG:
+    import cairo
 import numpy
 import wtracker
 
@@ -9,6 +12,7 @@ from scipy.ndimage import filters
 
 class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
 
+    debug_i = 0
     STDEVS = [max(a)/5.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)]
 
     def make_animators(self):
@@ -30,6 +34,22 @@ class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
             return 0
 
         result =  ((mask*image).sum()/(255*mask_sum))**2
+        
+        if DEBUG:
+            wim = wimage((mask*image).data/255)
+            
+            imsurf=cairo.ImageSurface(cairo.FORMAT_ARGB32, 512*3,512)
+            ctx = cairo.Context(imsurf)
+            for im in (image, mask, wim):
+                ctx.save()
+                im.render(ctx)
+                ctx.restore()
+                ctx.translate(512,0)
+            imsurf.write_to_png("/misc/projects/whisker/run/debug/%s%i.png"%("frame", self.debug_i))
+            self.debug_i += 1
+
+            print "sum, result:", mask_sum, result
+        
         return result
     
     def sample(self, prev_particle):
