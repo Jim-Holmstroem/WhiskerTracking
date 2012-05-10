@@ -5,10 +5,10 @@ import math
 from wmath import render_points
 
 class GWhiskerLayer(wlayer):
-    def __init__(self, particle, alpha=1,rotation=0.,translate=(0,0)):
+    def __init__(self, particle, dl, length, width, alpha=1,rotation=0.,translate=(0,0)):
         wlayer.__init__(self, alpha)
         self.particle = particle
-        self.renderer = GWhiskerRenderer(8,256,16,rotation,translate)
+        self.renderer = GWhiskerRenderer(dl,length,width,rotation,translate)
     
     def render(self, context):
         self.renderer.render(context, self.particle)
