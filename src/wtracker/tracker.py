@@ -13,10 +13,10 @@ class Tracker:
         self.num_objects = len(self.start_states)
         self.num_particles = num_particles
 
-        self.tracks = [None]*len(start_states)
-        self.animators = [None]*len(start_states)
-        self.resampled_particles = [None]*len(start_states)
-        self.preresampled_particles = [None]*len(start_states)
+        self.tracks = [None]*self.num_objects
+        self.animators = [None]*self.num_objects
+        self.resampled_particles = [None]*self.num_objects
+        self.preresampled_particles = [None]*self.num_objects
     
     def goodness(self, particle, image):
         raise NotImplementedError("This class is abstract!")
@@ -26,6 +26,9 @@ class Tracker:
     
     def make_animators(self):
         raise NotImplementedError("This class is abstract!")
+
+    def preprocess_image(self, image):
+        return image
 
     def get_track(self, i):
         return self.tracks[i]
@@ -38,7 +41,7 @@ class Tracker:
 
         for obj_i, start_state in enumerate(self.start_states):
             print "Tracking object %i of %i"%(obj_i+1, len(self.start_states))
-            print "Start state for object %i is %s."%(obj_i, start_state)
+            print "Start state for object %i is %s."%(obj_i+1, start_state)
 
             self.preresampled_particles[obj_i] = numpy.zeros((self.num_frames, self.num_particles, start_state.size))
             self.resampled_particles[obj_i] = numpy.zeros((self.num_frames, self.num_particles, start_state.size))
@@ -51,7 +54,7 @@ class Tracker:
             self.resampled_particles[obj_i][0] = particles
             
             for i, frame in enumerate(self.video[1:], 1):
-                particles, intermediate_particles = pf(particles, frame.get_array(), self.goodness, sampling_function=self.sample)
+                particles, intermediate_particles = pf(particles, self.preprocess_image(frame), self.goodness, sampling_function=self.sample)
                 track[i,:] = particles.mean(axis=0)
                 self.resampled_particles[obj_i][i] = particles
                 self.preresampled_particles[obj_i][i] = intermediate_particles

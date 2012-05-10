@@ -10,8 +10,8 @@ from wview import GWhiskerRenderer
 class GWhiskerGenerator(Generator):
     PARAMETER_GROUPS = [3]
 
-    A_LIMITS = (-0.00002, 0.00002)
-    B_LIMITS = (-0.005, 0.005)
+    A_LIMITS = (-0.00004, 0.00004)
+    B_LIMITS = (-0.010, 0.010)
     C_LIMITS = (-1.0, 1.0)
 
     WHISKER_DL = 5
@@ -28,10 +28,10 @@ class GWhiskerGenerator(Generator):
 
         mid = numpy.array((IMAGE_WIDTH/2, IMAGE_HEIGHT/2))
         translate_height = self.DISTANCE_BETWEEN_WHISKERS*float(self.number_of_objects-1)
-        translate = numpy.vstack((-self.WHISKER_LENGTH/2 * numpy.ones(self.number_of_objects), numpy.linspace(-translate_height/2, translate_height/2, self.number_of_objects))).T
+        translate = mid + numpy.vstack((-self.WHISKER_LENGTH/2 * numpy.ones(self.number_of_objects), numpy.linspace(-translate_height/2, translate_height/2, self.number_of_objects))).T
         
         for i in xrange(self.number_of_objects):
-            self.renderers.append(GWhiskerRenderer(self.WHISKER_DL, self.WHISKER_LENGTH, self.WHISKER_WIDTH, translate=mid+translate[i]))
+            self.renderers.append(GWhiskerRenderer(self.WHISKER_DL, self.WHISKER_LENGTH, self.WHISKER_WIDTH, translate=translate[i]))
 
     def timestep(self, from_states, t):
         cp = from_states.copy()
@@ -41,9 +41,9 @@ class GWhiskerGenerator(Generator):
     def generate_training_transitions(self):
     
         # Limits were found by manual testing, one parameter at a time
-        a = numpy.random.uniform(*self.A_LIMITS, size=(self.number_of_transitions, 1))/3
-        b = numpy.random.uniform(*self.B_LIMITS, size=(self.number_of_transitions, 1))/3
-        c = numpy.random.uniform(*self.C_LIMITS, size=(self.number_of_transitions, 1))/3
+        a = numpy.random.uniform(*self.A_LIMITS, size=(self.number_of_transitions, 1))
+        b = numpy.random.uniform(*self.B_LIMITS, size=(self.number_of_transitions, 1))
+        c = numpy.random.uniform(*self.C_LIMITS, size=(self.number_of_transitions, 1))
 
         from_states = numpy.hstack((a, b, c))
         to_states = self.timestep(from_states, numpy.random.uniform(0, math.pi*2))
