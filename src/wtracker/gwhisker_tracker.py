@@ -5,6 +5,8 @@ from wmedia import wimage
 from wgenerator import GWhiskerGenerator
 from wview import GWhiskerAnimator, GWhiskerLayer
 
+from scipy.ndimage import filters
+
 class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
 
     STDEVS = [max(a)/5.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)]
@@ -17,17 +19,18 @@ class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
 
         return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, translate)
 
+    def preprocess_image(self, image):
+        return image.transform(lambda img: filters.gaussian_filter(img,3.0))
+
     def goodness(self, arg):#particle, image):
         particle, image = arg
         mask = wimage(GWhiskerLayer(particle, 5, 150, 5, translate=(256-75, 256))) # TODO: Un-hardcode this
-        processed_image = wimage(image)
-        
         mask_sum = mask.sum()
         if mask_sum == 0:
             return 0
-        wim = (mask*processed_image)
-        wim.debug_show()
-        return wim.sum()/(255*mask_sum)
+
+        result =  ((mask*image).sum()/(255*mask_sum))**2
+        return result
     
     def sample(self, prev_particle):
         return self.db.sample_weighted_average(prev_particle) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
