@@ -25,7 +25,9 @@ class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
         mask_sum = mask.sum()
         if mask_sum == 0:
             return 0
-        return (mask*processed_image).sum()/(255*mask_sum)
+        wim = (mask*processed_image)
+        wim.debug_show()
+        return wim.sum()/(255*mask_sum)
     
     def sample(self, prev_particle):
         return self.db.sample_weighted_average(prev_particle) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
