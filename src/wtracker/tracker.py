@@ -13,10 +13,10 @@ class Tracker:
         self.num_objects = len(self.start_states)
         self.num_particles = num_particles
 
-        self.tracks = [None]*len(start_states)
-        self.animators = [None]*len(start_states)
-        self.resampled_particles = [None]*len(start_states)
-        self.preresampled_particles = [None]*len(start_states)
+        self.tracks = [None]*self.num_objects
+        self.animators = [None]*self.num_objects
+        self.resampled_particles = [None]*self.num_objects
+        self.preresampled_particles = [None]*self.num_objects
     
     def goodness(self, particle, image):
         raise NotImplementedError("This class is abstract!")
