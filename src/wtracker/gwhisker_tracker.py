@@ -13,7 +13,7 @@ from scipy.ndimage import filters
 class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
 
     debug_i = 0
-    STDEVS = [max(a)/5.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)]
+    STDEVS = [max(a)/10.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)]
 
     def make_animators(self):
 

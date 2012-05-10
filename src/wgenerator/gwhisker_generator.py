@@ -10,8 +10,8 @@ from wview import GWhiskerRenderer
 class GWhiskerGenerator(Generator):
     PARAMETER_GROUPS = [3]
 
-    A_LIMITS = (-0.00002, 0.00002)
-    B_LIMITS = (-0.005, 0.005)
+    A_LIMITS = (-0.00004, 0.00004)
+    B_LIMITS = (-0.010, 0.010)
     C_LIMITS = (-1.0, 1.0)
 
     WHISKER_DL = 5
@@ -41,9 +41,9 @@ class GWhiskerGenerator(Generator):
     def generate_training_transitions(self):
     
         # Limits were found by manual testing, one parameter at a time
-        a = numpy.random.uniform(*self.A_LIMITS, size=(self.number_of_transitions, 1))/3
-        b = numpy.random.uniform(*self.B_LIMITS, size=(self.number_of_transitions, 1))/3
-        c = numpy.random.uniform(*self.C_LIMITS, size=(self.number_of_transitions, 1))/3
+        a = numpy.random.uniform(*self.A_LIMITS, size=(self.number_of_transitions, 1))
+        b = numpy.random.uniform(*self.B_LIMITS, size=(self.number_of_transitions, 1))
+        c = numpy.random.uniform(*self.C_LIMITS, size=(self.number_of_transitions, 1))
 
         from_states = numpy.hstack((a, b, c))
         to_states = self.timestep(from_states, numpy.random.uniform(0, math.pi*2))

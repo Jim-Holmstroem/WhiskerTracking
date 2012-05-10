@@ -192,7 +192,7 @@ class StateTransitionDatabase:
             standard_deviations = numpy.delete(standard_deviations, zero_std_cols)
             diff = numpy.delete(from_states - subparticle, zero_std_cols, axis=1)
             
-            weights = (((diff)/standard_deviations)**2).sum(axis=1)
+            weights = (((diff)/standard_deviations)**4).sum(axis=1)
             weights += numpy.min(weights[numpy.nonzero(weights)])*1e-6 # HACK: Prevent division by zero
             weights = 1.0/weights
             weights /= sum(weights)
