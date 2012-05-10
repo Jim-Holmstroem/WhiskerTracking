@@ -13,13 +13,13 @@ class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
 
         mid = numpy.array((256, 256))
         translate_height = GWhiskerGenerator.DISTANCE_BETWEEN_WHISKERS*float(self.num_objects-1)
-        translate = numpy.vstack((-GWhiskerGenerator.WHISKER_LENGTH/2 * numpy.ones(self.num_objects), numpy.linspace(-translate_height/2, translate_height/2, self.num_objects))).T
+        translate = mid + numpy.vstack((-GWhiskerGenerator.WHISKER_LENGTH/2 * numpy.ones(self.num_objects), numpy.linspace(-translate_height/2, translate_height/2, self.num_objects))).T
 
-        return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, mid+translate)
+        return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, translate)
 
     def goodness(self, arg):#particle, image):
         particle, image = arg
-        mask = wimage(GWhiskerLayer(particle, 5, 150, 5, (256, 256))) # TODO: Un-hardcode this
+        mask = wimage(GWhiskerLayer(particle, 5, 150, 5, translate=(256-75, 256))) # TODO: Un-hardcode this
         processed_image = wimage(image)
         
         mask_sum = mask.sum()

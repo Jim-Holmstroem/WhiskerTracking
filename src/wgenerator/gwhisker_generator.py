@@ -28,10 +28,10 @@ class GWhiskerGenerator(Generator):
 
         mid = numpy.array((IMAGE_WIDTH/2, IMAGE_HEIGHT/2))
         translate_height = self.DISTANCE_BETWEEN_WHISKERS*float(self.number_of_objects-1)
-        translate = numpy.vstack((-self.WHISKER_LENGTH/2 * numpy.ones(self.number_of_objects), numpy.linspace(-translate_height/2, translate_height/2, self.number_of_objects))).T
+        translate = mid + numpy.vstack((-self.WHISKER_LENGTH/2 * numpy.ones(self.number_of_objects), numpy.linspace(-translate_height/2, translate_height/2, self.number_of_objects))).T
         
         for i in xrange(self.number_of_objects):
-            self.renderers.append(GWhiskerRenderer(self.WHISKER_DL, self.WHISKER_LENGTH, self.WHISKER_WIDTH, translate=mid+translate[i]))
+            self.renderers.append(GWhiskerRenderer(self.WHISKER_DL, self.WHISKER_LENGTH, self.WHISKER_WIDTH, translate=translate[i]))
 
     def timestep(self, from_states, t):
         cp = from_states.copy()
