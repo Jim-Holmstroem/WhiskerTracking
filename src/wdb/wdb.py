@@ -122,7 +122,8 @@ class StateTransitionDatabase:
             query += " AND ".join(where_clause_parts) + ";"
             self.__select_rectangle_queries.append(query)
         
-        parallel_map(self.get_all_transitions, xrange(len(self.__param_groups)))
+        #parallel_map(self.get_all_transitions, xrange(len(self.__param_groups)))
+        map(self.get_all_transitions, xrange(len(self.__param_groups)))
         
     def add_transitions(self, from_states, to_states):
         '''Add new transitions to the database.
@@ -159,7 +160,7 @@ class StateTransitionDatabase:
     def __split_by_parameter_groups(self, particles):
         """Splits the given particles into subparticles of independent parameters"""
         if len(self.__param_groups) == 1:
-            return particles
+            return numpy.array([particles])
         return numpy.hsplit(particles, self.__param_groups.cumsum()[:-1])
 
     def __split_transition(self, transition):
@@ -189,13 +190,12 @@ class StateTransitionDatabase:
             # HACK: Prevent division by zero
             zero_std_cols = numpy.where(standard_deviations == 0)[0]
             standard_deviations = numpy.delete(standard_deviations, zero_std_cols)
-            from_states = numpy.delete(from_states, zero_std_cols, axis=1)
+            diff = numpy.delete(from_states - subparticle, zero_std_cols, axis=1)
             
-            weights = (((from_states-subparticle)/standard_deviations)**2).sum(axis=1)
+            weights = (((diff)/standard_deviations)**2).sum(axis=1)
             weights += numpy.min(weights[numpy.nonzero(weights)])*1e-6 # HACK: Prevent division by zero
             weights = 1.0/weights
             weights /= sum(weights)
             
             selected.append(numpy.average(to_states, axis=0, weights=weights))
         return numpy.hstack(selected)
-#            from_states, to_states = self.__split_transition(self.get_transitions_in_rectangle(group, subparticle, max_diffs))

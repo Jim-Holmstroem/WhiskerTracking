@@ -1,0 +1,15 @@
+Mål:
+  - Någon form av slutsats huruvida det är rimligt att fortsätta undersöka detta
+    - Identifiera problem och svårigheter
+      - Vad är svårare? Försök kvantifiera svårigheter hos problemen
+    - Utvärdera prestanda hos algoritmen
+      - Tid
+      - Resultat
+
+Rapporten:
+  - Går det att skala problemet? Undersök.
+  - Jämför lösningar
+	
+Idéer om morrhårmodellen:
+  - Någon form av blur med hög topp för bra matchning (ej Gauss)
+  - En parameter som beskriver hastigheten i sidled?
