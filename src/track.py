@@ -8,6 +8,7 @@ from wmedia import wvideo
 import gtk
 import numpy
 import os
+import pickle
 import wtracker
 
 class TrackerRunner:
@@ -23,10 +24,13 @@ class TrackerRunner:
             self.num_objects += 1
 
         self.correct_states = [numpy.load((os.path.join(video_path, "state_sequence_%i.npy"%i))) for i in xrange(self.num_objects)]
+
+        metadata = [os.path.exists(os.path.join(video_path, "metadata_%i.pickle"%i)) and pickle.load(open(os.path.join(video_path, "metadata_%i.pickle"%i))) or {} for i in xrange(self.num_objects)]
+
         self.video = wvideo(video_path)
         self.db = StateTransitionDatabase(database_name)
 
-        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video, [self.correct_states[i][0] for i in xrange(self.num_objects)], num_particles), tracker_classes)
+        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video, [self.correct_states[i][0] for i in xrange(self.num_objects)], num_particles, metadata=metadata), tracker_classes)
 
     def _run_test(self, tracker):
         print "Tracking with tracker class %s"%(tracker.__class__.__name__)
