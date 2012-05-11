@@ -12,8 +12,6 @@ import wtracker
 
 class TrackerRunner:
     
-    TEST_DATA_BASE_DIR = "video"
-    
     def __init__(self, tracker_classes, video_name, database_name, num_particles=100):
         video_path = make_video_path(video_name + ".pngvin")
         
