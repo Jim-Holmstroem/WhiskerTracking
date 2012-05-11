@@ -34,11 +34,20 @@ class TrackerBenchmark:
         print "Tracking with tracker class %s"%(tracker.__class__.__name__)
         tracker.run()
         return (tracker.get_track(i) for i in xrange(self.num_objects))
+
+    def run_benchmark(self):
+        print "Running tracking benchmark"
+        print
+        import cProfile
+        cProfile.runctx("self.run()", globals(), locals())
+        print "Finished tracking benchmark"
+        print
     
     def run(self):
-        print "Running tracking test"
+        print "Running trackers"
+        print
         self.tracks = map(self._run_test, self.trackers)
-        print "Finished tracking test"
+        print "Finished tracking"
         print
 
     def evaluate_results(self):
@@ -87,13 +96,19 @@ class TrackerBenchmark:
         print
 
 def run_cli():
-    """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] Classes...
+    """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] [-b (True|False)] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
     specified video and database as arguments. The video and database are
     fetched from VIDEO_DIRECTORY and DATABASE_DIRECTORY, as specified in
     common.settings.
+
+    Optional arguments:
+        -n NUM_PARTICLES: Number of particles to use, default 100
+        -b BENCHMARK: If "True", the tracking is run as a benchmark. Otherwise
+            just runs the trackers.
+    Note that these arguments must appear before the Classes list.
     """
 
     import sys
@@ -105,11 +120,11 @@ def run_cli():
     num_particles = 100
 
     from common import cliutils
-    cli_result = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] TRACKER_CLASSES...")
+    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] [-b BENCHMARK] TRACKER_CLASSES...")
 
-    video_name, database_name, class_names = cli_result[0]
-    if "PARTICLES" in cli_result[1].keys():
-        num_particles = int(cli_result[1]["PARTICLES"])
+    video_name, database_name, class_names = args
+    if "PARTICLES" in op_args.keys():
+        num_particles = int(op_args["PARTICLES"])
     tracker_classes = [getattr(wtracker, c) for c in class_names]
 
     print "Using video: %s"%(video_name)
@@ -123,9 +138,11 @@ def run_cli():
     print
             
     benchmark = TrackerBenchmark(tracker_classes, video_name, database_name, num_particles)
-    
-    import cProfile
-    cProfile.runctx("benchmark.run()", globals(), locals())
+
+    if "BENCHMARK" in op_args.keys() and op_args["BENCHMARK"] == "True":
+        benchmark.run_benchmark()
+    else:
+        benchmark.run()
 
     benchmark.export_results()
 #    benchmark.evaluate_results()
