@@ -90,21 +90,24 @@ class TrackerRunner:
         print "Done animating test results"
         print
     
-    def export_results(self):
+    def export_results(self, name=None):
+        if name == None:
+            name = self.video_name
         for tracker in self.trackers:
-            pngvin_dir = make_run_path(self.video_name + "_" + tracker.__class__.__name__ + ".pngvin")
+            pngvin_dir = make_run_path(name + "_" + tracker.__class__.__name__ + ".pngvin")
             print "Saving results of tracker %s to %s"%(tracker.__class__.__name__, pngvin_dir)
             tracker.export_results(pngvin_dir)
         print
 
 def run_cli():
-    """Usage: python track.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] [-b (True|False)] Classes...
+    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
     specified video and database as arguments. The video and database are
     fetched from VIDEO_DIRECTORY and DATABASE_DIRECTORY, as specified in
-    common.settings.
+    common.settings. The result videos are saved with OUTPUT_NAME in the file
+    name.
 
     Optional arguments:
         -n NUM_PARTICLES: Number of particles to use, default 100
@@ -122,7 +125,7 @@ def run_cli():
     num_particles = 100
 
     from common import cliutils
-    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] [-b BENCHMARK] TRACKER_CLASSES...")
+    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] TRACKER_CLASSES...")
 
     video_name, database_name, class_names = args
     if "PARTICLES" in op_args.keys():
@@ -146,7 +149,10 @@ def run_cli():
     else:
         benchmark.run()
 
-    benchmark.export_results()
+    if "OUTPUT_NAME" in op_args.keys():
+        benchmark.export_results(op_args["OUTPUT_NAME"])
+    else:
+        benchmark.export_results()
 #    benchmark.evaluate_results()
 #    benchmark.animate(0)
 
