@@ -10,7 +10,7 @@ import numpy
 import os
 import wtracker
 
-class TrackerBenchmark:
+class TrackerRunner:
     
     TEST_DATA_BASE_DIR = "video"
     
@@ -96,7 +96,7 @@ class TrackerBenchmark:
         print
 
 def run_cli():
-    """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] [-b (True|False)] Classes...
+    """Usage: python track.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] [-b (True|False)] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
@@ -137,7 +137,7 @@ def run_cli():
         print "\t%s"%(c.__name__)
     print
             
-    benchmark = TrackerBenchmark(tracker_classes, video_name, database_name, num_particles)
+    benchmark = TrackerRunner(tracker_classes, video_name, database_name, num_particles)
 
     if "BENCHMARK" in op_args.keys() and op_args["BENCHMARK"] == "True":
         benchmark.run_benchmark()
