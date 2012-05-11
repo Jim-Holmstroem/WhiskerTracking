@@ -8,6 +8,7 @@ from wmedia import wvideo
 from wview import GWhiskerRenderer
 
 class GWhiskerGenerator(Generator):
+    """Generates whisker-like lines that swoosh around."""
     PARAMETER_GROUPS = [3]
 
     A_LIMITS = (-0.00004, 0.00004)
