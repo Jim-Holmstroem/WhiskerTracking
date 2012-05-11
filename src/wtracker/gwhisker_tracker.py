@@ -45,6 +45,8 @@ class GWhiskerTracker(Tracker):
         result =  ((mask*image).sum()/(255*mask_sum))**2
         
         if DEBUG:
+            from common import make_run_path
+            import os
             wim = wimage((mask*image).data/255)
             
             imsurf=cairo.ImageSurface(cairo.FORMAT_ARGB32, 512*3,512)
@@ -54,7 +56,7 @@ class GWhiskerTracker(Tracker):
                 im.render(ctx)
                 ctx.restore()
                 ctx.translate(512,0)
-            imsurf.write_to_png("/misc/projects/whisker/run/debug/%s%i.png"%("frame", self.debug_i))
+            imsurf.write_to_png(make_run_path(os.path.join("debug","%s%i.png"%("frame", self.debug_i))))
             self.debug_i += 1
 
             print "sum, result:", mask_sum, result
