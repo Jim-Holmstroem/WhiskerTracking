@@ -17,20 +17,20 @@ class GWhiskerTracker(Tracker):
     
     def __init__(self, db, video, start_states, *other_args, **kwargs):
         Tracker.__init__(self, db, video, start_states, *other_args, **kwargs)
-        self.renderer_dl = 5
-        self.renderer_length = 150
-        self.renderer_width = 5
-
-        mid = numpy.array((256, 256))
-        translate_height = GWhiskerGenerator.DISTANCE_BETWEEN_WHISKERS*float(self.num_objects-1)
-        self.renderer_translations = mid + numpy.vstack((-GWhiskerGenerator.WHISKER_LENGTH/2 * numpy.ones(self.num_objects), numpy.linspace(-translate_height/2, translate_height/2, self.num_objects))).T
+        try:
+            self.metadata = kwargs["metadata"]
+        except KeyError:
+            raise ArgumentError("Fatal: Metadata is missing.")
 
     def track_object(self, obj_i, *other_args, **kwargs):
-        self.current_translation = self.renderer_translations[obj_i] # For use in goodness later
+        self.renderer_dl = self.metadata[obj_i]["dl"]
+        self.renderer_length = self.metadata[obj_i]["length"]
+        self.renderer_width = self.metadata[obj_i]["width"]
+        self.current_translation = self.metadata[obj_i]["translate"]
         Tracker.track_object(self, obj_i, *other_args, **kwargs)
 
     def make_animators(self):
-        return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, self.renderer_translations)
+        return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, (d["translate"] for d in self.metadata))
 
     def preprocess_image(self, image):
         return image.transform(lambda img: filters.gaussian_filter(img,3.0))
