@@ -17,6 +17,7 @@ class Tracker:
         self.animators = [None]*self.num_objects
         self.resampled_particles = [None]*self.num_objects
         self.preresampled_particles = [None]*self.num_objects
+        self.highest_weight_particles = []
     
     def goodness(self, particle, image):
         raise NotImplementedError("This class is abstract!")
@@ -42,6 +43,7 @@ class Tracker:
         
         self.preresampled_particles[obj_i] = numpy.zeros((self.num_frames, self.num_particles, start_state.size))
         self.resampled_particles[obj_i] = numpy.zeros((self.num_frames, self.num_particles, start_state.size))
+        self.highest_weight_particles.append([start_state])
         
         particles = numpy.array([start_state]*self.num_particles)
         
@@ -51,11 +53,13 @@ class Tracker:
         self.resampled_particles[obj_i][0] = particles
         
         for i, frame in enumerate(self.video[1:], 1):
-            particles, intermediate_particles = pf(particles, self.preprocess_image(frame), self.goodness, sampling_function=self.sample)
+            particles, intermediate_particles = pf(particles, self.preprocess_image(frame), self.goodness, sampling_function=self.sample, resampling_function=self.save_highest_weight_particle_and_resample)
             track[i,:] = particles.mean(axis=0)
             self.resampled_particles[obj_i][i] = particles
-            self.preresampled_particles[obj_i][i] = intermediate_particles
+
             print "Tracked frame %i of %i"%(i+1, self.num_frames)
+
+        self.highest_weight_particles[obj_i] = numpy.array(self.highest_weight_particles[obj_i])
         
         print "Tracking complete."
         print

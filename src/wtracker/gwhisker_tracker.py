@@ -30,7 +30,7 @@ class GWhiskerTracker(Tracker):
         Tracker.track_object(self, obj_i, *other_args, **kwargs)
 
     def make_animators(self):
-        return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, (d["translate"] for d in self.metadata))
+        return map(lambda t,r,p,trans,hi: GWhiskerAnimator(t, r, p, translate=trans, highest_weight_particles=hi), self.tracks, self.resampled_particles, self.preresampled_particles, (d["translate"] for d in self.metadata), self.highest_weight_particles)
 
     def preprocess_image(self, image):
         return image.transform(lambda img: filters.gaussian_filter(img,3.0))
@@ -65,3 +65,8 @@ class GWhiskerTracker(Tracker):
     
     def sample(self, prev_particle):
         return self.db.sample_weighted_average_l2(prev_particle, self.renderer_length) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
+
+    def save_highest_weight_particle_and_resample(self, X, weights):
+        a = weights.argmax()
+        self.highest_weight_particles[-1].append(X[a])
+        return numpy.array([X[a]]*self.num_particles)
