@@ -64,4 +64,4 @@ class GWhiskerTracker(Tracker):
         return result
     
     def sample(self, prev_particle):
-        return self.db.sample_weighted_average(prev_particle) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
+        return self.db.sample_weighted_average_l2(prev_particle, self.renderer_length) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
