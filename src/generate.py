@@ -1,19 +1,16 @@
 #!/usr/bin/python
 
 def run_cli():
-    """Usage: python generate.py GENERATOR_CLASS [generator options...]
-
-    Generates a video and places it in VIDEO_DIRECTORY, as specified in
-    common.settings. Also generates a training database and places it in
-    DATA_DIRECTORY.
-    """
     """Usage: python generate.py GENERATOR_CLASS DATASET_NAME [-o NUM_OBJECTS]
     [-n NUM_TRANSITIONS] [-f NUM_FRAMES] [-m NUM_MOVIES] [--dt TIMESTEP_SIZE]
-    [--debug (True|False)]")
+    [--debug (True|False)] [generator options...]")
 
     Generates a video and places it in VIDEO_DIRECTORY, as specified in
     common.settings. Also generates a training database and places it in
     DATA_DIRECTORY.
+
+    Generators may have their own parameters, which can be specified after those
+    defined here.
     """
 
     import sys
