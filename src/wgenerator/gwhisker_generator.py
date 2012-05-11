@@ -20,8 +20,6 @@ class GWhiskerGenerator(Generator):
 
     DISTANCE_BETWEEN_WHISKERS = 25
     
-    renderer = GWhiskerRenderer(5, 150, 5, translate=(IMAGE_WIDTH/2, IMAGE_HEIGHT/2))
-
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.renderers = []
