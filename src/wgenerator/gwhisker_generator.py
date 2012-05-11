@@ -8,30 +8,39 @@ from wmedia import wvideo
 from wview import GWhiskerRenderer
 
 class GWhiskerGenerator(Generator):
+    """Generates whisker-like lines that swoosh around."""
+
+    CUSTOM_CLI_DEFINITION = "[--dl DL] [--length WHISKER_LENGTH] [--width WHISKER_WIDTH]"
+
     PARAMETER_GROUPS = [3]
 
-    A_LIMITS = (-0.00002, 0.00002)
-    B_LIMITS = (-0.005, 0.005)
-    C_LIMITS = (-1.0, 1.0)
+    A_LIMITS = (-0.00004, 0.00004)
+    B_LIMITS = (-0.010, 0.010)
+    C_LIMITS = (-0.5, 0.5)
 
-    WHISKER_DL = 5
-    WHISKER_LENGTH = 150
-    WHISKER_WIDTH = 5
+    dl = 5
+    length = 150
+    width = 5
 
     DISTANCE_BETWEEN_WHISKERS = 25
     
-    renderer = GWhiskerRenderer(5, 150, 5, translate=(IMAGE_WIDTH/2, IMAGE_HEIGHT/2))
-
     def __init__(self, *args, **kwargs):
         Generator.__init__(self, *args, **kwargs)
         self.renderers = []
 
         mid = numpy.array((IMAGE_WIDTH/2, IMAGE_HEIGHT/2))
         translate_height = self.DISTANCE_BETWEEN_WHISKERS*float(self.number_of_objects-1)
-        translate = numpy.vstack((-self.WHISKER_LENGTH/2 * numpy.ones(self.number_of_objects), numpy.linspace(-translate_height/2, translate_height/2, self.number_of_objects))).T
+        self.translate = mid + numpy.vstack((-self.length/2 * numpy.ones(self.number_of_objects), numpy.linspace(-translate_height/2, translate_height/2, self.number_of_objects))).T
+
+        if "DL" in kwargs.keys():
+            self.dl = kwargs["DL"]
+        if "WHISKER_LENGTH" in kwargs.keys():
+            self.length = kwargs["WHISKER_LENGTH"]
+        if "WHISKER_WIDTH" in kwargs.keys():
+            self.width = kwargs["WHISKER_WIDTH"]
         
         for i in xrange(self.number_of_objects):
-            self.renderers.append(GWhiskerRenderer(self.WHISKER_DL, self.WHISKER_LENGTH, self.WHISKER_WIDTH, translate=mid+translate[i]))
+            self.renderers.append(GWhiskerRenderer(self.dl, self.length, self.width, translate=self.translate[i]))
 
     def timestep(self, from_states, t):
         cp = from_states.copy()
@@ -41,9 +50,9 @@ class GWhiskerGenerator(Generator):
     def generate_training_transitions(self):
     
         # Limits were found by manual testing, one parameter at a time
-        a = numpy.random.uniform(*self.A_LIMITS, size=(self.number_of_transitions, 1))/3
-        b = numpy.random.uniform(*self.B_LIMITS, size=(self.number_of_transitions, 1))/3
-        c = numpy.random.uniform(*self.C_LIMITS, size=(self.number_of_transitions, 1))/3
+        a = numpy.random.uniform(*self.A_LIMITS, size=(self.number_of_transitions, 1))
+        b = numpy.random.uniform(*self.B_LIMITS, size=(self.number_of_transitions, 1))
+        c = numpy.random.uniform(*self.C_LIMITS, size=(self.number_of_transitions, 1))
 
         from_states = numpy.hstack((a, b, c))
         to_states = self.timestep(from_states, numpy.random.uniform(0, math.pi*2))
@@ -85,3 +94,8 @@ class GWhiskerGenerator(Generator):
         
         return wvideo(surfaces)
 
+    def generate_metadata(self, obj_i):
+        return {"dl": self.dl,
+                "length": self.length,
+                "width": self.width,
+                "translate": self.translate[obj_i]}

@@ -9,8 +9,8 @@ import wtracker
 
 class SquareTracker(wtracker.Tracker):
     
-    def __init__(self, *args):
-        wtracker.Tracker.__init__(self, *args)
+    def __init__(self, *args, **kwargs):
+        wtracker.Tracker.__init__(self, *args, **kwargs)
         print("Starting up...")
         
         print("Blurring video...")
@@ -63,10 +63,11 @@ class SquareTracker(wtracker.Tracker):
         self.video = self.blurred_video
 
 class SquareTrackerBetterGoodness(SquareTracker):
-    def __init__(self, *args):
-        Tracker.__init__(self, *args)
-    def export_results(self, *args):
-        Tracker.export_results(self, *args)
+    def __init__(self, *args, **kwargs):
+        Tracker.__init__(self, *args, **kwargs)
+
+    def export_results(self, *args, **kwargs):
+        Tracker.export_results(self, *args, **kwargs)
     
     def goodness(self, arg):#particle, image):
         particle, image = arg
