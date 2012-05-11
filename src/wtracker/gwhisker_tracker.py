@@ -2,33 +2,42 @@ DEBUG = False
 if DEBUG:
     import cairo
 import numpy
-import wtracker
 
 from wmedia import wimage
 from wgenerator import GWhiskerGenerator
+from wtracker import Tracker
 from wview import GWhiskerAnimator, GWhiskerLayer
 
 from scipy.ndimage import filters
 
-class GWhiskerTracker(wtracker.SquareTrackerBetterGoodness):
+class GWhiskerTracker(Tracker):
 
     debug_i = 0
     STDEVS = [max(a)/10.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)]
-
-    def make_animators(self):
+    
+    def __init__(self, db, video, start_states, *other_args, **kwargs):
+        Tracker.__init__(self, db, video, start_states, *other_args, **kwargs)
+        self.renderer_dl = 5
+        self.renderer_length = 150
+        self.renderer_width = 5
 
         mid = numpy.array((256, 256))
         translate_height = GWhiskerGenerator.DISTANCE_BETWEEN_WHISKERS*float(self.num_objects-1)
-        translate = mid + numpy.vstack((-GWhiskerGenerator.WHISKER_LENGTH/2 * numpy.ones(self.num_objects), numpy.linspace(-translate_height/2, translate_height/2, self.num_objects))).T
+        self.renderer_translations = mid + numpy.vstack((-GWhiskerGenerator.WHISKER_LENGTH/2 * numpy.ones(self.num_objects), numpy.linspace(-translate_height/2, translate_height/2, self.num_objects))).T
 
-        return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, translate)
+    def track_object(self, obj_i, *other_args, **kwargs):
+        self.current_translation = self.renderer_translations[obj_i] # For use in goodness later
+        Tracker.track_object(self, obj_i, *other_args, **kwargs)
+
+    def make_animators(self):
+        return map(lambda t,r,p,trans: GWhiskerAnimator(t, r, p, translate=trans), self.tracks, self.resampled_particles, self.preresampled_particles, self.renderer_translations)
 
     def preprocess_image(self, image):
         return image.transform(lambda img: filters.gaussian_filter(img,3.0))
 
     def goodness(self, arg):#particle, image):
         particle, image = arg
-        mask = wimage(GWhiskerLayer(particle, 5, 150, 5, translate=(256-75, 256))) # TODO: Un-hardcode this
+        mask = wimage(GWhiskerLayer(particle, self.renderer_dl, self.renderer_length, self.renderer_width, translate=self.current_translation))
         mask_sum = mask.sum()
         if mask_sum == 0:
             return 0
