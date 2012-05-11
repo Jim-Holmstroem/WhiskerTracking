@@ -64,6 +64,7 @@ class Tracker:
 
     def run(self):
         print "%s tracking with %i particles..."%(self.__class__.__name__, self.num_particles)
+        print
 
         map(self.track_object, xrange(len(self.start_states)), self.start_states)
 
