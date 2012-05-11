@@ -5,7 +5,7 @@ import numpy
 
 class Tracker:
     
-    def __init__(self, db, video, start_states, num_particles):
+    def __init__(self, db, video, start_states, num_particles, *other_args, **other_kwargs):
         self.db = db
         self.video = video
         self.num_frames = len(self.video)
