@@ -1,3 +1,12 @@
+2012-05-10
+Worked on making gwhisker tracking work. After a while we had a breakthrough when the tracking started behaving properly. Precision is still quite bad, but it is no longer completely random and actually seems to try to track the gwhisker. The critical change was to increase the exponent of the weight function in the database from 2 to 4 (Euclidean distance^4 instead of ^2).
+
+2012-05-09
+(Log written 2012-05-11)
+Finished first version of gwhisker generation.
+Started working on tracking gwhiskers.
+Had a meeting with Örjan, see protocol.
+
 2012-05-08
 (Log written 2012-05-09)
 Did a little work on the presentation.
