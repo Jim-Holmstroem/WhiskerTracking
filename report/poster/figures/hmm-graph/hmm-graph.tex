@@ -13,28 +13,28 @@
 
   % System state Z
 
-  \node[main node] (Z0) [label=left:$p(Z_0)$] {$Z_0$};
-  \node[main node] (Z1) [below of=Z0,label=left:$p(Z_1|Z_0)$] {$Z_1$};
-  \node[main node] (Z2) [below of=Z1,label=left:$p(Z_2|Z_1)$] {$Z_2$};
+  \node[main node] (Z0) {$Z_0$};
+  \node[main node] (Z1) [below of=Z0] {$Z_1$};
+  \node[main node] (Z2) [below of=Z1] {$Z_2$};
   \node (Zdots) [below of=Z2] {$\vdots$};
-  \node[main node] (Zn) [below of=Zdots,label=left:$p(Z_n|Z_{n-1})$] {$Z_n$};
+  \node[main node] (Zn) [below of=Zdots] {$Z_n$};
 
   % Observations u
 
-  \node[main node] (u1) [right of=Z1,label=below:$p(u_1|Z_1)$] {$u_1$};
-  \node[main node] (u2) [right of=Z2,label=below:$p(u_2|Z_2)$] {$u_2$};
+  \node[main node] (u1) [right of=Z1] {$u_1$};
+  \node[main node] (u2) [right of=Z2] {$u_2$};
   \node (udots) [below of=u2] {$\vdots$};
-  \node[main node] (un) [right of=Zn,label=below:$p(u_n|Z_n)$] {$u_n$};
+  \node[main node] (un) [right of=Zn] {$u_n$};
 
   % Particles X
-  \node[main node] (X1) [right of=u1, label=below right:$p(X_1|X_0)$] {$X_1$};
-  \node[main node] (X0) [above of=X1, label=below right:$p(X_0|x_0)$] {$X_0$};
-  \node[main node] (X2) [below of=X1, label=below right:$p(X_2|X_1)$] {$X_2$};
+  \node[main node] (X1) [right of=u1] {$X_1$};
+  \node[main node] (X0) [above of=X1] {$X_0$};
+  \node[main node] (X2) [below of=X1] {$X_2$};
   \node (Xdots) [below of=X2] {$\vdots$};
-  \node[main node] (Xn) [below of=Xdots, label=below right:$p(X_n|X_{n-1})$] {$X_n$};
+  \node[main node] (Xn) [below of=Xdots] {$X_n$};
 
   % Estimate x
-  \node[main node] (x0) [right of=X0, label=right:Initialization] {$x_0$};
+  \node[main node] (x0) [right of=X0, label=right:Initial guess] {$x_0$};
   \node[main node] (x1) [below of=x0, label=right:Estimate] {$x_1$};
   \node[main node] (x2) [below of=x1, label=right:Estimate] {$x_2$};
   \node (xdots) [below of=x2] {$\vdots$};
@@ -46,14 +46,21 @@
     (Z0) edge node [left] {Physics} (Z1)
     (Z1) edge node [left] {Physics} (Z2)
     (Z2) edge node [left] {Physics} (Zdots)
-    (Zdots) edge node [left] {Physics} (Zn);
+    (Zdots) edge node [left] {Physics} (Zn)
+    (Z0) edge node [right] {$p(Z_1|Z_0)$} (Z1)
+    (Z1) edge node [right] {$p(Z_2|Z_1)$} (Z2)
+    (Z2) edge node [right] {$p(Z_3|Z_2)$} (Zdots)
+    (Zdots) edge node [right] {$p(Z_n|Z_{n-1})$} (Zn);
 
   % Z-> u arrows
 
   \path[every node/.style={font=\sffamily\small}]
     (Z1) edge node [above] {Perception} (u1)
     (Z2) edge node [above] {Perception} (u2)
-    (Zn) edge node [above] {Perception} (un);
+    (Zn) edge node [above] {Perception} (un)
+    (Z1) edge node [below] {$p(u_1|Z_1)$} (u1)
+    (Z2) edge node [below] {$p(u_2|Z_2)$} (u2)
+    (Zn) edge node [below] {$p(u_n|Z_n)$} (un);
 
   % X->X arrows
 
@@ -61,7 +68,11 @@
     (X0) edge node [left] {Prediction} (X1)
     (X1) edge node [left] {Prediction} (X2)
     (X2) edge node [left] {Prediction} (Xdots)
-    (Xdots) edge node [left] {Prediction} (Xn);
+    (Xdots) edge node [left] {Prediction} (Xn)
+    (X0) edge node [right] {$p(X_1|X_0)$} (X1)
+    (X1) edge node [right] {$p(X_2|X_1)$} (X2)
+    (X2) edge node [right] {$p(X_3|X_2)$} (Xdots)
+    (Xdots) edge node [right] {$p(X_n|X_{n-1})$} (Xn);
 
   % u->X arrows
   \path[every node/.style={font=\sffamily\small}]
