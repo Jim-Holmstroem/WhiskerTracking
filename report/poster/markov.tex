@@ -1,9 +1,9 @@
 \section*{The Probabilistic Framework}
-Our solution is based on discrete \emph{Markov processes}, which are a special case of stochastic processes. For a Markov process, the next state depends only on the present state and not on past states.
+Our solution is based on \emph{Markov processes}, which are a special case of stochastic processes. For a Markov process, the next state depends only on the present state and not on past states.
 
-An example of a discrete Markov process is that of throwing dice and summing the results: the throws and state space are discrete, and the possible states (sums) after the next throw depend only on the current state.
+An example of a Markov process is that of throwing dice and summing the results: the possible states (sums) after the next throw depend only on the current state, and not on the results of the individual throws.
 
-In mathematical terms, a discrete Markov process satisfies the following:
+In mathematical terms, a Markov process satisfies the following:
 \begin{equation}
  \cprob{Z_{n+1}}{Z_n \wedge Z_{n-1} \wedge \dots \wedge Z_0} = \cprob{Z_{n+1}}{Z_n}
 \end{equation}
