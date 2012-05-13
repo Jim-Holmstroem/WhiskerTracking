@@ -2,11 +2,13 @@
 
 import cairo
 import numpy
+import os
 import wdb
+from common import make_run_path
 from wview import GWhiskerRenderer
 
 def run_cli():
-    """Usage: python draw_database.py DATASET_NAME
+    """Usage: python draw_database.py DATASET_NAME OUTPUT_name
 
     Draws the named database.
     """
@@ -51,8 +53,7 @@ def run_cli():
         for s in states:
             #if 0.00002*btm < abs(s[0]) and abs(s[0]) < 0.00002*top:
             renderer.render(ctx, s, alpha=0.05)
-        imsurf.write_to_png("/misc/projects/whisker/run/debug/db/%s.png"%(out_name + name))
-
+	    imsurf.write_to_png(make_run_path(os.path.join("debug","db","%s.png"%(out_name + name))))
 
 if __name__ == "__main__":
     run_cli()
