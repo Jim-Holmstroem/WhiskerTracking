@@ -70,10 +70,15 @@
 %%% options for multcol
 \setlength{\columnsep}{25mm}
 
+%%% Graphics search paths %%%
+\graphicspath{{figures/}{figures/hmm-graph/}}
+
 %%% Custom commands
 
 \newcommand{\prob}[1]{p\left(#1\right)}
 \newcommand{\cprob}[2]{\prob{\left. #1 \middle\vert #2 \right.}}
+\newcommand{\cprobnext}[1]{\cprob{#1_{n+1}}{#1_n}}
+\newcommand{\ndist}[2]{\mathcal{N}\left(#1, #2\right)}
 
 %%% begin document %%%
 
