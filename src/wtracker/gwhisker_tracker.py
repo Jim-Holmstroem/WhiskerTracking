@@ -42,7 +42,7 @@ class GWhiskerTracker(Tracker):
         if mask_sum == 0:
             return 0
 
-        result =  ((mask*image).sum()/(255*mask_sum))**2
+        result =  ((mask*image).sum()/(255*mask_sum))**4
         
         if DEBUG:
             from common import make_run_path
