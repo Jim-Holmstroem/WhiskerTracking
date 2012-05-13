@@ -19,15 +19,15 @@
   \node (Zdots) [below of=Z2] {$\vdots$};
   \node[main node] (Zn) [below of=Zdots] {$Z_n$};
 
-  % Observations u
+  % Observations I
 
-  \node[main node] (u1) [right of=Z1] {$u_1$};
-  \node[main node] (u2) [right of=Z2] {$u_2$};
-  \node (udots) [below of=u2] {$\vdots$};
-  \node[main node] (un) [right of=Zn] {$u_n$};
+  \node[main node] (I1) [right of=Z1] {$I_1$};
+  \node[main node] (I2) [right of=Z2] {$I_2$};
+  \node (Idots) [below of=I2] {$\vdots$};
+  \node[main node] (In) [right of=Zn] {$I_n$};
 
   % Particles X
-  \node[main node] (X1) [right of=u1] {$X_1$};
+  \node[main node] (X1) [right of=I1] {$X_1$};
   \node[main node] (X0) [above of=X1] {$X_0$};
   \node[main node] (X2) [below of=X1] {$X_2$};
   \node (Xdots) [below of=X2] {$\vdots$};
@@ -52,15 +52,15 @@
     (Z2) edge node [right] {$p(Z_3|Z_2)$} (Zdots)
     (Zdots) edge node [right] {$p(Z_n|Z_{n-1})$} (Zn);
 
-  % Z-> u arrows
+  % Z-> I arrows
 
   \path[every node/.style={font=\sffamily\small}]
-    (Z1) edge node [above] {Perception} (u1)
-    (Z2) edge node [above] {Perception} (u2)
-    (Zn) edge node [above] {Perception} (un)
-    (Z1) edge node [below] {$p(u_1|Z_1)$} (u1)
-    (Z2) edge node [below] {$p(u_2|Z_2)$} (u2)
-    (Zn) edge node [below] {$p(u_n|Z_n)$} (un);
+    (Z1) edge node [above] {Perception} (I1)
+    (Z2) edge node [above] {Perception} (I2)
+    (Zn) edge node [above] {Perception} (In)
+    (Z1) edge node [below] {$p(I_1|Z_1)$} (I1)
+    (Z2) edge node [below] {$p(I_2|Z_2)$} (I2)
+    (Zn) edge node [below] {$p(I_n|Z_n)$} (In);
 
   % X->X arrows
 
@@ -74,11 +74,11 @@
     (X2) edge node [right] {$p(X_3|X_2)$} (Xdots)
     (Xdots) edge node [right] {$p(X_n|X_{n-1})$} (Xn);
 
-  % u->X arrows
+  % I->X arrows
   \path[every node/.style={font=\sffamily\small}]
-    (u1) edge node [above] {Filtering} (X1)
-    (u2) edge node [above] {Filtering} (X2)
-    (un) edge node [above] {Filtering} (Xn);
+    (I1) edge node [above] {Filtering} (X1)
+    (I2) edge node [above] {Filtering} (X2)
+    (In) edge node [above] {Filtering} (Xn);
 
   % x0->X0 arrow
   \path[every node/.style={font=\sffamily\small}]
