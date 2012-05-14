@@ -38,17 +38,17 @@ if __name__=="__main__":
     
     
     #phi
-    #zerot=zero
-    #whisker1t=whisker1
-    #whisker2t=whisker2
-    #whisker3t=whisker3
+    zerot=zero
+    whisker1t=whisker1
+    whisker2t=whisker2
+    whisker3t=whisker3
 
-    trans = scipy.ndimage.laplace
+    #trans = scipy.ndimage.laplace
 
-    zerot=zero.transform(trans)
-    whisker1t=whisker1.transform(trans)
-    whisker2t=whisker2.transform(trans)
-    whisker3t=whisker3.transform()
+    #zerot=zero.transform(trans)
+    #whisker1t=whisker1.transform(trans)
+    #whisker2t=whisker2.transform(trans)
+    #whisker3t=whisker3.transform(trans)
     
     normalize=zerot[0].sum() #OK since static
 
@@ -57,18 +57,20 @@ if __name__=="__main__":
     response2=numpy.array((zerot*whisker2t).sum())/normalize
     response3=numpy.array((zerot*whisker3t).sum())/normalize
 
+    ymax = max([max(response1),max(response2),max(response3)])
+
     pylab.figure(1)
     pylab.subplot(131)
     pylab.plot(x1,response1)
-    pylab.axis([-0.00008,0.00008,0,250])
+    pylab.axis([-0.00008,0.00008,0,ymax])
 
     pylab.subplot(132) 
     pylab.plot(x2,response2)
-    pylab.axis([-0.04,0.04,0,250])
+    pylab.axis([-0.04,0.04,0,ymax])
     
     pylab.subplot(133) 
     pylab.plot(x3,response3)
-    pylab.axis([-2,2,0,250])
+    pylab.axis([-2,2,0,ymax])
     pylab.show()
 
     #layermanager.add_layer(whisker3)
