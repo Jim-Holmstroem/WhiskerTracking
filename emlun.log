@@ -1,9 +1,24 @@
+2012-05-10
+Worked on making gwhisker tracking work. After a while we had a breakthrough when the tracking started behaving properly. Precision is still quite bad, but it is no longer completely random and actually seems to try to track the gwhisker. The critical change was to increase the exponent of the weight function in the database from 2 to 4 (Euclidean distance^4 instead of ^2).
+
+2012-05-09
+(Log written 2012-05-11)
+Finished first version of gwhisker generation.
+Started working on tracking gwhiskers.
+Had a meeting with Örjan, see protocol.
+
+2012-05-08
+(Log written 2012-05-09)
+Did a little work on the presentation.
+Tweaked square tracker, now works reasonably well.
+Started working on generation of whisker videos.
+
 2012-05-03
 Worked on the mechanical model of whiskers. Tried plotting splines against real whiskers, it seems 4th order polynomials are good enough for representing whiskers.
 
 2012-05-02
 (Log written at 00:20, 2012-05-03)
-Committed some slamm things I'd been working on.
+Committed some small things I'd been working on.
 Integrated "simple" and "online" square generators into the generator system.
 Started working on mechanical model of whiskers using variational calculus.
 

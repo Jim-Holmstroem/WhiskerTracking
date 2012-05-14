@@ -23,18 +23,19 @@ The Particle Filter is a technique for simulating a process described by a HMM. 
 Figure 2 shows the working principle of the Particle Filter working alongside a Hidden Markov Model. The following is the core function of the Particle Filter:
 
 \begin{quote}
- The particle filter attempts to approximate the probability density function $\cprobnext{Z}$ as a set $X_{n+1}$ of discrete hypotheses.
+  \emph{The particle filter attempts to approximate the probability density function $\cprobnext{Z}$ as a set $X_{n+1}$ of discrete hypotheses.}
 \end{quote}
 
-For brevity, we will commit some abuse of notation in the following discussion.
+More particles mean greater accuracy, since the PDF can then be approximated more closely. However, using many particles is also computationally expensive. Therefore the number of particles is an important quantity. The Particle Filter employs a few tricks to \emph{filter} the hypotheses, keeping probable ones and throwing improbable ones away, in order to reduce the number of particles needed for a good approximation. The following is a quick run-down of how the Particle Filter does this. For brevity, we will commit some abuse of notation.
 
 \begin{description}
 \item[Initialization:] Since the algorithm only does tracking, we need to initialize the algorithm with a start guess $x_0$. Using this we take a number of samples $X_0 \sim \ndist{x_0}{\Sigma}$\footnote{$\Sigma$ is roughly estimated from the database} and let the set $X_0$ be an approximation of $\prob{Z_0}$.
 \item[Prediction:] The hypotheses $X_n$ are updated in the \emph{prediction} step to an approximation of $\cprobnext{Z}_{n+1}$. This is done by drawing new samples $\bar{X}_{n+1} \sim \cprobnext{X}$.
-\item[Perception:] By measuring the state of the system, we gain an observation $I_{n+1} \sim \cprob{I_{n+1}}{Z_{n+1}}$ of the state $Z_{n+1}$.
+\item[Perception:] By measuring the state of the system, we gain an \emph{observation} $I_{n+1} \sim \cprob{I_{n+1}}{Z_{n+1}}$ of the state $Z_{n+1}$.
 \item[Filtering:] The observation $I_{n+1}$ of the system is then used for filtering bad hypotheses out of $\bar{X}_{n+1}$. We draw samples $X_{n+1}$ from $\bar{X}_{n+1}$ with probabilities given by $\cprob{I_{n+1}}{\bar{X}_{n+1}}$. As a result, $X_{n+1}$ will be a subset of $\bar{X}_{n+1}$ where more probable hypotheses appear multiple times. For this reason, this is also known as the \emph{resampling} step. The set $X_{n+1}$ is the \emph{belief}, our approximation of $\cprobnext{Z}$.
-\item[Selection:] Finally, we produce a single hypothesis $x_{n+1}$ from $X_{n+1}$ as our estimate of the state $Z_{n+1}$. Supposing $X_{n+1}$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, the mean value of $X_{n+1}$ is a good hypothesis since it approximates the expectation of $\cprobnext{Z}$.
+\item[Selection:] Finally, we produce a single hypothesis $x_{n+1}$ from $X_{n+1}$ as our \emph{estimate} of the state $Z_{n+1}$. Supposing $X_{n+1}$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, the mean value of $X_{n+1}$ is a good hypothesis since it approximates the expectation of $\cprobnext{Z}$.
 \end{description}
+
 
 \subsection*{Implementing the Particle Filter}
 An implementation of the Particle Filter consists mainly of designing the probability functions $\cprobnext{X}$ and $\cprob{I_n}{X_n}$, and providing the algorithm with a sensible initialization. This is what this project is all about. The rest just consists of taking samples from these functions.
