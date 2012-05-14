@@ -25,7 +25,7 @@ class GWhiskerRenderer:
         context.identity_matrix()
         context.translate(*(self.translate))
         context.rotate(self.rotation)
-        contex.set_source_rgba(*(color + (alpha,)))
+        context.set_source_rgba(*(color + (alpha,)))
 
         context.set_line_width(self.width)
         def fragment_renderer(data):

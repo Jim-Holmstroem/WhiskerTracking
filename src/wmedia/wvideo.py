@@ -78,12 +78,16 @@ class wvideo(wlayer):
 
     def __mul__(self,other):
         padding_size=abs(len(self)-len(other))
+        assert(padding_size==0) #padding some somehow broken
         imgs=map(lambda (i,j):i*j,izip(self.imgs,other.imgs))
         imgs.extend(map(lambda dummy:wimage((512,512)),range(padding_size)))
         return wvideo(imgs)
 
     def __len__(self):
         return len(self.imgs)
+
+    def sum(self):
+        return map(lambda img:img.sum(),self.imgs)
 
     def __getitem__(self,i):
         return self.imgs[i]
