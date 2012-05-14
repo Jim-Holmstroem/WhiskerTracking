@@ -13,23 +13,26 @@ What we do in practice when sampling is: for each hypothesis $x_n^i \in X_n$,
   \item Return $\frac{\sum_j t^j w^{ij}}{\sum_jw^{ij}}$, the weighted average of the ``to'' states with weights $w^{ij}$.
 \end{enumerate}
 
-Doing this for each hypothesis $x_n^i$ yields the set $\bar{X}_n$.
+Doing this for each hypothesis $x_n^i$ yields the set $\bar{X}_n$. We have not yet thoroughly investigated how the power $a$ qualitatively affects the tracking results, but $a=4$ seems to be a good value.
 
 \subsection*{The filtering step: Image comparison}
 
 \begin{figure}
   \centering
   \includegraphics[scale=1.0]{whisker_compare.pdf}
-  \caption{Schematic image of the process to evaluate importance of hypothesis.}
+  \caption{Schematic image of the process to evaluate the importance of a hypothesis.}
   \label{fig:whisker_compare}
 \end{figure}
 
-The $\phi$-transform is used to generate a sensory cue for the comparison, at the moment we have choosen to just use the identity transform since we have, compared to others, a homogeneous environment.
+We implement the probability function $\cprob{I_n}{X_n}$ as simply checking if the image pixels beneath the whiskers $X_n$ look like whisker pixels. The image $I_n$ is grayscale, and so each pixel can be identified with a number between 0 and 255, inclusive. We assume that whisker pixels have a high value and background pixels have a low value.
+
+We first preprocess the image using a transformation $\phi$, to make the measurement easier. At the current stage in our testing, the images used are generated synthetic ones that are already easy to process. Therefore we let $\phi$ be the identity transformation at the moment.
+
+After preprocessing the image, for each hypothesis $\bar{x}_n^i \in \bar{X}_n$ we create a \emph{mask} image $I_n^i$. This image will be zero everywhere except where the whisker $\bar{x}_n^i$ is. We then let $w^i = \sum\limits_{\mathrm{pixels}}I_n \cdot I_n^i$, where the multiplication is done component-wise. We then let $\left\{\left(\bar{x}_n^i, w^i\right)\right\}_{i=1}^N$ define a discrete probability function that returns $\bar{x}_n^i$ with probability $w^i$, and let this distribution be our approximation of $\cprob{I_N}{X_n}$.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.7\textwidth]{database_gwhisker_spline3_n2048_from_to_fixed.png}
   \caption{View of all whiskers in transition database. Left: from-states. Right: to-states.}
->>>>>>> github/presentation
   \label{fig:database}
 \end{figure}
