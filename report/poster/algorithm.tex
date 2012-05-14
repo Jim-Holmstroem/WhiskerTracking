@@ -36,3 +36,15 @@ After preprocessing the image, for each hypothesis $\bar{x}_n^i \in \bar{X}_n$ w
   \caption{View of all whiskers in transition database. Left: from-states. Right: to-states.}
   \label{fig:database}
 \end{figure}
+
+\subsection*{Example tracking image}
+
+Figure \ref{fig:particles} shows an illustration of the three tracking steps. The blue lines are the hypotheses $\bar{X}_n$ sampled from the database. The red lines are these same hypotheses, but after resampling, $X_n$. The green line is the estimate $x_n$, the mean of $X_n$. One can see how $X_n$ is slightly more concentrated around the tracked whisker (white) than $\bar{X}_n$ is.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.3\textwidth]{tracking-particles-cropped.png}
+  \caption{Tracking image with $\bar{X}_n$ (blue) and $X_n$ (blue) drawn along with the estimate $x_n$ (green).}
+  \label{fig:particles}
+\end{figure}
+
