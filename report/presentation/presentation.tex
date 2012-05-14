@@ -29,6 +29,9 @@
 \newcommand{\ndist}[2]{\mathcal{N}\left(#1, #2\right)}
 \newcommand{\norm}[1]{\left\|#1\right\|}
 \newcommand{\Lp}[1]{\mathrm{L}^{#1}}
+\newcommand{\bbset}[1]{\mathbb{#1}}
+\newcommand{\RP}{\bbset{R}^+}
+\newcommand{\ZP}{\bbset{Z}^+}
 
 \begin{document}
 
@@ -70,7 +73,7 @@
 \frametitle{Dold Markovmodell}
   \begin{columns}[c]
     \column{2in}
-    \includegraphics[height=1\textheight]{hmm-graph.pdf}
+    \includegraphics[width=0.8\textwidth]{hmm-graph.pdf}
     
     \column{2in}
     \begin{itemize}
@@ -164,5 +167,58 @@
     \includegraphics[width=1\textwidth]{rat-splines.png}
   \end{columns}
 \end{frame}
+
+\subsection{Maskininl\ae rning: Databas med Tr\ae ningsdata}
+\begin{frame}
+  \frametitle{Maskininl\ae rning: Databas med Tr\ae ningsdata}
+  \begin{itemize}
+  \item Implementerar sannolikhetsfunktionen $\cprobnext{X}$ som en s\oe kning i databas
+  \item Databasen inneh\aa ller tillst\aa nds\oe verg\aa ngar $T = (f, t)$ som best\aa r av en fr\aa n-del $f$ och en till-del $t$
+  \item Givet en hypotes $x_n$ uppskattas $x_{n+1}$ som ett medelv\ae rde \oe ver $t$, viktat mot skillnaden mellan $x_n$ och $f$
+  \item Viktfunktion $w(x_n, f)$
+    \begin{equation*}
+      x_{n+1} = \frac{\sum\limits_{(f, t) \in \mathrm{DB}} t \cdot w(x_n, f)}{\sum\limits_f w(x_n, f)}
+    \end{equation*}
+  \item T.ex. $w(x_n, f) = \norm{x_n - f}_{\Lp{p}}^a$ f\oe r n\aa got $a\in \RP$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exempel\oe verg\aa ng}
+  \begin{columns}[c]
+    \column{2in}
+    \includegraphics[width=0.8\textwidth]{transition-example.png}
+    
+    \column{2in}
+    \begin{itemize}
+    \item Gul: Fr\aa n-tillst\aa nd
+      \begin{itemize}
+      \item $f = \frac{x^3 + 100x^2 - 2000x}{10000}$
+      \end{itemize}
+      
+    \item R\oe d: Till-tillst\aa nd
+      \begin{itemize}
+      \item $t = \frac{x^3 + 150x^2 - 2000x}{10000}$
+      \end{itemize}
+    \item $\left(f, t\right) \in \mathrm{DB}$
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Exempel: Genererad databas}
+  \begin{columns}[c]
+    \column{2in}
+    \includegraphics[width=1\textwidth]{database_gwhisker_spline3_n2048_from_to_fixed.png}
+    
+    \column{2in}
+    \begin{itemize}
+      \item Genererad databas av tillst\aa nds\oe verg\aa ngar
+      \item V\ae nster: Fr\aa n-tillst\aa nd
+      \item H\oe ger: Till-tillst\aa nd
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
 
 \end{document}
