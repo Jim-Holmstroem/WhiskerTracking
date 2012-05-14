@@ -29,8 +29,20 @@ class GWhiskerTracker(Tracker):
         self.current_translation = self.metadata[obj_i]["translate"]
         Tracker.track_object(self, obj_i, *other_args, **kwargs)
 
-    def make_animators(self):
-        return map(lambda t,r,p,trans,hi: GWhiskerAnimator(t, r, p, translate=trans, highest_weight_particles=hi), self.tracks, self.resampled_particles, self.preresampled_particles, (d["translate"] for d in self.metadata), self.highest_weight_particles)
+    def make_animators(self, track=True, resampled_particles=True, preresampled_particles=True, highest_weight_particles=True):
+        def return_None_if_false(b, r):
+            if b == True:
+                return r
+            return None
+
+        self.animators = map(lambda t,r,p,trans,hi: GWhiskerAnimator(
+                return_None_if_false(track, t),
+                return_None_if_false(resampled_particles, r),
+                return_None_if_false(preresampled_particles, p),
+                highest_weight_particles=return_None_if_false(highest_weight_particles, hi),
+                translate=trans),
+                self.tracks, self.resampled_particles, self.preresampled_particles, (d["translate"] for d in self.metadata), self.highest_weight_particles)
+        return self.animators
 
     def preprocess_image(self, image):
         return image.transform(lambda img: filters.gaussian_filter(img,3.0))

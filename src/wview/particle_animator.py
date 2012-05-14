@@ -31,13 +31,8 @@ class ParticleAnimator(wanimation):
             for row in self.resampled_particles[i]:
                 self.renderer.render(context, row, self.resampled_particles_color, filled=False, alpha=0.1)
         
-        main_particle = None
         if self.track != None:
-            main_particle = self.track[i]
-        else:
-            main_particle = self.resampled_particles[i].mean(axis=0)
-        
-        self.renderer.render(context, main_particle, self.track_color, filled=False, alpha=1)
+            self.renderer.render(context, self.track[i], self.track_color, filled=False, alpha=1)
 
         if self.highest_weight_particles != None:
             self.renderer.render(context, self.highest_weight_particles[i], self.highest_weight_particle_color, filled=True, alpha=0.5)
