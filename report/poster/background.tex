@@ -3,10 +3,15 @@
 The interest in studying rodent whiskers has recently seen a significant increase, particularly in the field of neurophysiology. As a result, there is a need for automatic tracking of whisker movements. Currently available commercial solutions either are extremely expensive, restrict the experiment setup, or fail when whiskers cross or overlap. A cheap, reliable solution to the tracking problem is needed.
 
 \begin{center}
-  \includegraphics[width=0.2\textwidth]{rat.png}
-  \label{fig:rat}
+  \begin{tabular}{rl}
+    \includegraphics[width=0.15\textwidth]{rat-vanilla.png}
+    & \includegraphics[width=0.15\textwidth]{rat-splines.png}
+    \label{fig:rat}
+  \end{tabular}
   
-  Figure 1: Example image of a rat and its whiskers.
+  Figure 1:\\
+  Left: Example image of a rat and its whiskers.\\
+  Right: Least squares fitted third degree polynomials.
 \end{center}
 
 \subsection*{A Probabilistic Approach}
