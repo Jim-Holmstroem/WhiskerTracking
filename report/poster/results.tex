@@ -1,7 +1,8 @@
 \section*{Results}
 So far, we have run some tests on randomly generated video sequences of whisker-like objects. While the results are far from good enough for practical use, they are still quite promising.
 
-\begin{center}
+\begin{figure}
+  \centering
   \begin{tabular}{ccc}
     \includegraphics[width=0.3\textwidth]{tracking/frame10.png}
     & \includegraphics[width=0.3\textwidth]{tracking/frame20.png}
@@ -14,11 +15,9 @@ So far, we have run some tests on randomly generated video sequences of whisker-
     \\
     Frame 40 & Frame 50 & Frame 60
   \end{tabular}
-  \label{tab:result1}
 
-  Table 1: Tracking result using 32 particles on 64 frames of generated whiskers.\\
-  White is the whisker being tracked, green is the estimate of its position.
-  
-\end{center}
+  \caption{Tracking result using 32 particles on 64 frames of generated whiskers. White is the whisker being tracked, green is the estimate of its position.}
+  \label{tab:result1}
+\end{figure}
 
 Our results so far lead us to believe that that it is indeed feasible to use this method for tracking whiskers.
