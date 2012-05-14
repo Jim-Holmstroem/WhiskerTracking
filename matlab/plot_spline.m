@@ -26,15 +26,28 @@ clf;
 imshow(I);
 hold on;
 
+degree = 3
+
 for n = 1:size(points, 3)
     x = points(:,1,n);
     y = points(:,2,n);
     
-    A = [[1;1;1;1;1] x x.^2 x.^3 x.^4];
+    A = zeros(length(x),degree+1);
+    for m=0:degree
+        A(:,m+1) = x.^m;
+    end
+    %x.^2 x.^3 x.^4];
     a = A\y;
     
-    X = min(x):max(x);
-    Y = a(1) + a(2)*X + a(3)*X.^2 + a(4)*X.^3 + a(5)*X.^4;
+    plotX = min(x):max(x);
+
+    X = zeros(length(plotX), degree+1);
+    for n=0:degree
+        X(:,n+1) = plotX.^(n);
+    end
+
+    Y = X * a;
+    %Y = a(1) + a(2)*X + a(3)*X.^2 + a(4)*X.^3;% + a(5)*X.^4;
     
     plot(X,Y, 'g--');
 end
