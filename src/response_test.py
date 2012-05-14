@@ -6,6 +6,7 @@ from wmedia import wvideo,testscreen
 import math
 import numpy
 import pylab
+import scipy
 
 from common import make_video_path
 
@@ -37,11 +38,18 @@ if __name__=="__main__":
     
     
     #phi
-    zerot=zero
-    whisker1t=whisker1
-    whisker2t=whisker2
-    whisker3t=whisker3
-   
+    #zerot=zero
+    #whisker1t=whisker1
+    #whisker2t=whisker2
+    #whisker3t=whisker3
+
+    trans = scipy.ndimage.laplace
+
+    zerot=zero.transform(trans)
+    whisker1t=whisker1.transform(trans)
+    whisker2t=whisker2.transform(trans)
+    whisker3t=whisker3.transform()
+    
     normalize=zerot[0].sum() #OK since static
 
     #correlation
@@ -65,12 +73,12 @@ if __name__=="__main__":
 
     #layermanager.add_layer(whisker3)
     #layermanager.add_layer(whisker2)
-    #layermanager.add_layer(whisker1)
+    layermanager.add_layer(whisker1)
   
-    #layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
+    layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
 
-    #win=wwindow(layermanager)
+    win=wwindow(layermanager)
 
-    #gtk.gdk.threads_enter()
-    #gtk.main()
-    #gtk.gdk.threads_leave()
+    gtk.gdk.threads_enter()
+    gtk.main()
+    gtk.gdk.threads_leave()
