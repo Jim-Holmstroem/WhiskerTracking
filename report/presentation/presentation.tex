@@ -115,6 +115,7 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Illustration av stegen}
   \begin{columns}[c]
     \column{2.5in}
 
@@ -146,6 +147,39 @@
   \end{columns}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Illustration av stegen}
+  \begin{columns}[c]
+    \column{2.5in}
+
+    \begin{description}
+      \item[\color{red}{
+          \begin{picture}(0, 0)
+            \color{blue}
+            \put(-16, 4){\circle{16}}
+          \end{picture}}] F\oe re filtrering
+      \item[]
+      \item[\color{red}{
+          \begin{picture}(0, 0)
+            \color{red}
+            \put(-16, 4){\circle{16}}
+          \end{picture}}] Efter filtrering
+      \item[]
+      \item[\color{red}{
+          \begin{picture}(0, 0)
+            \color{green}
+            \put(-16, 4){\circle{16}}
+          \end{picture}}] Slutlig uppskattning
+    \end{description}
+    
+    \column{2in}
+    
+    \begin{center}
+      \includegraphics[width=1\textwidth]{tracking-particles.png}
+    \end{center}
+  \end{columns}
+\end{frame}
+
 \subsection{Morrh\aa rens Matematiska Modell}
 \begin{frame}
   \frametitle{Morrh\aa rens Matematiska Modell}
@@ -168,9 +202,9 @@
   \end{columns}
 \end{frame}
 
-\subsection{Maskininl\ae rning: Databas med Tr\ae ningsdata}
+\subsection{Prediktion: S\oe kning i Databas med Tr\ae ningsdata}
 \begin{frame}
-  \frametitle{Maskininl\ae rning: Databas med Tr\ae ningsdata}
+  \frametitle{Prediktion: S\oe kning i Databas med Tr\ae ningsdata}
   \begin{itemize}
   \item Implementerar sannolikhetsfunktionen $\cprobnext{X}$ som en s\oe kning i databas
   \item Databasen inneh\aa ller tillst\aa nds\oe verg\aa ngar $T = (f, t)$ som best\aa r av en fr\aa n-del $f$ och en till-del $t$
@@ -213,12 +247,73 @@
     
     \column{2in}
     \begin{itemize}
-      \item Genererad databas av tillst\aa nds\oe verg\aa ngar
-      \item V\ae nster: Fr\aa n-tillst\aa nd
-      \item H\oe ger: Till-tillst\aa nd
+    \item Genererad databas av tillst\aa nds\oe verg\aa ngar
+    \item V\ae nster: Fr\aa n-tillst\aa nd
+    \item H\oe ger: Till-tillst\aa nd
     \end{itemize}
   \end{columns}
 \end{frame}
 
+\subsection{Filtrering: J\ae mf\oe relse av bilder}
+\begin{frame}
+  \frametitle{Filtrering: J\ae mf\oe relse av bilder}
+  \begin{center}
+    \includegraphics[width=0.8\textwidth]{whisker_compare.pdf}
+  \end{center}
+\end{frame}
+
+\section{Resultat}
+\begin{frame}
+  \frametitle{Resultat: 32 partiklar, databas med 10000 \oe verg\aa ngar}
+  
+  \begin{center}
+    \begin{tabular}{ccc}
+      \includegraphics[width=0.25\textwidth]{tracking/frame10.png}
+      & \includegraphics[width=0.25\textwidth]{tracking/frame20.png}
+      & \includegraphics[width=0.25\textwidth]{tracking/frame30.png}
+      \\
+      Bildruta 10 & Bildruta 20 & Bildruta 30\\
+      \includegraphics[width=0.25\textwidth]{tracking/frame40.png}
+      & \includegraphics[width=0.25\textwidth]{tracking/frame50.png}
+      & \includegraphics[width=0.25\textwidth]{tracking/frame60.png}
+      \\
+      Bildruta 40 & Bildruta 50 & Bildruta 60\\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Resultat: 256 partiklar, databas med 10000 \oe verg\aa ngar}
+  
+  \begin{center}
+    \begin{tabular}{ccc}
+      \includegraphics[width=0.25\textwidth]{tracking-256/frame10.png}
+      & \includegraphics[width=0.25\textwidth]{tracking-256/frame20.png}
+      & \includegraphics[width=0.25\textwidth]{tracking-256/frame30.png}
+      \\
+      Bildruta 10 & Bildruta 20 & Bildruta 30\\
+      \includegraphics[width=0.25\textwidth]{tracking-256/frame40.png}
+      & \includegraphics[width=0.25\textwidth]{tracking-256/frame50.png}
+      & \includegraphics[width=0.25\textwidth]{tracking-256/frame60.png}
+      \\
+      Bildruta 40 & Bildruta 50 & Bildruta 60\\
+    \end{tabular}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{itemize}
+  \item Resultaten p\aa\ genererade morrh\aa r verkar lovande
+    \begin{itemize}
+      \item F\oe rv\aa nansv\aa rt bra resultat med endast 32 partiklar
+      \item Mycket litet fel med 256 partiklar
+      \end{itemize}
+  \item \AA terst\aa r att g\oe ra:
+    \begin{itemize}
+    \item Testa p\aa\ riktiga morrh\aa r
+    \item Optimera parametrar
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
 \end{document}
