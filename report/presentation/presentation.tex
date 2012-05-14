@@ -13,11 +13,6 @@
 
 \graphicspath{{figures/}{figures/hmm-graph/}{figures/gwhisker_database/}{figures/gwhiskers/}{figures/preprocessing}}
 
-\title{Probabilistic Tracking of Multiple Whiskers}
-\author{Jim Holmstr\"{o}m, Emil Lundberg}                 % Enter your name between curly braces
-\institute{CSC,KTH}      % Enter your institute name between curly braces
-\date{\today}                    % Enter the date or \today between curly braces
-
 \renewcommand{\ae}{\"{a}}
 \renewcommand{\oe}{\"{o}}
 \renewcommand{\AE}{\"{A}}
@@ -32,6 +27,11 @@
 \newcommand{\bbset}[1]{\mathbb{#1}}
 \newcommand{\RP}{\bbset{R}^+}
 \newcommand{\ZP}{\bbset{Z}^+}
+
+\title{Probabilistisk f\oe ljning av multipla morrh\aa r i monokul\ae r video}
+\author{Jim Holmstr\"{o}m, Emil Lundberg}                 % Enter your name between curly braces
+\institute{CSC,KTH}      % Enter your institute name between curly braces
+\date{\today}                    % Enter the date or \today between curly braces
 
 \begin{document}
 
@@ -95,15 +95,12 @@
 \end{frame}
 
 \begin{frame}
-  
+  \frametitle{Partikelfiltrets fyra steg}
   \begin{columns}[tt]
     \column{2.5in}
     \includegraphics[width=1\textwidth]{hmm-graph-pf.pdf}
 
     \column{2.5in}
-    \begin{itemize}
-    \item Fyra steg:
-    \end{itemize}
     \begin{description}
     \item[Prediktion] Skapa hypoteser om n\ae sta tidssteg
     \item[Perception] L\ae s in och tolka bild
@@ -114,29 +111,30 @@
   \end{columns}
 \end{frame}
 
+\newcommand{\Circle}[1]{
+  \begin{picture}(0, 0)
+    \color{#1}
+    \put(-16, 4){\circle{16}}
+  \end{picture}
+}
+\newcommand{\Line}[1]{
+  \begin{picture}(0, 0)
+    \color{#1}
+    \put(-24, 4){\line(1,0){16}}
+  \end{picture}
+}
+
 \begin{frame}
   \frametitle{Illustration av stegen}
   \begin{columns}[c]
     \column{2.5in}
 
     \begin{description}
-      \item[\color{red}{
-          \begin{picture}(0, 0)
-            \color{blue}
-            \put(-16, 4){\circle{16}}
-          \end{picture}}] F\oe re filtrering
+      \item[\Circle{blue}] F\oe re filtrering
       \item[]
-      \item[\color{red}{
-          \begin{picture}(0, 0)
-            \color{red}
-            \put(-16, 4){\circle{16}}
-          \end{picture}}] Efter filtrering
+      \item[\Circle{red}] Efter filtrering
       \item[]
-      \item[\color{red}{
-          \begin{picture}(0, 0)
-            \color{green}
-            \put(-16, 4){\circle{16}}
-          \end{picture}}] Slutlig uppskattning
+      \item[\Circle{green}] Slutlig uppskattning
     \end{description}
     
     \column{2in}
@@ -153,23 +151,11 @@
     \column{2.5in}
 
     \begin{description}
-      \item[\color{red}{
-          \begin{picture}(0, 0)
-            \color{blue}
-            \put(-16, 4){\circle{16}}
-          \end{picture}}] F\oe re filtrering
+      \item[\Line{blue}] F\oe re filtrering
       \item[]
-      \item[\color{red}{
-          \begin{picture}(0, 0)
-            \color{red}
-            \put(-16, 4){\circle{16}}
-          \end{picture}}] Efter filtrering
+      \item[\Line{red}] Efter filtrering
       \item[]
-      \item[\color{red}{
-          \begin{picture}(0, 0)
-            \color{green}
-            \put(-16, 4){\circle{16}}
-          \end{picture}}] Slutlig uppskattning
+      \item[\Line{green}] Slutlig uppskattning
     \end{description}
     
     \column{2in}
@@ -190,7 +176,7 @@
     \item Mycket enkel modell: $a_1x + a_2x^2 + a_3x^3$
       \begin{itemize}
       \item Approximerar morrh\aa rens form inom felmarginal f\oe r blotta \oe gat
-      \item Kan missa lite i s\ae llsynta extrema fall
+      \item Kan avvika lite i s\ae llsynta extrema fall
       \end{itemize}
     \item Andra kandidater t.ex. $\sum\limits_k a_k\sin \left(kx\right)$
     \end{itemize}
@@ -202,9 +188,9 @@
   \end{columns}
 \end{frame}
 
-\subsection{Prediktion: S\oe kning i Databas med Tr\ae ningsdata}
+\subsection{Prediktion: S\oe kning i databas med tr\ae ningsdata}
 \begin{frame}
-  \frametitle{Prediktion: S\oe kning i Databas med Tr\ae ningsdata}
+  \frametitle{Prediktion: S\oe kning i databas med tr\ae ningsdata}
   \begin{itemize}
   \item Implementerar sannolikhetsfunktionen $\cprobnext{X}$ som en s\oe kning i databas
   \item Databasen inneh\aa ller tillst\aa nds\oe verg\aa ngar $T = (f, t)$ som best\aa r av en fr\aa n-del $f$ och en till-del $t$
