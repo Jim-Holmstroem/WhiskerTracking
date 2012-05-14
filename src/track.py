@@ -8,11 +8,10 @@ from wmedia import wvideo
 import gtk
 import numpy
 import os
+import pickle
 import wtracker
 
-class TrackerBenchmark:
-    
-    TEST_DATA_BASE_DIR = "video"
+class TrackerRunner:
     
     def __init__(self, tracker_classes, video_name, database_name, num_particles=100):
         video_path = make_video_path(video_name + ".pngvin")
@@ -25,20 +24,32 @@ class TrackerBenchmark:
             self.num_objects += 1
 
         self.correct_states = [numpy.load((os.path.join(video_path, "state_sequence_%i.npy"%i))) for i in xrange(self.num_objects)]
+
+        metadata = [os.path.exists(os.path.join(video_path, "metadata_%i.pickle"%i)) and pickle.load(open(os.path.join(video_path, "metadata_%i.pickle"%i))) or {} for i in xrange(self.num_objects)]
+
         self.video = wvideo(video_path)
         self.db = StateTransitionDatabase(database_name)
 
-        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video, [self.correct_states[i][0] for i in xrange(self.num_objects)], num_particles), tracker_classes)
+        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video, [self.correct_states[i][0] for i in xrange(self.num_objects)], num_particles, metadata=metadata), tracker_classes)
 
     def _run_test(self, tracker):
         print "Tracking with tracker class %s"%(tracker.__class__.__name__)
         tracker.run()
         return (tracker.get_track(i) for i in xrange(self.num_objects))
+
+    def run_benchmark(self):
+        print "Running tracking benchmark"
+        print
+        import cProfile
+        cProfile.runctx("self.run()", globals(), locals())
+        print "Finished tracking benchmark"
+        print
     
     def run(self):
-        print "Running tracking test"
+        print "Running trackers"
+        print
         self.tracks = map(self._run_test, self.trackers)
-        print "Finished tracking test"
+        print "Finished tracking"
         print
 
     def evaluate_results(self):
@@ -79,19 +90,32 @@ class TrackerBenchmark:
         print "Done animating test results"
         print
     
-    def export_results(self):
-        for tracker in self.trackers:
-            pngvin_dir = make_run_path(self.video_name + "_" + tracker.__class__.__name__ + ".pngvin")
-            print "Saving results of tracker %s to %s"%(tracker.__class__.__name__, pngvin_dir)
-            tracker.export_results(pngvin_dir)
+    def export_results(self, name=None):
+        if name == None:
+            name = self.video_name
+        for name_suffix, draw_all in zip(("_only_track", "_all_particles"), (False, True)):
+            for tracker in self.trackers:
+                tracker.make_animators(track=True, resampled_particles=draw_all, preresampled_particles=draw_all, highest_weight_particles=draw_all)
+                pngvin_dir = make_run_path(name + name_suffix + "_" + tracker.__class__.__name__ + ".pngvin")
+                print "Saving results of tracker %s to %s"%(tracker.__class__.__name__, pngvin_dir)
+                tracker.export_results(pngvin_dir)
         print
 
 def run_cli():
-    """Usage: python benchmark.py VIDEO_NAME DB_NAME [-n NUM_PARTICLES] classes...
+    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
-    specified video and database as arguments.
+    specified video and database as arguments. The video and database are
+    fetched from VIDEO_DIRECTORY and DATABASE_DIRECTORY, as specified in
+    common.settings. The result videos are saved with OUTPUT_NAME in the file
+    name.
+
+    Optional arguments:
+        -n NUM_PARTICLES: Number of particles to use, default 100
+        -b BENCHMARK: If "True", the tracking is run as a benchmark. Otherwise
+            just runs the trackers.
+    Note that these arguments must appear before the Classes list.
     """
 
     import sys
@@ -103,11 +127,11 @@ def run_cli():
     num_particles = 100
 
     from common import cliutils
-    cli_result = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-n PARTICLES] TRACKER_CLASSES...")
+    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] TRACKER_CLASSES...")
 
-    video_name, database_name, class_names = cli_result[0]
-    if "PARTICLES" in cli_result[1].keys():
-        num_particles = int(cli_result[1]["PARTICLES"])
+    video_name, database_name, class_names = args
+    if "PARTICLES" in op_args.keys():
+        num_particles = int(op_args["PARTICLES"])
     tracker_classes = [getattr(wtracker, c) for c in class_names]
 
     print "Using video: %s"%(video_name)
@@ -120,12 +144,17 @@ def run_cli():
         print "\t%s"%(c.__name__)
     print
             
-    benchmark = TrackerBenchmark(tracker_classes, video_name, database_name, num_particles)
-    
-    import cProfile
-    cProfile.runctx("benchmark.run()", globals(), locals())
+    benchmark = TrackerRunner(tracker_classes, video_name, database_name, num_particles)
 
-    benchmark.export_results()
+    if "BENCHMARK" in op_args.keys() and op_args["BENCHMARK"] == "True":
+        benchmark.run_benchmark()
+    else:
+        benchmark.run()
+
+    if "OUTPUT_NAME" in op_args.keys():
+        benchmark.export_results(op_args["OUTPUT_NAME"])
+    else:
+        benchmark.export_results()
 #    benchmark.evaluate_results()
 #    benchmark.animate(0)
 

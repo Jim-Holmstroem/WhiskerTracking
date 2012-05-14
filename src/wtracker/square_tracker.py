@@ -1,3 +1,4 @@
+from itertools import izip
 from scipy.ndimage import filters
 from wmedia import wimage
 from wtracker.tracker import Tracker
@@ -8,8 +9,8 @@ import wtracker
 
 class SquareTracker(wtracker.Tracker):
     
-    def __init__(self, *args):
-        wtracker.Tracker.__init__(self, *args)
+    def __init__(self, *args, **kwargs):
+        wtracker.Tracker.__init__(self, *args, **kwargs)
         print("Starting up...")
         
         print("Blurring video...")
@@ -21,8 +22,8 @@ class SquareTracker(wtracker.Tracker):
         
         print "Startup complete."
         
-    def make_animator(self, main_particles, particles, intermediate_particles):
-        return SquareAnimator(main_particles[:,::2], particles[:,:,::2], intermediate_particles[:,:,::2])
+    def make_animators(self):
+        return [SquareAnimator(mp[:,::2], post[:,:,::2], pre[:,:,::2]) for mp, post, pre in izip(self.tracks, self.resampled_particles, self.preresampled_particles)]
         
     def goodness(self, arg):#particle, image):
         particle, image = arg
@@ -62,10 +63,11 @@ class SquareTracker(wtracker.Tracker):
         self.video = self.blurred_video
 
 class SquareTrackerBetterGoodness(SquareTracker):
-    def __init__(self, *args):
-        Tracker.__init__(self, *args)
-    def export_results(self, *args):
-        Tracker.export_results(self, *args)
+    def __init__(self, *args, **kwargs):
+        Tracker.__init__(self, *args, **kwargs)
+
+    def export_results(self, *args, **kwargs):
+        Tracker.export_results(self, *args, **kwargs)
     
     def goodness(self, arg):#particle, image):
         particle, image = arg
@@ -79,9 +81,9 @@ class SquareTrackerBetterGoodness(SquareTracker):
 
 class SquareWithoutVelocityTracker(SquareTrackerBetterGoodness):
 
-    def make_animator(self, main_particles, particles, intermediate_particles):
-        return SquareAnimator(main_particles, particles, intermediate_particles)
-        
+    def make_animators(self):
+        return map(SquareAnimator, self.tracks, self.resampled_particles, self.preresampled_particles)
+
     def goodness(self, arg):#particle, image):
         particle, image = arg
         mask = wimage(SquareLayer(particle))

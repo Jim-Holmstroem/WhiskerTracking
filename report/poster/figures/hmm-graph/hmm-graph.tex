@@ -11,32 +11,72 @@
 \begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
   thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
 
-  \node[main node] (Z1) [label=left:$p(Z_1)$] {$Z_1$};
+  % System state Z
+
+  \node[main node] (Z0) [label=left:$p(Z_0)$] {$Z_0$};
+  \node[main node] (Z1) [below of=Z0,label=left:$p(Z_1|Z_0)$] {$Z_1$};
   \node[main node] (Z2) [below of=Z1,label=left:$p(Z_2|Z_1)$] {$Z_2$};
-  \node[main node] (Z3) [below of=Z2,label=left:$p(Z_3|Z_2)$] {$Z_3$};
+  \node[main node] (Zn) [below of=Z2,label=left:$p(Z_n|Z_{n-1})$] {$Z_n$};
+
+  % Observations I
+
+  \node[main node] (I1) [right of=Z1,label=below:$p(I_1|Z_1)$] {$I_1$};
+  \node[main node] (I2) [right of=Z2,label=below:$p(I_2|Z_2)$] {$I_2$};
+  \node[main node] (In) [right of=Zn,label=below:$p(I_n|Z_n)$] {$I_n$};
+
+  % Particles X
+  \node[main node] (X1) [right of=I1, label=below right:$p(X_1|X_0)$] {$X_1$};
+  \node[main node] (X0) [above of=X1, label=below right:$p(X_0|x_0)$] {$X_0$};
+  \node[main node] (X2) [below of=X1, label=below right:$p(X_2|X_1)$] {$X_2$};
+  \node[main node] (Xn) [below of=X2, label=below right:$p(X_n|X_{n-1})$] {$X_n$};
+
+  % Estimate x
+  \node[main node] (x0) [right of=X0, label=right:Initialization] {$x_0$};
+  \node[main node] (x1) [below of=x0, label=right:Estimate] {$x_1$};
+  \node[main node] (x2) [below of=x1, label=right:Estimate] {$x_2$};
+  \node[main node] (xn) [below of=x2, label=right:Estimate] {$x_n$};
+
+  % Z->Z arrows
+
+  \path[every node/.style={font=\sffamily\small}]
+    (Z0) edge node [left] {Physics} (Z1)
+    (Z1) edge node [left] {Physics} (Z2);
+
+  % Z-> I arrows
+
+  \path[every node/.style={font=\sffamily\small}]
+    (Z1) edge node [above] {Perception} (I1)
+    (Z2) edge node [above] {Perception} (I2)
+    (Zn) edge node [above] {Perception} (In);
+
+  % X->X arrows
+
+  \path[every node/.style={font=\sffamily\small}]
+    (X0) edge node [left] {Prediction} (X1)
+    (X1) edge node [left] {Prediction} (X2);
+  %(X2) edge node [left] {Prediction} (Xn);
+
+  % I->X arrows
+  \path[every node/.style={font=\sffamily\small}]
+    (I1) edge node [above] {Filtering} (X1)
+    (I2) edge node [above] {Filtering} (X2)
+    (In) edge node [above] {Filtering} (Xn);
+
+  % x0->X0 arrow
+  \path[every node/.style={font=\sffamily\small}]
+    (x0) edge node [above] {Initialization} (X0);
   
-  %evolution rule
-
-  \node (dots) [below of=Z3] {$\vdots$};
-  \node[main node] (Zn) [below of=dots,label=left:$p(Z_n|Z_{n-1})$] {$Z_n$};
-
-  \node[main node] (u1) [right of=Z1,label=below:$p(u_1|Z_1)$] {$u_1$};
-  \node[main node] (u2) [right of=Z2,label=below:$p(u_2|Z_2)$] {$u_2$};
-  \node[main node] (u3) [right of=Z3,label=below:$p(u_3|Z_3)$] {$u_3$};
-  \node (udots) [right of=dots] {$\vdots$};
-  \node[main node] (un) [right of=Zn,label=below:$p(u_n|Z_n)$] {$u_n$};
-
+  % X->x arrows
   \path[every node/.style={font=\sffamily\small}]
-    (Z1) edge node [left] {Physics} (Z2)
-    (Z2) edge node [left] {Physics} (Z3)
-    (Z3) edge node [left] {Physics} (dots)
-    (dots) edge node [left] {Physics} (Zn);
+    (X1) edge node [above] {Selection} (x1)
+    (X2) edge node [above] {Selection} (x2)
+    (Xn) edge node [above] {Selection} (xn);
 
-  \path[every node/.style={font=\sffamily\small}]
-    (Z1) edge node [above] {Observe} (u1)
-    (Z2) edge node [above] {Observe} (u2)
-    (Z3) edge node [above] {Observe} (u3)
-    (Zn) edge node [above] {Observe} (un);
+  % Dotted arrows
+  \draw[dotted] (Z2) -- (Zn);
+  \draw[dotted] (X2) -- (Xn);
+
+  
 
 \end{tikzpicture}
 \end{document}

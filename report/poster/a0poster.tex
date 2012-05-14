@@ -1,6 +1,6 @@
-\documentclass{a0poster}
+\documentclass{article}
 \usepackage{geometry}
-\geometry{paper=a0paper}
+\geometry{paper=a4paper}
 \geometry{hmarginratio=1:1}
 \geometry{vmarginratio=1:1}
 \geometry{hmargin=25mm}
@@ -47,14 +47,14 @@
 \def\tol{{\textsc{tol}}}
 \providecommand{\D}[1]{\,\mathrm{d}#1}
 
-\newcommand{\mysmall}{\small}
-\newcommand{\mynormalsize}{\normalsize}
-\newcommand{\myFontSize}{\large}
-\newcommand{\myTitleFontSize}{\Huge}
-\newcommand{\mySubTitleFontSize}{\Large}
-\newcommand{\mySubSubTitleFontSize}{\small}
-\newcommand{\setLineThickness}{\linethickness{4mm}}
-\newcommand{\myrule}{\rule{\textwidth}{3pt}}
+%\newcommand{\mysmall}{\small}
+%\newcommand{\mynormalsize}{\normalsize}
+%\newcommand{\myFontSize}{\large}
+%\newcommand{\myTitleFontSize}{\Large}
+%\newcommand{\mySubTitleFontSize}{\large}
+%\newcommand{\mySubSubTitleFontSize}{\small}
+%\newcommand{\setLineThickness}{\linethickness{2mm}}
+%\newcommand{\myrule}{\rule{\textwidth}{1pt}}
 
 %%% set new tolerances %%%%
 
@@ -64,52 +64,52 @@
 \renewcommand{\floatpagefraction}{0.35}
 \setcounter{totalnumber}{5}
 
+%%% Set footnote numbering type %%%
+\renewcommand{\thefootnote}{\arabic{footnote}}
+
 %%% options for multcol
 \setlength{\columnsep}{25mm}
+
+%%% Graphics search paths %%%
+\graphicspath{{figures/}{figures/hmm-graph/}{figures/gwhisker_database/}{figures/gwhiskers/}}
+
+%%% Custom commands
+
+\newcommand{\prob}[1]{p\left(#1\right)}
+\newcommand{\cprob}[2]{\prob{\left. #1 \middle\vert #2 \right.}}
+\newcommand{\cprobnext}[1]{\cprob{#1_{n+1}}{#1_n}}
+\newcommand{\ndist}[2]{\mathcal{N}\left(#1, #2\right)}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\Lp}[1]{\mathrm{L}^{#1}}
 
 %%% begin document %%%
 
 \begin{document}
 
-\begin{tabular}{ll}
+\title{\bf Probabilistic Tracking of Multiple Rodent Whiskers In Monocular Video Sequences}
 
-  \begin{minipage}{425mm}
+\date{}
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
 
-    {\Huge\bf Probabilistic Tracking of Multiple Rodent Whiskers In Monocular Video Sequences}\\[10mm]
-    {\Large\bf Jim Holmström, \; Emil Lundberg\\[3mm]
-      Bachelor's Thesis at CSC, KTH} \\
+{\bf Jim Holmström, \; Emil Lundberg}
 
+Supervised by Prof. Örjan Ekeberg
 
-    \vspace*{5mm}
+Bachelor's Thesis at CSC, KTH
 
-    \input{abstract}
+\input{background}
 
-  \end{minipage}
+\input{framework}
 
-\end{tabular}
+\input{model}
 
-\vspace*{25mm}
+\input{algorithm}
 
-\begin{minipage}{\linewidth}
+\input{results}
 
-  \begin{multicols*}{2}
-    
-    \input{background}
-    
-    \input{markov}
-    
-    \input{whiskers}
-
-    \input{algorithm}
-    
-    \input{database}
-
-    \bibliographystyle{vancouver}
-    \bibliography{a0poster}
-
-  \end{multicols*}
-
-\end{minipage}
-
+\bibliography{a0poster}{}
+\bibliographystyle{plain}
 
 \end{document}
