@@ -1,0 +1,35 @@
+\section*{Our implementation of the Particle Filter}
+An implementation of the Particle Filter consists mainly of designing the probability functions $\cprobnext{X}$ and $\cprob{I_n}{X_n}$, and providing the algorithm with a sensible initialization. This is what this project is all about. The rest just consists of taking samples from these functions.
+
+\subsection*{The prediction step: The Database}
+
+We investigate the plausibility of implementging $\cprobnext{X}$ as a search through a database of training data. We set up a database of known transitions between whisker shapes. A transition $T$ consists of a ``from'' state $f$ and a''to'' state $t$. This denotes that ``we have observed with 100\% accuracy that a whisker went from this shape to that shape in one time step''. We then approximate $\cprobnext{X}$ as a weighted average of the database, where transitions are weighted by how much their ``from'' parts differ from the hypotheses in $X_n$.
+
+What we do in practice when sampling is: for each hypothesis $x_n^i \in X_n$,
+
+\begin{enumerate}
+  \item For each transition $T^j = (f^j, t^j)$ in the database, calculate the function $d^{ij}$ that is the difference between the two functions described by $x_n^i$ and $f^j$. In this case, both are polynomials and thus $d^{ij}$ is the polynomial with coefficients given by the tuple $x_n^i - f^i$.
+  \item Let $w^{ij} = \left(\frac{1}{\norm{d^{ij}}_{\Ltwo}}\right)^a$, the reciprocal of the $\Ltwo$ norm of $d^{ij}$ raised to a power $a$.
+  \item Return $\frac{\sum_j t^j w^{ij}}{\sum_jw^{ij}}$, the weighted average of the ``to'' states with weights $w^{ij}$.
+\end{enumerate}
+
+Doing this for each hypothesis $x_n^i$ yields the set $\bar{X}_n$.
+
+\subsection*{The filtering step: Image comparison}
+
+\begin{figure}
+  \centering
+  \includegraphics[scale=1.0]{whisker_compare.pdf}
+  \caption{Schematic image of the process to evaluate importance of hypothesis.}
+  \label{fig:whisker_compare}
+\end{figure}
+
+The $\phi$-transform is used to generate a sensory cue for the comparison, at the moment we have choosen to just use the identity transform since we have, compared to others, a homogeneous environment.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\textwidth]{database_gwhisker_spline3_n2048_from_to_fixed.png}
+  \caption{View of all whiskers in transition database. Left: from-states. Right: to-states.}
+>>>>>>> github/presentation
+  \label{fig:database}
+\end{figure}

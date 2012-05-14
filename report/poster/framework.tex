@@ -36,7 +36,3 @@ More particles mean greater accuracy, since the PDF can then be approximated mor
 \item[Filtering:] The observation $I_{n+1}$ of the system is then used for filtering bad hypotheses out of $\bar{X}_{n+1}$. We draw samples $X_{n+1}$ from $\bar{X}_{n+1}$ with probabilities given by $\cprob{I_{n+1}}{\bar{X}_{n+1}}$. As a result, $X_{n+1}$ will be a subset of $\bar{X}_{n+1}$ where more probable hypotheses appear multiple times. For this reason, this is also known as the \emph{resampling} step. The set $X_{n+1}$ is the \emph{belief}, our approximation of $\cprobnext{Z}$.
 \item[Selection:] Finally, we produce a single hypothesis $x_{n+1}$ from $X_{n+1}$ as our \emph{estimate} of the state $Z_{n+1}$. Supposing $X_{n+1}$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, the mean value of $X_{n+1}$ is a good hypothesis since it approximates the expectation of $\cprobnext{Z}$.
 \end{description}
-
-
-\subsection*{Implementing the Particle Filter}
-An implementation of the Particle Filter consists mainly of designing the probability functions $\cprobnext{X}$ and $\cprob{I_n}{X_n}$, and providing the algorithm with a sensible initialization. This is what this project is all about. The rest just consists of taking samples from these functions.
