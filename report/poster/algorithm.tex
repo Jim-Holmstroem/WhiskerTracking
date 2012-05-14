@@ -3,7 +3,7 @@ An implementation of the Particle Filter consists mainly of designing the probab
 
 \subsection*{The prediction step: The Database}
 
-We investigate the plausibility of implementging $\cprobnext{X}$ as a search through a database of training data. We set up a database of known transitions between whisker shapes. A transition $T$ consists of a ``from'' state $f$ and a''to'' state $t$. This denotes our \emph{ground truth}\footnote{See \cite{EncyclopediaMachineLearning}} that ``a whisker went from this shape to that shape in one time step''. We then approximate $\cprobnext{X}$ as a weighted average of the database, where transitions are weighted by how much their ``from'' parts differ from the hypotheses in $X_n$.
+We investigate the plausibility of implementing $\cprobnext{X}$ as a search through a database of training data. We set up a database of known transitions between whisker shapes. A transition $T$ consists of a ``from'' state $f$ and a''to'' state $t$. This denotes our \emph{ground truth}\footnote{See \cite{EncyclopediaMachineLearning}} that ``a whisker went from this shape to that shape in one time step''. We then approximate $\cprobnext{X}$ as a weighted average of the database, where transitions are weighted by how much their ``from'' parts differ from the hypotheses in $X_n$.
 
 What we do in practice when sampling is: for each hypothesis $x_n^i \in X_n$,
 
