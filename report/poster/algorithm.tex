@@ -3,32 +3,34 @@ An implementation of the Particle Filter consists mainly of designing the probab
 
 \subsection*{The prediction step: The Database}
 
-We investigate the plausibility of implementging $\cprobnext{X}$ as a search through a database of training data. We set up a database of known transitions between whisker shapes. A transition $T$ consists of a ``from'' state $f$ and a''to'' state $t$. This denotes that ``we have observed with 100\% accuracy that a whisker went from this shape to that shape in one time step''. We then approximate $\cprobnext{X}$ as a weighted average of the database, where transitions are weighted by how much their ``from'' parts differ from the hypotheses in $X_n$.
+We investigate the plausibility of implementging $\cprobnext{X}$ as a search through a database of training data. We set up a database of known transitions between whisker shapes. A transition $T$ consists of a ``from'' state $f$ and a''to'' state $t$. This denotes our \emph{ground truth}\footnote{See \cite{EncyclopediaMachineLearning}} that ``a whisker went from this shape to that shape in one time step''. We then approximate $\cprobnext{X}$ as a weighted average of the database, where transitions are weighted by how much their ``from'' parts differ from the hypotheses in $X_n$.
 
 What we do in practice when sampling is: for each hypothesis $x_n^i \in X_n$,
 
 \begin{enumerate}
-  \item For each transition $T^j = (f^j, t^j)$ in the database, calculate the function $d^{ij}$ that is the difference between the two functions described by $x_n^i$ and $f^j$. In this case, both are polynomials and thus $d^{ij}$ is the polynomial with coefficients given by the tuple $x_n^i - f^i$.
-  \item Let $w^{ij} = \left(\frac{1}{\norm{d^{ij}}_{\Ltwo}}\right)^a$, the reciprocal of the $\Ltwo$ norm of $d^{ij}$ raised to a power $a$.
+  \item For each transition $T^j = (f^j, t^j)$ in the database, calculate the function $d^{ij}$ that is the difference between the two functions described by $x_n^i$ and $f^j$. In this case, both are polynomials and thus $d^{ij}$ is the polynomial with coefficients given by the tuple $x_n^i - f^j$.
+  \item Let $w^{ij} = \left(\frac{1}{\norm{d^{ij}}_{\Lp{p}}}\right)^a$, the reciprocal of the $\Lp{p}$ norm of $d^{ij}$ raised to a power $a$.
   \item Return $\frac{\sum_j t^j w^{ij}}{\sum_jw^{ij}}$, the weighted average of the ``to'' states with weights $w^{ij}$.
 \end{enumerate}
 
-Doing this for each hypothesis $x_n^i$ yields the set $\bar{X}_n$. We have not yet thoroughly investigated how the power $a$ qualitatively affects the tracking results, but $a=4$ seems to be a good value.
+Doing this for each hypothesis $x_n^i$ yields the set $\bar{X}_n$.
+
+We have not yet thoroughly investigated which power $a$ and which $\Lp{p}$ space to use. We have run tests with $\Lp{2}$, and $a=4$ seems to be a good value. These will later be determined in a ``bake-off''\footnote{See \cite{EncyclopediaMachineLearning}}.
 
 \subsection*{The filtering step: Image comparison}
 
 \begin{figure}
   \centering
   \includegraphics[scale=1.0]{whisker_compare.pdf}
-  \caption{Schematic image of the process to evaluate the importance of a hypothesis.}
+  \caption{Schematic image of the process to evaluate the importance of a hypothesis. The transformation $\phi$ in this case extracts an edge cue from the images.}
   \label{fig:whisker_compare}
 \end{figure}
 
-We implement the probability function $\cprob{I_n}{X_n}$ as simply checking if the image pixels beneath the whiskers $X_n$ look like whisker pixels. The image $I_n$ is grayscale, and so each pixel can be identified with a number between 0 and 255, inclusive. We assume that whisker pixels have a high value and background pixels have a low value.
+We implement the probability function $\cprob{I_n}{X_n}$ as a comparison between $I_n$ and the images corresponding to the hypotheses $X_n$. For each hypothesis $\bar{x}_n^i \in \bar{X}_n$ we create an image $I_n^i$ that corresponds to the state described by $\bar{x}_n^i$.
 
-We first preprocess the image using a transformation $\phi$, to make the measurement easier. At the current stage in our testing, the images used are generated synthetic ones that are already easy to process. Therefore we let $\phi$ be the identity transformation at the moment.
+We apply a transformation $\phi$ to the images to get a sensory cue for evaluating the hypotheses. At the current stage in our testing, the images used are generated synthetic ones that are already easy to process. Therefore we let $\phi$ be the identity transformation at the moment. Another feasible candidate for $\phi$ would be a differentiation, in order to highlight edges in the image.
 
-After preprocessing the image, for each hypothesis $\bar{x}_n^i \in \bar{X}_n$ we create a \emph{mask} image $I_n^i$. This image will be zero everywhere except where the whisker $\bar{x}_n^i$ is. We then let $w^i = \sum\limits_{\mathrm{pixels}}I_n \cdot I_n^i$, where the multiplication is done component-wise. We then let $\left\{\left(\bar{x}_n^i, w^i\right)\right\}_{i=1}^N$ define a discrete probability function that returns $\bar{x}_n^i$ with probability $w^i$, and let this distribution be our approximation of $\cprob{I_N}{X_n}$.
+We then let $w^i = \sum\limits_{\mathrm{pixels}}\phi\left(I_n\right) \cdot \phi\left(I_n^i\right)$, where the multiplication is done component-wise. We then let $\left\{\left(\bar{x}_n^i, w^i\right)\right\}_{i=1}^N$ define a discrete probability function that returns $\bar{x}_n^i$ with probability $\frac{w^i}{\sum_{i=0}^Nw^i}$, and let this distribution be our approximation of $\cprob{I_N}{X_n}$.
 
 \begin{figure}
   \centering
@@ -43,7 +45,7 @@ Figure \ref{fig:particles} shows an illustration of the three tracking steps. Th
 
 \begin{figure}[h]
   \centering
-  \includegraphics[width=0.3\textwidth]{tracking-particles-cropped.png}
+  \includegraphics[width=0.3\textwidth]{tracking-particles.png}
   \caption{Tracking image with $\bar{X}_n$ (blue) and $X_n$ (blue) drawn along with the estimate $x_n$ (green).}
   \label{fig:particles}
 \end{figure}
