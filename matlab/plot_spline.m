@@ -51,3 +51,6 @@ for n = 1:size(points, 3)
     
     plot(X,Y, 'g--');
 end
+
+print(figure(1), 'rat-vanilla.png', '-dpng');
+print(figure(2), 'rat-splines.png', '-dpng');
