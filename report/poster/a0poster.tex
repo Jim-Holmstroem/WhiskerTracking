@@ -1,7 +1,6 @@
-\documentclass{a0poster}
+\documentclass{article}
 \usepackage{geometry}
-%\geometry{paper=a1paper}
-\geometry{width=630mm,height=594mm}
+\geometry{paper=a4paper}
 \geometry{hmarginratio=1:1}
 \geometry{vmarginratio=1:1}
 \geometry{hmargin=25mm}
@@ -85,45 +84,30 @@
 
 \begin{document}
 
-\begin{tabular}{ll}
+\title{\bf Probabilistic Tracking of Multiple Rodent Whiskers In Monocular Video Sequences}
 
-  \begin{minipage}{630mm}
+\date{}
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
 
-    {\Large\bf Probabilistic Tracking of Multiple Rodent Whiskers In Monocular Video Sequences}\\[3mm]
-    {\bf Jim Holmström, \; Emil Lundberg\\
-      Bachelor's Thesis at CSC, KTH} \\
+{\bf Jim Holmström, \; Emil Lundberg}
 
+Bachelor's Thesis at CSC, KTH
 
-    \vspace*{5mm}
+\input{background}
 
-  \end{minipage}
+\input{markov}
 
-\end{tabular}
+\input{whiskers}
 
-\vspace*{10mm}
+\input{database}
 
-\begin{minipage}{\linewidth}
+\input{algorithm}
 
-  \begin{multicols*}{3}
-    
-    \input{background}
-    
-    \input{markov}
+\input{results}
 
-    \input{whiskers}
-
-    \input{database}
-
-    \input{algorithm}
-    
-    \input{results}
-
-    \bibliographystyle{vancouver}
-    \bibliography{a0poster}
-
-  \end{multicols*}
-
-\end{minipage}
-
+\bibliographystyle{vancouver}
+\bibliography{a0poster}
 
 \end{document}
