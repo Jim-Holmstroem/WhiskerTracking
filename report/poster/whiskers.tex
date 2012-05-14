@@ -1,6 +1,7 @@
 \section*{A Simple Whisker Model}
 
-Our simplest model of a whiskers is $n$-th degree polynomial curve attached at $x=0$ to a fixed point in space. This means our state parameters are the coefficients ${a_i}_{i=0}^n$ of the polynomial $\sum_{i=0}^n a_ix^i$, and we can represent a whisker's state with the tuple of its coefficients. In this model we implicitly assume that the rat's head movements do not greatly affect the whiskers' movement. Possible improvements to this model may include:
+Our simplest model of a whiskers is $n$-th degree polynomial curve attached at $x=0$ to a fixed point in space. This means our state parameters are the coefficients $\left\{a_i\right\}_{i=0}^n$ of the polynomial $\sum_{i=0}^n a_ix^i$, and we can represent a whisker's state with the tuple of its coefficients. In this model we implicitly assume that the rat's head movements do not greatly affect the whiskers' movement. Possible improvements to this model may include:
+
 \begin{itemize}
   \item letting the whisker attach to a fixed point in a moving coordinate system (the ``head system''),
   \item using some other function basis, such as a sine series.
@@ -8,7 +9,4 @@ Our simplest model of a whiskers is $n$-th degree polynomial curve attached at $
 
 So far we have only investigated the simplest polynomial model. Least squares fitting tests performed using MATLAB show that a third degree polynomial can represent any whisker in figure \ref{fig:whiskers} with an error that is barely visible to the naked eye. Therefore a third degree polynomial was used as a first step. We omit the constant term since this information can instead be included in the position of the whisker base.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=0.7\textwidth]{whisker_compare.pdf}
-\end{figure}
+
