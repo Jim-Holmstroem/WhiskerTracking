@@ -1,6 +1,6 @@
 \section*{A Simple Whisker Model}
 
-Our simplest model of a whiskers is $n$-th degree polynomial curve attached at $x=0$ to a fixed point in space. This means our state parameters are the coefficients ${a_i}_{i=0}^n$ of the polynomial $\sum_{i=0}^n a_ix^i$. In this model we implicitly assume that the rat's head movements do not greatly affect the whiskers' movement. Possible improvements to this model may include:
+Our simplest model of a whiskers is $n$-th degree polynomial curve attached at $x=0$ to a fixed point in space. This means our state parameters are the coefficients ${a_i}_{i=0}^n$ of the polynomial $\sum_{i=0}^n a_ix^i$, and we can represent a whisker's state with the tuple of its coefficients. In this model we implicitly assume that the rat's head movements do not greatly affect the whiskers' movement. Possible improvements to this model may include:
 \begin{itemize}
   \item letting the whisker attach to a fixed point in a moving coordinate system (the ``head system''),
   \item using some other function basis, such as a sine series.
