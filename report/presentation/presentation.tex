@@ -205,14 +205,14 @@
 \begin{frame}
   \frametitle{Prediktion: S\oe kning i databas med tr\ae ningsdata}
   \begin{itemize}
-  \item Implementerar sannolikhetsfunktionen $\cprobnext{X}$ som en s\oe kning i databas
-  \item Databasen inneh\aa ller tillst\aa nds\oe verg\aa ngar $T = (f, t)$ som best\aa r av en fr\aa n-del $f$ och en till-del $t$
+  \item Implementerar $\cprobnext{X}$ som en s\oe kning i databas
+  \item Databas av tillst\aa nds\oe verg\aa ngar $T = (f, t)$
   \item Givet en hypotes $x_n$ uppskattas $x_{n+1}$ som ett medelv\ae rde \oe ver $t$, viktat mot skillnaden mellan $x_n$ och $f$
   \item Viktfunktion $w(x_n, f)$
     \begin{equation*}
-      x_{n+1} = \frac{\sum\limits_{(f, t) \in \mathrm{DB}} t \cdot w(x_n, f)}{\sum\limits_f w(x_n, f)}
+      x_{n+1} = \frac{\sum\limits_{(f, t) \in \mathrm{DB}} t \cdot w(x_n, f)}{\sum\limits_f w(x_n, f)} + \ndist{0}{\sigma}
     \end{equation*}
-  \item T.ex. $w(x_n, f) = \norm{x_n - f}_{\Lp{p}}^a$ f\oe r n\aa got $a\in \RP$
+  \item T.ex. $w(x_n, f) = \norm{x_n - f}_{\Lp{p}}^{-a}$ f\oe r n\aa got $a\in \RP$
   \end{itemize}
 \end{frame}
 
@@ -310,7 +310,7 @@
   \item \AA terst\aa r att g\oe ra:
     \begin{itemize}
     \item Testa p\aa\ riktiga morrh\aa r
-    \item Optimera parametrar
+    \item Optimera parametrar (bl.a. $a$ och val av $\Lp{p}$)
     \end{itemize}
   \end{itemize}
 \end{frame}
