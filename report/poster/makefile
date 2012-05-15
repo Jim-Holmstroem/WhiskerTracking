@@ -1,9 +1,12 @@
 all: a0poster.pdf
 
-force:
-	pdflatex a0poster.tex
+clean:
+	rm a0poster.pdf
+
+force: clean a0poster.pdf
 
 %.pdf: *.tex %.bib
+	cp --remove-destination ../report/report.bib a0poster.bib
 	pdflatex $*
 	bibtex $*
 	pdflatex $*
