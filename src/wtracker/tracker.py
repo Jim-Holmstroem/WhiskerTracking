@@ -72,8 +72,6 @@ class Tracker:
 
         map(self.track_object, xrange(len(self.start_states)), self.start_states)
 
-        self.animators = self.make_animators()
-    
     def export_results(self, pngvin_dir):
         from wgui import wlayermanager
         

@@ -1,2 +1,26 @@
 \section*{Results}
 So far, we have run some tests on randomly generated video sequences of whisker-like objects. While the results are far from good enough for practical use, they are still quite promising.
+
+\begin{figure}[h]
+  \centering
+  \begin{tabular}{ccc}
+    \includegraphics[width=0.3\textwidth]{tracking-256/frame10.png}
+    & \includegraphics[width=0.3\textwidth]{tracking-256/frame20.png}
+    & \includegraphics[width=0.3\textwidth]{tracking-256/frame30.png}
+    \\
+    Frame 10 & Frame 20 & Frame 30\\
+    \includegraphics[width=0.3\textwidth]{tracking-256/frame40.png}
+    & \includegraphics[width=0.3\textwidth]{tracking-256/frame50.png}
+    & \includegraphics[width=0.3\textwidth]{tracking-256/frame60.png}
+    \\
+    Frame 40 & Frame 50 & Frame 60
+  \end{tabular}
+
+  \caption{Tracking result using 256 particles on 64 frames of generated whiskers. White is the whisker being tracked, green is the estimate of its position.}
+  \label{fig:tracking}
+\end{figure}
+
+Figure \ref{fig:tracking} shows the tracking result on a sequence of generated, synthetic whiskers. The estimate of the top and middle whiskers' positions are close to perfect, but the tracking of the bottom whisker fails much of the time. Still, this illustrates the power of the probabilistic approach. This was run using only 256 particles, which is a rather low amount. It took about 25 minutes to finish on a 2.83 GHz Intel\textregistered \; Core\texttrademark \; 2 Quad computer system with 3.8 GiB of RAM running Ubuntu 10.04, without multithreading the program at all.
+
+\subsection*{Conclusions}
+Our results so far lead us to believe that that it is indeed feasible to use this method for tracking whiskers.

@@ -93,10 +93,12 @@ class TrackerRunner:
     def export_results(self, name=None):
         if name == None:
             name = self.video_name
-        for tracker in self.trackers:
-            pngvin_dir = make_run_path(name + "_" + tracker.__class__.__name__ + ".pngvin")
-            print "Saving results of tracker %s to %s"%(tracker.__class__.__name__, pngvin_dir)
-            tracker.export_results(pngvin_dir)
+        for name_suffix, draw_all in zip(("_only_track", "_all_particles"), (False, True)):
+            for tracker in self.trackers:
+                tracker.make_animators(track=True, resampled_particles=draw_all, preresampled_particles=draw_all, highest_weight_particles=draw_all)
+                pngvin_dir = make_run_path(name + name_suffix + "_" + tracker.__class__.__name__ + ".pngvin")
+                print "Saving results of tracker %s to %s"%(tracker.__class__.__name__, pngvin_dir)
+                tracker.export_results(pngvin_dir)
         print
 
 def run_cli():

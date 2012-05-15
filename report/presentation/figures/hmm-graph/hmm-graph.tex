@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{tikz}
+%%%<
+\usepackage{verbatim}
+\usepackage[active,tightpage]{preview}
+\PreviewEnvironment{tikzpicture}
+\setlength\PreviewBorder{5pt}%
+%%%>
+\usetikzlibrary{arrows}
+\begin{document}
+\begin{tikzpicture}[->,>=stealth',shorten >=1pt,auto,node distance=3cm,
+  thick,main node/.style={circle,draw,font=\sffamily\Large\bfseries}]
+
+  % System state Z
+
+  \node[main node] (Z0) [label=left:$p(Z_0)$] {$Z_0$};
+  \node[main node] (Z1) [below of=Z0,label=left:$p(Z_1|Z_0)$] {$Z_1$};
+  \node[main node] (Z2) [below of=Z1,label=left:$p(Z_2|Z_1)$] {$Z_2$};
+  \node[main node] (Zn) [below of=Z2,label=left:$p(Z_n|Z_{n-1})$] {$Z_n$};
+
+  % Observations I
+
+  \node[main node] (I1) [right of=Z1,label=below:$p(I_1|Z_1)$] {$I_1$};
+  \node[main node] (I2) [right of=Z2,label=below:$p(I_2|Z_2)$] {$I_2$};
+  \node[main node] (In) [right of=Zn,label=below:$p(I_n|Z_n)$] {$I_n$};
+
+  % Z->Z arrows
+
+  \path[every node/.style={font=\sffamily\small}]
+    (Z0) edge node [left] {Physics} (Z1)
+    (Z1) edge node [left] {Physics} (Z2);
+
+  % Z-> I arrows
+
+  \path[every node/.style={font=\sffamily\small}]
+    (Z1) edge node [above] {Perception} (I1)
+    (Z2) edge node [above] {Perception} (I2)
+    (Zn) edge node [above] {Perception} (In);
+
+  % Dotted arrows
+  \draw[dotted] (Z2) -- (Zn);
+
+\end{tikzpicture}
+\end{document}
