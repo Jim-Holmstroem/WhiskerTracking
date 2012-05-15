@@ -15,19 +15,6 @@ from wview.gwhisker import GWhiskerLayer
 #selftest
 if __name__=="__main__":
     layermanager = wlayermanager()
-<<<<<<< HEAD
-    whisker1=wvideo(map(lambda b:
-        GWhiskerLayer((-0.0001,float(b)/2048,0,0),5,150,5,rotation=0.,translate=(256.,256.)),range(-16,16+1)),alpha=1.0)
-#    whisker2=wvideo(map(lambda b:
-#        GWhiskerLayer((0,-float(b)/2048,0,0),5,150,5,rotation=math.pi/4,translate=(256.,256.)),range(-16,16+1)),alpha=0.3)
-#    whisker3=wvideo(map(lambda b:
-#        GWhiskerLayer((0,float(b)/2048,0,0),5,150,5,rotation=-math.pi/4,translate=(256.,256.)),range(-16,16+1)),alpha=0.3)
-    
-    layermanager.add_layer(whisker1)
-#    layermanager.add_layer(whisker2)
-#    layermanager.add_layer(whisker3)
-=======
-    
     tries = 8
 
     testrange=range(-tries,tries+1)
@@ -69,12 +56,3 @@ if __name__=="__main__":
     layermanager.add_layer(whisker3)
     layermanager.add_layer(whisker2)
     layermanager.add_layer(whisker1)
->>>>>>> origin/presentation
-  
-    layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
-
-    win=wwindow(layermanager)
-
-    gtk.gdk.threads_enter()
-    gtk.main()
-    gtk.gdk.threads_leave()
