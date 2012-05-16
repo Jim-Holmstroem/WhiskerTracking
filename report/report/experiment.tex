@@ -4,11 +4,13 @@
 The bake-off <ref> setup for the experimental parameter evalution<ref>:
 
 Evaluated parameters:
-    p     - for the norm
-    a     - penelty for the norm
-    N     - number of transitions
-    cp    - particle count
-    sigma - on resample blur
+\begin{description}
+    \item[p] The norm (where)
+    \item[a] Penelty for the norm
+    \item[N] Number of transitions
+    \item[cp] Particle count
+    \item[$\sigma$] Resample blur (?)
+\end{description}
 
 will be tested on a small set of benchmarks consisting of 4 disperse(d?)/scatter generated whisker videos.
 
@@ -19,18 +21,22 @@ The evaluation tensor:
 
 TODO (check the comments here)
 %TODO define phi:img->img
-%TODO define the render function $R(x_t)$ returns a renderingn of the hypothesis
 %TODO define \phi(R(x))*\phi(I) as <x,I>_\phi
 
 The measures that will be used as fitness of the parameters:
-    >$\int{||\epsilon(t)||_{L^p}}dt$ - integrating over time the the difference
-    with the ground truth (do this for L{1:10} and see if it correlates with
-    the p choosed (to see how much it deviates from the ground truth)
-    >$\int{\sum{\phi{R(x_t)}\phi{I_t}} }dt$ - integrating over time the response
-    for the choosed hypotethis (to see how the different image transformation
-        affects the results, that is if it only follows what it thinks is best
-        (phi))
-    >4 image samples foreach video, a subjective check by hand
+    \begin{description}
+        \item[$\int{||\epsilon(t)||_{L^p}}dt$]
+            integrating over time the the difference
+            with the ground truth (do this for L{1:10} and see if it correlates with
+            the p choosed (to see how much it deviates from the ground truth)
+        \item[$\int{\sum{\phi{R(x_t)}\phi{I_t}} }dt$] 
+            integrating over time the response
+            for the choosed hypotethis (to see how the different image transformation
+            affects the results, that is if it only follows what it thinks is best
+            (phi))
+        \item[Subjective] 4 image samples
+    \end{description}
+And all this are done for all 4 benchmark videos.
 
 
 "There are many metrics by which a model may be assessed." - Encyclopedia

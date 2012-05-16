@@ -185,12 +185,31 @@ One method that uses prior knowledge of the models PDF and a pretrained database
 
 
 
+===================
+
+\begin{definition}
+    The render function $R$ takes an hypotesis $x$ and renders an image with an
+    reassemblance on how a real whisker would have looked like having the same
+    underlying model and parameters as $x$.
+    \begin{equation}
+        \begin{split}
+            R : \HS &\rightarrow \IS\\
+                x &\mapsto I
+        \end{split}
+    \end{equation}
+\end{definition}
 
 
-!!!
-The biggest problem with computer vision is that computers don't have vision,
-they only have a data input device in the form of a camera. <introduce the
-phi>
+\subsection{Sensory Cues}
+
+The biggest problem with computer vision is that computers do not have
+vision, they do only have a data input device called camera. 
+
+<ref to machine vs biological comparison study>
+
+
+
+<image showing the use of $\phi$>
 
 
 
