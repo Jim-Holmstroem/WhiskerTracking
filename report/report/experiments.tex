@@ -12,15 +12,24 @@ Evaluated parameters:
 
 will be tested on a small set of benchmarks consisting of 4 disperse(d?)/scatter generated whisker videos.
 
-The test matrix:
+The evaluation tensor:
 \begin{equation}
     \Phi_{p,a,N,...}(benchmark)
 \end{equation}
 
-The measures we will use as fitness of the algorithm is:
-    integrating over time the the difference with the ground truth (do this for L{1:10} and see if it correlates with the p choosed
-    integrating over time the response for the choosed hypotethis (to see how the different image transformation affects the results)
-    4 image samples foreach video (checked by hand, subjective)
+TODO define phi:img->img
+TODO define the render function $R(x_t)$ returns a renderingn of the hypothesis
+TODO define \phi(R(x))*\phi(I) as <x,I>_\phi
+
+The measures that will be used as fitness of the parameters:
+    >$\int{||\epsilon(t)||_{L^p}}dt$ - integrating over time the the difference
+    with the ground truth (do this for L{1:10} and see if it correlates with
+    the p choosed (to see how much it deviates from the ground truth)
+    >$\int{\sum{\phi{R(x_t)}\phi{I_t}} }dt$ - integrating over time the response
+    for the choosed hypotethis (to see how the different image transformation
+        affects the results, that is if it only follows what it thinks is best
+        (phi))
+    >4 image samples foreach video, a subjective check by hand
 
 <<graph over the setup>>
 
@@ -29,3 +38,9 @@ result since we initially wont consider the running time.
 
 The runtime for the algorithm is handled separately on one machine setup <...>
 
+
+
+Tillvägagångsätt:
+1. Since we have prior knowledge about the effect off varying the parameters cp,N
+they will firstly be set to a sufficently large value.
+2. A partion of the test-matrix will then be evaluated 
