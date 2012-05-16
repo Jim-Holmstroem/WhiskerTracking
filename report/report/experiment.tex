@@ -17,9 +17,10 @@ The evaluation tensor:
     \Phi_{p,a,N,...}(benchmark)
 \end{equation}
 
-TODO define phi:img->img
-TODO define the render function $R(x_t)$ returns a renderingn of the hypothesis
-TODO define \phi(R(x))*\phi(I) as <x,I>_\phi
+TODO (check the comments here)
+%TODO define phi:img->img
+%TODO define the render function $R(x_t)$ returns a renderingn of the hypothesis
+%TODO define \phi(R(x))*\phi(I) as <x,I>_\phi
 
 The measures that will be used as fitness of the parameters:
     >$\int{||\epsilon(t)||_{L^p}}dt$ - integrating over time the the difference
@@ -31,7 +32,9 @@ The measures that will be used as fitness of the parameters:
         (phi))
     >4 image samples foreach video, a subjective check by hand
 
-<<graph over the setup>>
+
+"There are many metrics by which a model may be assessed." - Encyclopedia
+
 
 The fitness test was runned on different machines but this wont effect the
 result since we initially wont consider the running time.

@@ -1,18 +1,34 @@
+\section{Model}
+
+%"
+%==Model selection
+%Model selection is the process of choosing an appropriate mathematical model
+%from a class of models.
+%" - Encyclopedia 
+
+In the following chapter we will formalize the whisker and discuss our model
+selection<ref:encyclo> process.
+
+First of we formalize the whisker by the definition
 
 \begin{definition}
-Let the $whisker$ function be defined as a function that takes a $\omega\in\RP$
-and returns a position $whisker(\omega)\in\RR^2$.
+    Let 
+    \begin{equation}
+    \begin{split}
+        whisker : \RR^+ &\rightarrow \RR^2 \\
+                  \omega&\mapsto (x,y)
+    \end{split}
+    \end{equation}
 \end{definition}
 
-The idea is to find a function $whisker^*$ that approximates the $whisker$.
-
-The following class of functions are those available for consideration:
+The idea is to find a function $whisker^*$ that approximates the $whisker$. The 
+following class of functions are available for consideration:
 
 It must be able to sufficiently approximate the whisker
 \begin{equation}
     \forall whisker \exists whisker^* : whisker \approx whisker^*
 \end{equation}
-that is, it must be able to fill the range/image for the $whisker$ function.
+that is, the model must be able to fill the range/image of the $whisker$ function.
 
 \begin{example}
 A straight line will not suffice since the $whisker$ is generally
@@ -21,18 +37,18 @@ curved and straight lines can not fill that partition of the space.
 
 Additionally it must of course be $C_1$ and have finitely many parameters.
 
-We might also assume that a whisker has one fix point at the origin, which we choose, the boundary 
-condition is equivalent to
+We might also assume that a whisker has one fix point at the origin, which we
+choose as origo, the boundary condition is equivalent to
 \begin{equation}
     \label{eq:bv_root}
     whisker^*(0)=\bar{0}
 \end{equation}
-this is not the case in the real data, 
-generally we have time dependency
+this is not the case in the real data, generally we have time dependency
 \begin{equation}
     whisker(0,t)\neq\bar{0} 
 \end{equation}
-since rodents seems to have the ability to move around their whiskers root on the chin surface.
+since rodents seems to have the ability to move around their whiskers root on
+the chins surface.
 
 We are for all cases assuming that the whisker thickness is defined by
 
@@ -47,7 +63,7 @@ We are for all cases assuming that the whisker thickness is defined by
 where $D>0$ is the thickness at the root and $L<0$ is the total length of the
 whisker.
 
-\subsubsection{$\Spline{\omega}$}
+\subsection{Polynom $\Spline{\omega}$}
 
     Our first and simplest candidate is the third degree polynom $\Spline{\omega}$.
 
@@ -62,25 +78,17 @@ whisker.
 
     <example images compared with real whiskers>
 
-\subsubsection{$\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$}
+\subsection{Sinus serie$\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$}
     Another promising candidate is the sinus series.
     The fourier transform becomes $\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$ when
-    considering \refeq{eq:bv_root}. One can choose just a few $n$ which can be
+    considering (\ref{eq:bv_root}). One can choose just a few $n$ which can be
     viewed as a few different waves propagating trough the whisker propelled by
-    the whisking of the whisker.
+    the whisking. 
 
 \subsubsection{Verdict(?)}
     It is hard to analytically justify the chose of $whisker^*$ since we do not
     have an analytic model for the $whisker$.
 
 
-"There are many metrics by which a model may be assessed." - Encyclopedia
-(>model evaluation)
-
-"
-==Model selection
-Model selection is the process of choosing an appropriate mathematical model
-from a class of models.
-" - Encyclopedia 
 
 

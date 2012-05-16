@@ -6,6 +6,11 @@
 \usepackage[swedish,english]{babel}
 \usepackage{modifications}
 
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
 \usepackage{clrscode}
 \usepackage{hyperref}
 \newcommand{\ForEach}{\textbf{foreach} }
@@ -13,13 +18,23 @@
 
 \newcommand{\Spline}[1]{a_3#1^3+a_2#1^2+a_1#1}
 
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\newcommand{\NN}{\ensuremath{\mathbb{N}}}
+\newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+
+
 \title{
-    Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video Sequences
-    \\FIRST DRAFT
+    Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video
+    Sequences\\ <FIRST DRAFT>
 }
 
 \subtitle{
-    A small step towards cheap, reliable, and nonintrusive automatic tracking of whiskers.
+    A small step towards cheap, reliable, and non-intrusive automatic tracking of whiskers.
 }
 \foreigntitle{
     Statistisk Följning av Multipla Morrhår på Gnagare i Video.
@@ -82,11 +97,15 @@
     \input{algorithms_implementations}
 
 
+\chapter{TEMPORARY}
+    ======= MODEL =======
+    \input{model.tex}
+
 %TODO results or Results?
 %TODO does one write benchmarking? and results?
 \chapter{Benchmarking \& Results}
     \label{sec:benchmarks_results}
-    \input{benchmarks_results}
+    \input{experiment}
 
 %TODO discussion or Discussion?
 \chapter{Analysis \& Discussion}
