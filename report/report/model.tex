@@ -1,5 +1,59 @@
-Assuming that a whisker has one fix point of origin<ref:analysis(this is not
-the case really)> we have the boundary condition $whisker(0)=0$
+
+Let the $whisker$ function be defined as a function that takes a $\omega\in\RP$
+and returns a position $whisker(\omega)\in\RR^2$.
+
+The idea is to find a function $whisker^*$ that approximates the $whisker$.
+
+The class of functions that are available for consideration:
+
+It must be able to sufficiently approximate the whisker
+\begin{equation}
+    \forall whisker \exists whisker^* : whisker \approx whisker^*
+\end{equation}
+that is, it must be able to fill the range/image for the $whisker$ function.
+As an example a straight line will not suffice since the $whisker$ is generally
+curved.
+
+Additionally it must of course be $C_1$ and have finitely many parameters.
+
+We might also assume that a whisker has one fix point at the origin, which we choose, the boundary 
+condition appears
+\begin{equation}
+    whisker^*(0)=\bar{0}
+\end{equation}
+this is not the case in the real data, 
+generally we have time dependacy
+\begin{equation}
+    whisker(0,t)\neq\bar{0} 
+\end{equation}
+since rodents probably can move around their whisker base on the chin surface.
+
+We are for all cases assuming that the whisker thickness is defined by
+
+\begin{equation}
+    d(\omega) = \begin{cases}
+        D \omega=0\\
+        D-\frac{D\omega}{L} \omega<L\\
+        0 \omega\ge L
+    \end{cases}
+\end{equation}
+
+
+where $D,L>0$
+
+
+\subsubsection{$\Spline$}
+
+Our first and simplest candidate is the 3rd degree polynom
+
+This chose can be justified by the theory of beams under small curvature(?) in the area of 
+strength of materials, after all a whisker is not to far away from a beamer.<ref>
+
+
+
+It is hard to analytically justify the chose of $whisker^*$ since we do not
+have an analytic model for the $whisker$.
+
 
 "There are many metrics by which a model may be assessed." - Encyclopedia
 (>model evaluation)
