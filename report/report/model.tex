@@ -1,32 +1,38 @@
 
+\begin{definition}
 Let the $whisker$ function be defined as a function that takes a $\omega\in\RP$
 and returns a position $whisker(\omega)\in\RR^2$.
+\end{definition}
 
 The idea is to find a function $whisker^*$ that approximates the $whisker$.
 
-The class of functions that are available for consideration:
+The following class of functions are those available for consideration:
 
 It must be able to sufficiently approximate the whisker
 \begin{equation}
     \forall whisker \exists whisker^* : whisker \approx whisker^*
 \end{equation}
 that is, it must be able to fill the range/image for the $whisker$ function.
-As an example a straight line will not suffice since the $whisker$ is generally
-curved.
+
+\begin{example}
+A straight line will not suffice since the $whisker$ is generally
+curved and straight lines can not fill that partition of the space.
+\end{example}
 
 Additionally it must of course be $C_1$ and have finitely many parameters.
 
 We might also assume that a whisker has one fix point at the origin, which we choose, the boundary 
-condition appears
+condition is equivalent to
 \begin{equation}
+    \label{eq:bv_root}
     whisker^*(0)=\bar{0}
 \end{equation}
 this is not the case in the real data, 
-generally we have time dependacy
+generally we have time dependency
 \begin{equation}
     whisker(0,t)\neq\bar{0} 
 \end{equation}
-since rodents probably can move around their whisker base on the chin surface.
+since rodents seems to have the ability to move around their whiskers root on the chin surface.
 
 We are for all cases assuming that the whisker thickness is defined by
 
@@ -38,21 +44,34 @@ We are for all cases assuming that the whisker thickness is defined by
     \end{cases}
 \end{equation}
 
+where $D>0$ is the thickness at the root and $L<0$ is the total length of the
+whisker.
 
-where $D,L>0$
+\subsubsection{$\Spline{\omega}$}
 
+    Our first and simplest candidate is the third degree polynom $\Spline{\omega}$.
 
-\subsubsection{$\Spline$}
+    Parametrically define as
+    \begin{equation}
+        (\omega,\Spline{\omega})
+    \end{equation}
 
-Our first and simplest candidate is the 3rd degree polynom
+    This chose can be justified by the theory of beams under small(?) curvature(?) in the area of 
+    strength of materials, after all a whisker is not to far away from a
+    beamer.<ref: strength of materials>
 
-This chose can be justified by the theory of beams under small curvature(?) in the area of 
-strength of materials, after all a whisker is not to far away from a beamer.<ref>
+    <example images compared with real whiskers>
 
+\subsubsection{$\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$}
+    Another promising candidate is the sinus series.
+    The fourier transform becomes $\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$ when
+    considering \refeq{eq:bv_root}. One can choose just a few $n$ which can be
+    viewed as a few different waves propagating trough the whisker propelled by
+    the whisking of the whisker.
 
-
-It is hard to analytically justify the chose of $whisker^*$ since we do not
-have an analytic model for the $whisker$.
+\subsubsection{Verdict(?)}
+    It is hard to analytically justify the chose of $whisker^*$ since we do not
+    have an analytic model for the $whisker$.
 
 
 "There are many metrics by which a model may be assessed." - Encyclopedia
@@ -63,6 +82,5 @@ have an analytic model for the $whisker$.
 Model selection is the process of choosing an appropriate mathematical model
 from a class of models.
 " - Encyclopedia 
-The class being all functions with f(0)=0,contioiuns(or stronger?) and finite number of parameters
 
 
