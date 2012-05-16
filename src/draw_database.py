@@ -5,7 +5,7 @@ import numpy
 import os
 import wdb
 from common import make_run_path
-from wview import GWhiskerRenderer
+from wview.gwhisker import GWhiskerDatabaseRenderer
 
 def run_cli():
     """Usage: python draw_database.py DATASET_NAME OUTPUT_name
@@ -40,7 +40,7 @@ def run_cli():
     to_states[:,1] = 0
     """
 
-    renderer = GWhiskerRenderer(5, 150, 5, translate=(256-75, 256), particle_alpha=0.0001)
+    renderer = GWhiskerDatabaseRenderer(5, 150, 5, translate=(256-75, 256), particle_alpha=0.0001)
 
     imsurf=cairo.ImageSurface(cairo.FORMAT_ARGB32, 512,512)
     ctx = cairo.Context(imsurf)

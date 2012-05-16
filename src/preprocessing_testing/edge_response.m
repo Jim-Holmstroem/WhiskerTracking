@@ -1,0 +1,9 @@
+function res = edge_response(img)
+%
+% 
+%
+    prewitt =(fspecial('prewitt'));
+    res = sqrt( ...
+                    conv2replicate(img,prewitt ).^2+ ...
+                    conv2replicate(img,prewitt').^2  ...
+               );

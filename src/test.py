@@ -15,7 +15,6 @@ from wview.gwhisker import GWhiskerLayer
 #selftest
 if __name__=="__main__":
     layermanager = wlayermanager()
-    
     tries = 8
 
     testrange=range(-tries,tries+1)
@@ -57,11 +56,3 @@ if __name__=="__main__":
     layermanager.add_layer(whisker3)
     layermanager.add_layer(whisker2)
     layermanager.add_layer(whisker1)
-  
-    layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
-
-    win=wwindow(layermanager)
-
-    gtk.gdk.threads_enter()
-    gtk.main()
-    gtk.gdk.threads_leave()
