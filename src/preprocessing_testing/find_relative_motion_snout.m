@@ -6,7 +6,7 @@
 gaussian=(fspecial('gaussian',5*3,5));
 
 search_angle=0;%-pi/8:pi/16:(pi/8+pi/16);
-search_translation=-25:1:(25+1);
+search_translation=-25:1:25;
 A=size(search_angle,2);
 T=size(search_translation,2);
 
