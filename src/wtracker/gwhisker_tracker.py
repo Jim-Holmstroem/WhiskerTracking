@@ -18,13 +18,15 @@ from scipy.ndimage import filters
 class GWhiskerTracker(Tracker):
 
     debug_i = 0
-    STDEVS = [max(a)/10.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)]
+    STDEVS = numpy.array([max(a)/10.0 for a in (GWhiskerGenerator.A_LIMITS, GWhiskerGenerator.B_LIMITS, GWhiskerGenerator.C_LIMITS)])
     
     def __init__(self, db, video, start_states, *other_args, **kwargs):
         Tracker.__init__(self, db, video, start_states, *other_args, **kwargs)
         self.lp_space = int(kwargs['LP'])
-        self.weight_power = float(kwargs['WEIGHT_POWER'])
-        self.goodness_power = float(kwargs['GOODNESS_POWER'])
+        self.lp_space_for_error = int(kwargs['ERROR_LP'])
+        self.weight_power = int(kwargs['WEIGHT_POWER'])
+        self.goodness_power = int(kwargs['GOODNESS_POWER'])
+        self.sample_std_modifier = float(kwargs['SAMPLE_STD_MODIFIER'])
 
         try:
             self.metadata = kwargs["metadata"]
@@ -88,10 +90,10 @@ class GWhiskerTracker(Tracker):
         return (1.0/(wmath.spline_lp_distances(prev_particle, from_states, self.renderer_length, self.lp_space)))**self.weight_power
     
     def sample(self, prev_particle):
-        return self.db.sample_weighted_average(prev_particle, self.weight_function) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
+        return self.db.sample_weighted_average(prev_particle, self.weight_function) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS*self.sample_std_modifier))
 
     def calculate_error(self, correct_states):
         performances = []
         for track, correct in izip(self.tracks, correct_states):
-            performances.append(sum(map(wmath.spline_lp_distances, track, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space, len(track)))))
+            performances.append(sum(map(wmath.spline_lp_distances, track, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space_for_error, len(track)))))
         return performances
