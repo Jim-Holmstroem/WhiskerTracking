@@ -1,13 +1,13 @@
 all: report.pdf
 
 clean:
-	rm *.aux
-	rm *.bbl
-	rm *.blg
-	rm *.log
-	rm *.out
-	rm *.toc
-	rm report.pdf
+	rm -f *.aux
+	rm -f *.bbl
+	rm -f *.blg
+	rm -f *.log
+	rm -f *.out
+	rm -f *.toc
+	rm -f report.pdf
 
 force: clean all
 

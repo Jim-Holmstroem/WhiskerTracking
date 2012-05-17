@@ -6,19 +6,42 @@
 \usepackage[swedish,english]{babel}
 \usepackage{modifications}
 
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{amsfonts}
+
 \usepackage{clrscode}
 \usepackage{hyperref}
 \newcommand{\ForEach}{\textbf{foreach} }
 \newcommand{\In}{\textbf{in} }
 
+\newcommand{\Spline}[1]{a_3#1^3+a_2#1^2+a_1#1}
+
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+
+\newcommand{\NN}{\ensuremath{\mathbb{N}}}
+\newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
+\newcommand{\RR}{\ensuremath{\mathbb{R}}}
+\newcommand{\CC}{\ensuremath{\mathbb{C}}}
+
+
+%all spaces
+\newcommand{\HS}{\ensuremath{\mathcal{H}}}
+\newcommand{\IS}{\ensuremath{\mathcal{I}}}
+
+
+
 
 \title{
-    Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video Sequences
-    \\WORK IN PROGRESS
+    Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video
+    Sequences\\ <FIRST DRAFT>
 }
 
 \subtitle{
-    A small step towards cheap, reliable, and nonintrusive automatic tracking of whiskers.
+    A small step towards cheap, reliable, and non-intrusive automatic tracking of whiskers.
 }
 \foreigntitle{
     Statistisk Följning av Multipla Morrhår på Gnagare i Video.
@@ -33,8 +56,8 @@
 \blurb{
   SA104X Examensarbete inom teknisk fysik, grundnivå\\
   Bachelor's Thesis at CSC, KTH\\
-  Supervisor: Örjan Ekeberg\\
-  Examiner: ??? Örjan Ekeberg ???
+  Supervisor: Prof. Örjan Ekeberg\\
+  Examiner: ???
 }
 \trita{TRITA xxx yyyy-nn}
 \begin{document}
@@ -85,7 +108,7 @@
 %TODO does one write benchmarking? and results?
 \chapter{Benchmarking \& Results}
     \label{sec:benchmarks_results}
-    \input{benchmarks_results}
+    \input{experiment}
 
 %TODO discussion or Discussion?
 \chapter{Analysis \& Discussion}

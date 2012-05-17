@@ -1,14 +1,96 @@
-Assuming that a whisker has one fix point of origin<ref:analysis(this is not
-the case really)> we have the boundary condition $whisker(0)=0$
+\section{Model}
 
-"There are many metrics by which a model may be assessed." - Encyclopedia
-(>model evaluation)
+%"
+%==Model selection
+%Model selection is the process of choosing an appropriate mathematical model
+%from a class of models.
+%" - Encyclopedia 
 
-"
-==Model selection
-Model selection is the process of choosing an appropriate mathematical model
-from a class of models.
-" - Encyclopedia 
-The class being all functions with f(0)=0,contioiuns(or stronger?) and finite number of parameters
+In the following chapter we will formalize the whisker and discuss our model
+selection<ref:encyclo> process.
+
+First of we formalize the whisker by the definition
+
+\begin{definition}
+    Let 
+    \begin{equation}
+    \begin{split}
+        whisker : \RR^+ &\rightarrow \RR^2 \\
+                  \omega&\mapsto (x,y)
+    \end{split}
+    \end{equation}
+\end{definition}
+
+The idea is to find a function $whisker^*$ that approximates the $whisker$. The 
+following class of functions are available for consideration:
+
+It must be able to sufficiently approximate the whisker
+\begin{equation}
+    \forall whisker \exists whisker^* : whisker \approx whisker^*
+\end{equation}
+that is, the model must be able to fill the range/image of the $whisker$ function.
+
+\begin{example}
+    A straight line will not suffice since the $whisker$ is generally
+    curved and straight lines can not fill that partition of the space.
+\end{example}
+
+Additionally it must of course be $C_1$ and have finitely many parameters.
+
+We might also assume that a whisker has one fix point at the origin, which we
+choose as origo, the boundary condition is equivalent to
+\begin{equation}
+    \label{eq:bv_root}
+    whisker^*(0)=\bar{0}
+\end{equation}
+this is not the case in the real data, generally we have time dependency
+\begin{equation}
+    whisker(0,t)\neq\bar{0} 
+\end{equation}
+since rodents seems to have the ability to move around their whiskers root on
+the chins surface.
+
+We are for all cases assuming that the whisker thickness is defined by
+
+\begin{equation}
+    d(\omega) = \begin{cases}
+        D,~& \omega=0\\
+        D-\frac{D\omega}{L},~& \omega<L\\
+        0,~& \omega\ge L
+    \end{cases}
+\end{equation}
+
+where $D>0$ is the thickness at the root and $L<0$ is the total length of the
+whisker.
+
+\subsection{Polynom $\Spline{\omega}$}
+
+    Our first and simplest candidate is the third degree polynom $\Spline{\omega}$.
+
+    Parametrically define as
+    \begin{equation}
+        (\omega,\Spline{\omega})
+    \end{equation}
+
+    This chose can be justified by the theory of beams under small deformations 
+    in the area of strength of materials, after all a whisker is not to far 
+    away from a beamer.<ref: strength of materials> The two main assumption
+    for this to hold is a linear elastic material and small deformations which
+    ...
+
+    <example images compared with real whiskers>
+
+\subsection{Sinus serie$\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$}
+    Another promising candidate is the sinus series.
+    The Fourier transform becomes $\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$ when
+    considering (\ref{eq:bv_root}). One can choose just a few $n$ which can be
+    viewed as a few different waves propagating trough the whisker propelled by
+    the whisking. 
+
+\subsection{Verdict(?)}
+    It is hard to analytically justify the chose of $whisker^*$ since we do not
+    have an analytic model for the $whisker$.
+
+
 
 
