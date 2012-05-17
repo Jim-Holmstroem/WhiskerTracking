@@ -1,4 +1,18 @@
-\subsection{The particle filter}
 
-\subsection{The state transition database}
+The code has a main focus on being modular since we are only doing a proof-of-concept implementation and additionally does not have any issues with not being real-time.
+The implementation is all centered around the particle filter handling the filtering.
+
+\section{The particle filter}
+    A plug-n-play algorithm which only lacks the problem-domain<ref:encyc> specific parts:$x_0$, $\cprob{x_t}{x_{t-1}}$ and $\cprob{I_t}{x_t}$
+    \subsection{Initilization $x_0$}
+        The particle filter only does tracking thus we need to have an initial guess for $t=0$ which in our case will be hand labeled foreach whisker.
+    \subsection{Goodness $\kappa\cprob{x_t}{I_t}$}
+        It also needs an direction to know how good the hypothesis $x_t$ matches the given image $I_t$.
+
+        TODO <ref:theorem>
+    \subsection{Sampling $\cprob{x_t}{x_{t-1}}$}
+
+        ...
+
+\section{The state transition database}
 
