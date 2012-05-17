@@ -4,6 +4,7 @@ if DEBUG:
 import numpy
 import wmath
 
+from itertools import repeat
 from wmedia import wimage
 from wgenerator import GWhiskerGenerator
 from wtracker import Tracker
@@ -18,6 +19,9 @@ class GWhiskerTracker(Tracker):
     
     def __init__(self, db, video, start_states, *other_args, **kwargs):
         Tracker.__init__(self, db, video, start_states, *other_args, **kwargs)
+        self.lp_space = int(kwargs['LP'])
+        self.weight_power = float(kwargs['WEIGHT_POWER'])
+
         try:
             self.metadata = kwargs["metadata"]
         except KeyError:
@@ -77,7 +81,7 @@ class GWhiskerTracker(Tracker):
         return result
 
     def weight_function(self, prev_particle, from_states):
-        return wmath.l2_distances_inverse(prev_particle, from_states, self.renderer_length)
+        return (1.0/(wmath.spline_lp_distances(prev_particle, from_states, self.renderer_length, self.lp_space)))**self.weight_power
     
     def sample(self, prev_particle):
         return self.db.sample_weighted_average(prev_particle, self.weight_function) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))

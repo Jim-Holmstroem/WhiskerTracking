@@ -13,7 +13,7 @@ import wtracker
 
 class TrackerRunner:
     
-    def __init__(self, tracker_classes, video_name, database_name, num_particles=100):
+    def __init__(self, tracker_classes, video_name, database_name, num_particles=100, **cli_kwargs):
         video_path = make_video_path(video_name + ".pngvin")
         
         self.video_name = video_name
@@ -30,7 +30,7 @@ class TrackerRunner:
         self.video = wvideo(video_path)
         self.db = StateTransitionDatabase(database_name)
 
-        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video, [self.correct_states[i][0] for i in xrange(self.num_objects)], num_particles, metadata=metadata), tracker_classes)
+        self.trackers = map(lambda tracker_class:tracker_class(self.db, self.video, [self.correct_states[i][0] for i in xrange(self.num_objects)], num_particles, metadata=metadata, **cli_kwargs), tracker_classes)
 
     def _run_test(self, tracker):
         print "Tracking with tracker class %s"%(tracker.__class__.__name__)
@@ -102,7 +102,7 @@ class TrackerRunner:
         print
 
 def run_cli():
-    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] Classes...
+    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] [-p LP] [-a WEIGHT_POWER] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
@@ -127,7 +127,7 @@ def run_cli():
     num_particles = 100
 
     from common import cliutils
-    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] TRACKER_CLASSES...")
+    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] [-p LP] [-a WEIGHT_POWER] TRACKER_CLASSES...")
 
     video_name, database_name, class_names = args
     if "PARTICLES" in op_args.keys():
@@ -144,7 +144,7 @@ def run_cli():
         print "\t%s"%(c.__name__)
     print
             
-    benchmark = TrackerRunner(tracker_classes, video_name, database_name, num_particles)
+    benchmark = TrackerRunner(tracker_classes, video_name, database_name, num_particles, **op_args)
 
     if "BENCHMARK" in op_args.keys() and op_args["BENCHMARK"] == "True":
         benchmark.run_benchmark()
