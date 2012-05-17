@@ -7,6 +7,7 @@ import wmath
 IMAGE_WIDTH = 204
 IMAGE_HEIGHT = 204
 
+from common import make_path
 from itertools import izip, repeat
 from wmedia import wimage
 from wgenerator import GWhiskerGenerator
@@ -97,3 +98,7 @@ class GWhiskerTracker(Tracker):
         for track, correct in izip(self.tracks, correct_states):
             performances.append(sum(map(wmath.spline_lp_distances, track, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space_for_error, len(track)))))
         return performances
+
+    def save_error(self, errors):
+        save_file = make_path("results", "%s_n=%i_p=%i_P=%i_a=%i_g=%i_s=%s.npy"%(self.__class__.__name__, self.num_particles, self.lp_space, self.lp_space_for_error, self.weight_power, self.goodness_power, self.STDEVS*self.sample_std_modifier))
+        numpy.save(save_file, errors)
