@@ -94,11 +94,19 @@ class GWhiskerTracker(Tracker):
         return self.db.sample_weighted_average(prev_particle, self.weight_function) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS*self.sample_std_modifier))
 
     def calculate_error(self, correct_states):
-        performances = []
+        self.absolute_error = []
+        self.relative_error = []
         for track, correct in izip(self.tracks, correct_states):
-            performances.append(sum(map(wmath.spline_lp_distances, track, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space_for_error, len(track)))))
-        return performances
+            distances = numpy.array(map(wmath.spline_lp_distances, track, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space_for_error, len(track))))
+            correct_norms = numpy.array(map(wmath.spline_lp_norms, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space_for_error, len(track))))
+            relative_errors = distances / correct_norms
+            self.absolute_error.append(distances)
+            self.relative_error.append(relative_errors)
+        self.absolute_error = numpy.array(self.absolute_error)
+        self.relative_error = numpy.array(self.relative_error)
+        return self.relative_error.sum(axis=1)
 
-    def save_error(self, errors):
-        save_file = make_path("results", "%s_n=%i_p=%i_P=%i_a=%i_g=%i_s=%s.npy"%(self.__class__.__name__, self.num_particles, self.lp_space, self.lp_space_for_error, self.weight_power, self.goodness_power, self.STDEVS*self.sample_std_modifier))
-        numpy.save(save_file, errors)
+    def save_error(self):
+        for filesuffix, error in (("absolute", self.absolute_error,), ("relative", self.relative_error)):
+            save_file = make_path("results", "%s_n=%i_p=%i_P=%i_a=%i_g=%i_s=%s_%s.npy"%(self.__class__.__name__, self.num_particles, self.lp_space, self.lp_space_for_error, self.weight_power, self.goodness_power, self.STDEVS*self.sample_std_modifier, filesuffix))
+            numpy.save(save_file, error)

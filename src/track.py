@@ -87,7 +87,7 @@ class TrackerRunner:
         print
 
         for i, t in enumerate(self.trackers):
-            t.save_error(errors[i])
+            t.save_error()
     
     def animate(self, tracker_i):
         print "Animating test results"
