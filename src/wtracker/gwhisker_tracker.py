@@ -4,6 +4,9 @@ if DEBUG:
 import numpy
 import wmath
 
+IMAGE_WIDTH = 204
+IMAGE_HEIGHT = 204
+
 from common import make_path
 from itertools import izip, repeat
 from wmedia import wimage
@@ -58,7 +61,7 @@ class GWhiskerTracker(Tracker):
 
     def goodness(self, arg):#particle, image):
         particle, image = arg
-        mask = wimage(GWhiskerLayer(particle, self.renderer_dl, self.renderer_length, self.renderer_width, translate=self.current_translation))
+        mask = wimage(GWhiskerLayer(particle, self.renderer_dl, self.renderer_length, self.renderer_width, translate=self.current_translation), width=IMAGE_WIDTH, height=IMAGE_HEIGHT)
         mask_sum = mask.sum()
         if mask_sum == 0:
             return 0
@@ -68,15 +71,15 @@ class GWhiskerTracker(Tracker):
         if DEBUG:
             from common import make_run_path
             import os
-            wim = wimage((mask*image).data/255)
+            wim = wimage((mask*image).data/255.0)
             
-            imsurf=cairo.ImageSurface(cairo.FORMAT_ARGB32, 512*3,512)
+            imsurf=cairo.ImageSurface(cairo.FORMAT_ARGB32, IMAGE_WIDTH*3,IMAGE_HEIGHT)
             ctx = cairo.Context(imsurf)
             for im in (image, mask, wim):
                 ctx.save()
                 im.render(ctx)
                 ctx.restore()
-                ctx.translate(512,0)
+                ctx.translate(IMAGE_WIDTH,0)
             imsurf.write_to_png(make_run_path(os.path.join("debug","%s%i.png"%("frame", self.debug_i))))
             self.debug_i += 1
 
