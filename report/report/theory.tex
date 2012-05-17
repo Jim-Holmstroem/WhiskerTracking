@@ -194,7 +194,7 @@ One method that uses prior knowledge of the models PDF and a pretrained database
     \begin{equation}
         \begin{split}
             R : \HS &\rightarrow \IS\\
-                x &\mapsto I
+                x &\mapsto render(x)
         \end{split}
     \end{equation}
 \end{definition}
@@ -208,12 +208,22 @@ vision, they do only have a data input device called camera.
 <ref to machine vs biological comparison study>
 
 
+\begin{definition}
+    %%TODO cue function/transformation (cue says more doesnt it?) change all
+    %%use
+    The cue function $\phi_{cue}$ takes an image $I$ and renders one property of the
+    image like intensity, edges or ridges.
+    \begin{equation}
+        \begin{split}
+            \phi_{cue} : \IS &\rightarrow \IS\\
+                I &\mapsto cue(I)
+        \end{split}
+    \end{equation}
+    If the cue function for any cue is under consideration we simply denote that with $\phi$.
+\end{definition}
+
 
 <image showing the use of $\phi$>
-
-
-
-
 
 
 \subsection{Particle filtering whisker movements}
@@ -224,11 +234,8 @@ Here we propose a way to model whiskers as a dynamic system.
 In all our models we have separated the head from the whiskers since they have
 such different kinematic properties and actually are attached to each other.
 
-==The first model
-Assumptions:
->Material is linear elastic
->Small deformations (probably the biggest assumption, which dont actually hold
-in our case)
+
+\input{model.tex}
 
 The equation of elastic line ... [Grundläggande Hållfasthetslära - Hans Lundh
 p94 (7.6)]

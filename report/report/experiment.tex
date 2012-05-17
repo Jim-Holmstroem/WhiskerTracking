@@ -7,9 +7,10 @@ Evaluated parameters:
 \begin{description}
     \item[p] The norm (where)
     \item[a] Penelty for the norm
-    \item[N] Number of transitions
-    \item[cp] Particle count
     \item[$\sigma$] Resample blur (?)
+    \item[$\phi$] Transformation
+    \item[N] Number of transitions
+    \item[n] Particle count
 \end{description}
 
 will be tested on a small set of benchmarks consisting of 4 disperse(d?)/scatter generated whisker videos.
@@ -31,7 +32,7 @@ The measures that will be used as fitness of the parameters:
             the p choosed (to see how much it deviates from the ground truth)
         \item[$\int{\sum{\phi{R(x_t)}\phi{I_t}} }dt$] 
             integrating over time the response
-            for the choosed hypotethis (to see how the different image transformation
+            for the choosed hypothesis (to see how the different image transformation
             affects the results, that is if it only follows what it thinks is best
             (phi))
         \item[Subjective] 4 image samples
@@ -50,6 +51,7 @@ The runtime for the algorithm is handled separately on one machine setup <...>
 
 
 Tillvägagångsätt:
-1. Since we have prior knowledge about the effect off varying the parameters cp,N
+
+1. Since we have prior knowledge about the effect off varying the parameters n,N
 they will firstly be set to a sufficently large value.
-2. A partion of the test-matrix will then be evaluated 
+2. A partion of the test-matrix will then be evaluated by ... parameter group 
