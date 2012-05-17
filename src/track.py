@@ -111,7 +111,7 @@ class TrackerRunner:
         print
 
 def run_cli():
-    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] [-p LP] [-a WEIGHT_POWER] Classes...
+    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] [-p LP] [-a WEIGHT_POWER] [-g GOODNESS_POWER] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
@@ -136,7 +136,7 @@ def run_cli():
     num_particles = 100
 
     from common import cliutils
-    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] [-v PRINT_VIDEO] [-p LP] [-a WEIGHT_POWER] TRACKER_CLASSES...")
+    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] [-v PRINT_VIDEO] [-p LP] [-a WEIGHT_POWER] [-g GOODNESS_POWER] TRACKER_CLASSES...")
 
     video_name, database_name, class_names = args
     if "PARTICLES" in op_args.keys():

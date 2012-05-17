@@ -21,6 +21,7 @@ class GWhiskerTracker(Tracker):
         Tracker.__init__(self, db, video, start_states, *other_args, **kwargs)
         self.lp_space = int(kwargs['LP'])
         self.weight_power = float(kwargs['WEIGHT_POWER'])
+        self.goodness_power = float(kwargs['GOODNESS_POWER'])
 
         try:
             self.metadata = kwargs["metadata"]
@@ -59,7 +60,7 @@ class GWhiskerTracker(Tracker):
         if mask_sum == 0:
             return 0
 
-        result =  ((mask*image).sum()/(255*mask_sum))**4
+        result = ((mask*image).sum()/(255.0*mask_sum))**self.goodness_power
         
         if DEBUG:
             from common import make_run_path
