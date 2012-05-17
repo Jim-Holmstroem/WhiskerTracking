@@ -1,6 +1,9 @@
 
 __all__=['L1_spline3','L2_spline3','L3_spline3','L4_spline3','L5_spline3','L6_spline3','L7_spline3','L8_spline3']
 
+def L0_spline3(a,b,c,L):
+    raise NotImplementedError()
+
 def L1_spline3(a,b,c,L):
     return L**3*(b/3 + (L*a)/4) + (L**2*c)/2
 def L2_spline3(a,b,c,L):

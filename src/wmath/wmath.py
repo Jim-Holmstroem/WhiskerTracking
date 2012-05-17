@@ -1,5 +1,5 @@
 
-__all__=['weighted_choice','render_points','argpick','argmin','argmax','binary_search', 'l2_distances_inverse']
+__all__=['weighted_choice','render_points','argpick','argmin','argmax','binary_search', 'spline_lp_norms', 'spline_lp_distances']
 
 from random import uniform
 
@@ -7,6 +7,7 @@ import collections
 from Queue import Queue
 from math import sqrt,sin,cos,tan,pi
 
+import Lp_spline3
 import numpy
 import pylab
 
@@ -181,3 +182,26 @@ def l2_distances_between_third_degree_polynomials_with_no_constant_terms(polynom
 
     return (diff[:,2]**2/3*l3 + diff[:,1]*diff[:,2]/2*l4 + (diff[:,1]**2 + 2*diff[:,0]*diff[:,2])/5*l5 + diff[:,0]*diff[:,1]/3*l6 + diff[:,0]**2/7*l7)**0.5
 
+Lp_norm_functions = [
+    Lp_spline3.L0_spline3,
+    Lp_spline3.L1_spline3,
+    Lp_spline3.L2_spline3,
+    Lp_spline3.L3_spline3,
+    Lp_spline3.L4_spline3,
+    Lp_spline3.L5_spline3,
+    Lp_spline3.L6_spline3,
+    Lp_spline3.L7_spline3,
+    Lp_spline3.L8_spline3
+]
+
+
+def spline_lp_norms(polynomials, l, p):
+    if len(polynomials.shape) == 1:
+        polynomials.resize(1, polynomials.size)
+    a = polynomials[:,0]
+    b = polynomials[:,1]
+    c = polynomials[:,2]
+    return (Lp_norm_functions[p](a, b, c, l))**(1.0/p)
+
+def spline_lp_distances(pols1, pols2, l, p):
+    return spline_lp_norms(pols1-pols2, l, p)
