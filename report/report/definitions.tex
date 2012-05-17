@@ -41,24 +41,62 @@ Finally the $image$-space is denoted by
     I \in \IS
 \end{equation}
 
-\begin{example}
-    test
-    %\includegraphics{smiley/smiley.gif} 
+\begin{example}~\\
+    \begin{tabular}{lcr}
+        $
+        \begin{pmatrix} 
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&  255&  255&    0&  255&  255&    0&  255&  255&  255\\
+        255&  255&  255&    0&  255&  255&    0&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&    0&  255&  255&  255&  255&  255&  255&    0&  255\\
+        255&  255&    0&  255&  255&  255&  255&    0&  255&  255\\
+        255&  255&  255&    0&    0&    0&    0&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255
+        \end{pmatrix}
+       $
+       &$\Rightarrow$& \parbox[c]{1em}{\includegraphics[scale=10.0]{smiley.png}}
+    \end{tabular}
 \end{example}
 
 \subsubsection{Video}
-Ordered list of images
+A \emph{video} can be represented as a function mapping an integer to the designated image $I$
+\begin{equation}
+    video : \NN \rightarrow I
+\end{equation}
 
+\subsection{State}
+<intro about state>
+\begin{note}
+    State and hypothesis is model dependant.
+\end{note}
+\subsubsection{State}
+$x$
+\subsubsection{State-space}
+$x\in\XS$ %TODO(collides with X?)
 \subsubsection{Hypothesis}
+$z$
+
 Explain: Hypotesis (in the context of PF), sample, DOF?, 
 
-\subsubsection{Prop. function as a collection of points with attached weight.}
+\subsubsection{Hypothesis-space}
+$z\in\ZS$
 
+\subsubsection{Estimate}
+The algorithms estimate of the ground truth
+$x^*$ 
+
+\subsubsection{Observation}
+<placement?><denotation?>
+
+\subsection{MISC?}
+
+\subsubsection{Prop. function as a collection of points with attached weight.}
 
 \subsubsection{Dynamic system}
     It's a tuple <space,update,time>
     Any mechanical system following newton physics (or relativistic for that matter) can be considered to be an dynamic system
     in our case the tuple whould be <feature\_space,update\_rule (the one we are trying to preprocess data to approximate),time>
-
-
 
