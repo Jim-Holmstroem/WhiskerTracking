@@ -1,4 +1,4 @@
-__all__ = ["create_database", "create_database_if_not_exists", "delete_database", "StateTransitionDatabase"]
+__all__ = ["create_database", "create_database_if_not_exists", "delete_database", "StateTransitionDatabase", "parameter_distance_std_normalised"]
 
 from itertools import imap, izip, product
 from parallel import parallel_map
@@ -22,6 +22,20 @@ def euclidean_distance_inverse_squared(a, b):
     zero_division_defense = 1e-9 * min(numpy.linalg.norm(a), numpy.linalg.norm(b))
     
     return 1.0/(zero_division_defense + (numpy.linalg.norm(a-b))**2)
+
+def parameter_distance_std_normalised(prev_particle, from_states):
+    standard_deviations = numpy.std(from_states, axis=0)
+    
+    # HACK: Prevent division by zero
+    zero_std_cols = numpy.where(standard_deviations == 0)[0]
+    standard_deviations = numpy.delete(standard_deviations, zero_std_cols)
+    diff = numpy.delete(from_states - prev_particle, zero_std_cols, axis=1)
+    
+    weights = (((diff)/standard_deviations)**4).sum(axis=1)
+    weights += numpy.min(weights[numpy.nonzero(weights)])*1e-6 # HACK: Prevent division by zero
+    weights = 1.0/weights
+    weights /= sum(weights)
+    return weights
 
 def create_database(database_name, parameter_groups):
     db_file = make_db_path(database_name)
@@ -166,108 +180,46 @@ class StateTransitionDatabase:
     def __split_transition(self, transition):
         return numpy.hsplit(transition, 2)
     
-    def sample_weighted_average(self, prev_particle, weight_function=euclidean_distance_inverse_squared):
-        """Generate a particle by taking the average of the database.
+    def sample(self, prev_particle, weight_function, selection_function):
+        """Generate new a particle by querying the database.
         
-        For each transition t in the database, a weight w[t] is calculated
-        using the provided function as w[t] = weight_function(prev_particle,
-        t.from). The returned particle is the average of {t.from for t in
-        database} with the weights {w[t]}.
+        Weights tor each transition t in the database, are calculated using the
+        provided function weight_function. weight_function will be called as
+        weights = weight_function(prev_particle, from_states), where from_states
+        is a numpy array of "from" states from the database. The returned
+        particle is selection_function(to_states, weights), where to_states is a
+        numpy array of "to" states from the database.
         
         @param prev_particle: the particle using which to create new particles
         @param weight_function: a function to use for weighting database
-            entries. Will be called as weight_function(prev_particle, t) where
+            entries. Will be called as weight_function(prev_particle, from_states) where
             t is the "from" part of a transition in the database.
-        @return: A weighted average of the database as a new particle 
+        @return: A new particle
         """
-        
         split_particle = self.__split_by_parameter_groups(prev_particle)
         selected = []
         for group, subparticle in enumerate(split_particle):
             from_states, to_states = self.__split_transition(self.get_all_transitions(group))
-            standard_deviations = numpy.std(from_states, axis=0)
+            weights = weight_function(subparticle, from_states)
+            sw = sum(weights)
+            if sw == 0:
+                weights[:] = 1.0/len(weights)
+            else:
+                weights /= sw
             
-            # HACK: Prevent division by zero
-            zero_std_cols = numpy.where(standard_deviations == 0)[0]
-            standard_deviations = numpy.delete(standard_deviations, zero_std_cols)
-            diff = numpy.delete(from_states - subparticle, zero_std_cols, axis=1)
-            
-            weights = (((diff)/standard_deviations)**4).sum(axis=1)
-            weights += numpy.min(weights[numpy.nonzero(weights)])*1e-6 # HACK: Prevent division by zero
-            weights = 1.0/weights
-            weights /= sum(weights)
-            
-            selected.append(numpy.average(to_states, axis=0, weights=weights))
+            selected.append(selection_function(to_states, weights))
         return numpy.hstack(selected)
 
-    def sample_weighted_average_l2(self, prev_particle, l):
+    def sample_weighted_average(self, prev_particle, weight_function):
         """Generate a particle by taking the average of the database.
-        
-        For each transition t in the database, a weight w[t] is calculated
-        using the provided function as w[t] = weight_function(prev_particle,
-        t.from). The returned particle is the average of {t.from for t in
-        database} with the weights {w[t]}.
-        
-        @param prev_particle: the particle using which to create new particles
-        @param weight_function: a function to use for weighting database
-            entries. Will be called as weight_function(prev_particle, t) where
-            t is the "from" part of a transition in the database.
+        @see sample
         @return: A weighted average of the database as a new particle 
         """
+        return self.sample(prev_particle, weight_function, selection_function=lambda t, w: numpy.average(t, weights=w, axis=0))
 
-        l3 = l**3
-        l4 = l**4
-        l5 = l**5
-        l6 = l**6
-        l7 = l**7
-        
-        split_particle = self.__split_by_parameter_groups(prev_particle)
-        selected = []
-        for group, subparticle in enumerate(split_particle):
-            from_states, to_states = self.__split_transition(self.get_all_transitions(group))
-
-            diff = from_states - prev_particle
-            
-            weights = diff[:,2]**2/3*l3 + diff[:,1]*diff[:,2]/2*l4 + (diff[:,1]**2 + 2*diff[:,0]*diff[:,2])/5*l5 + diff[:,0]*diff[:,1]/3*l6 + diff[:,0]**2/7*l7
-
-            weights = 1.0/(weights**2)
-            weights /= sum(weights)
-            
-            selected.append(numpy.average(to_states, axis=0, weights=weights))
-        return numpy.hstack(selected)
-
-    def sample_argmax_l2(self, prev_particle, l):
-        """Generate a particle by taking the average of the database.
-        
-        For each transition t in the database, a weight w[t] is calculated
-        using the provided function as w[t] = weight_function(prev_particle,
-        t.from). The returned particle is the average of {t.from for t in
-        database} with the weights {w[t]}.
-        
-        @param prev_particle: the particle using which to create new particles
-        @param weight_function: a function to use for weighting database
-            entries. Will be called as weight_function(prev_particle, t) where
-            t is the "from" part of a transition in the database.
-        @return: A weighted average of the database as a new particle 
+    def sample_argmax(self, prev_particle, weight_function):
+        """Generate a particle by taking the argmax of the database.
+        @see sample
+        @return: The particle in the database that has the highest weight
         """
-
-        l3 = l**3
-        l4 = l**4
-        l5 = l**5
-        l6 = l**6
-        l7 = l**7
-        
-        split_particle = self.__split_by_parameter_groups(prev_particle)
-        selected = []
-        for group, subparticle in enumerate(split_particle):
-            from_states, to_states = self.__split_transition(self.get_all_transitions(group))
-
-            diff = from_states - prev_particle
-            
-            weights = diff[:,2]**2/3*l3 + diff[:,1]*diff[:,2]/2*l4 + (diff[:,1]**2 + 2*diff[:,0]*diff[:,2])/5*l5 + diff[:,0]*diff[:,1]/3*l6 + diff[:,0]**2/7*l7
-
-            weights = 1.0/weights
-            weights /= sum(weights)
-            
-            selected.append(to_states[weights.argmax()])
-        return numpy.hstack(selected)
+        return self.sample(prev_particle, weight_function, selection_function=lambda t, w: t[w.argmax()])

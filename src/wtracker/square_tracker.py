@@ -1,5 +1,6 @@
 from itertools import izip
 from scipy.ndimage import filters
+from wdb import parameter_distance_std_normalised
 from wmedia import wimage
 from wtracker.tracker import Tracker
 from wview import SquareAnimator
@@ -94,5 +95,8 @@ class SquareWithoutVelocityTracker(SquareTrackerBetterGoodness):
             return 0
         return (mask*processed_image).sum()/(255*mask_sum)
 
+    def weight_function(self, prev_particle, from_states):
+        return parameter_distance_std_normalised(prev_particle, from_states)
+
     def sample(self, prev_particle):
-        return numpy.random.normal(self.db.sample_weighted_average(prev_particle), 15)
+        return numpy.random.normal(self.db.sample_weighted_average(prev_particle, self.weight_function), 15)

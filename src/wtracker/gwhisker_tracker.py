@@ -2,6 +2,7 @@ DEBUG = False
 if DEBUG:
     import cairo
 import numpy
+import wmath
 
 from wmedia import wimage
 from wgenerator import GWhiskerGenerator
@@ -74,11 +75,10 @@ class GWhiskerTracker(Tracker):
             print "sum, result:", mask_sum, result
         
         return result
+
+    def weight_function(self, prev_particle, from_states):
+        return wmath.l2_distances_inverse(prev_particle, from_states, self.renderer_length)
     
     def sample(self, prev_particle):
-        return self.db.sample_weighted_average_l2(prev_particle, self.renderer_length) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
+        return self.db.sample_weighted_average(prev_particle, self.weight_function) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
 
-    def save_highest_weight_particle_and_resample(self, X, weights):
-        a = weights.argmax()
-        self.highest_weight_particles[-1].append(X[a])
-        return numpy.array([X[a]]*self.num_particles)

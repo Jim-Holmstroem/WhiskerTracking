@@ -82,3 +82,8 @@ class Tracker:
         wl.exportPNGVIN(pngvin_dir)
         print "Export complete."
         print
+
+    def save_highest_weight_particle_and_resample(self, X, weights):
+        a = weights.argmax()
+        self.highest_weight_particles[-1].append(X[a])
+        return numpy.array([X[a]]*self.num_particles)

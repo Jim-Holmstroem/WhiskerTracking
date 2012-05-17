@@ -125,6 +125,9 @@ class AcceleratingSquareWithoutVelocityGenerator(SquareGenerator):
         
         return states[:,::2]
 
+    def generate_metadata(self, obj_i):
+        return {}
+
 class SimpleSquareGenerator(AcceleratingSquareGenerator):
     """
     Renders a spinning square moving in a straight line.

@@ -1,5 +1,5 @@
 
-__all__=['weighted_choice','render_points','argpick','argmin','argmax','binary_search']
+__all__=['weighted_choice','render_points','argpick','argmin','argmax','binary_search', 'l2_distances_inverse']
 
 from random import uniform
 
@@ -7,6 +7,7 @@ import collections
 from Queue import Queue
 from math import sqrt,sin,cos,tan,pi
 
+import numpy
 import pylab
 
 '''
@@ -163,4 +164,20 @@ def binary_search(get_value,goal,seq):
             return binary_search(get_value,goal,seq[:mid_index])
         else: #found a value
             return mid_elem #basecase
+
+def l2_distances_inverse(polynomials1, polynomials2, l):
+    d = l2_distances_between_third_degree_polynomials_with_no_constant_terms(polynomials1, polynomials2, 1)
+    d[numpy.where(d == 0)] = abs(d[numpy.where(d != 0)]).min()*1E-6 # HACK: Preventdivision by zero
+    return 1.0/d
+
+def l2_distances_between_third_degree_polynomials_with_no_constant_terms(polynomials1, polynomials2, l):
+    l3 = l**3
+    l4 = l**4
+    l5 = l**5
+    l6 = l**6
+    l7 = l**7
+
+    diff = polynomials1 - polynomials2
+
+    return (diff[:,2]**2/3*l3 + diff[:,1]*diff[:,2]/2*l4 + (diff[:,1]**2 + 2*diff[:,0]*diff[:,2])/5*l5 + diff[:,0]*diff[:,1]/3*l6 + diff[:,0]**2/7*l7)**0.5
 
