@@ -53,3 +53,4 @@ function [whiskers,snout] = preprocess(img,background)
     snout=blured<0.6;
 
     whiskers=(1-result).*~snout;
+
