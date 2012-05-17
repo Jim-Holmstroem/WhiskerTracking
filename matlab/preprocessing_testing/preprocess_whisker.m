@@ -10,7 +10,6 @@ function preprocess_whisker( directory )
     B=size(bnames,1);
 
     background=zeros([size(imread(strcat(directory,'/background/',bnames(1).name))),B]);
-   
 
     dirname_prewhiskers=strcat(directory,'/preprocessed_whiskers');
     dirname_presnout   =strcat(directory,'/preprocessed_snout');
