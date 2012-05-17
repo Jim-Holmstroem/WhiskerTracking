@@ -4,8 +4,7 @@ if DEBUG:
 import numpy
 import wmath
 
-IMAGE_WIDTH = 204
-IMAGE_HEIGHT = 204
+from common.settings import IMAGE_WIDTH, IMAGE_HEIGHT
 
 from common import make_path
 from itertools import izip, repeat

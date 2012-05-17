@@ -1,6 +1,7 @@
 __init__ = ['wwindow']
 
 import gtk
+from common import settings
 
 class wwindow(gtk.Window):
     __version__="0.2"
@@ -20,7 +21,7 @@ class wwindow(gtk.Window):
             vbox.add(layermanager)
         else:
             error=gtk.image_new_from_stock("gtk-dialog-error",gtk.ICON_SIZE_DIALOG)
-            error.set_size_request(512,512)
+            error.set_size_request(settings.IMAGE_WIDTH,settings.IMAGE_HEIGHT)
             vbox.add(error)
 
         timeline=gtk.Adjustment(0,0,len(layermanager),1,1,1)
