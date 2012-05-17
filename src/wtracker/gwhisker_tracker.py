@@ -4,7 +4,7 @@ if DEBUG:
 import numpy
 import wmath
 
-from itertools import repeat
+from itertools import izip, repeat
 from wmedia import wimage
 from wgenerator import GWhiskerGenerator
 from wtracker import Tracker
@@ -86,3 +86,8 @@ class GWhiskerTracker(Tracker):
     def sample(self, prev_particle):
         return self.db.sample_weighted_average(prev_particle, self.weight_function) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS))
 
+    def calculate_error(self, correct_states):
+        performances = []
+        for track, correct in izip(self.tracks, correct_states):
+            performances.append(sum(map(wmath.spline_lp_distances, track, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space, len(track)))))
+        return performances

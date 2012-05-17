@@ -28,6 +28,9 @@ class Tracker:
     def make_animators(self):
         raise NotImplementedError("This class is abstract!")
 
+    def calculate_error(self, correct_states):
+        raise NotImplementedError("This class is abstract!")
+
     def preprocess_image(self, image):
         return image
 

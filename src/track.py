@@ -44,6 +44,7 @@ class TrackerRunner:
         cProfile.runctx("self.run()", globals(), locals())
         print "Finished tracking benchmark"
         print
+        self.evaluate_results()
     
     def run(self):
         print "Running trackers"
@@ -53,24 +54,32 @@ class TrackerRunner:
         print
 
     def evaluate_results(self):
-        raise NotImplementedError("Broken because of changes")
         print "##################################################"
         print "#                  TEST RESULTS                  #"
         print "##################################################"
         print
-        
-        differences_from_correct = map(lambda track:numpy.abs(self.correct_states - track), self.tracks)
-        sum_diffs = map(lambda diff:diff.sum(axis=0), differences_from_correct)
-        
-        print self.sum_diffs
 
-        diff_matrix = numpy.array(sum_diffs)
-        winner_indices = numpy.array(zip(*numpy.where((diff_matrix-diff_matrix.min(axis=0)) == 0)))[:,0]
-        print "Winners by parameter index:"
+        # Rows: trackers, Cols: objects
+        errors = numpy.array([t.calculate_error(self.correct_states) for t in self.trackers])
+        
+        for tracker_i, err in enumerate(errors):
+            print "Errors for tracker %s:"%(self.trackers[tracker_i].__class__.__name__)
+            for obj_i, e in enumerate(err):
+                print "Object %i: %f"%(obj_i+1, e)
+            print
+
+        wins = numpy.zeros(len(self.trackers))
+
+        for obj_i in xrange(self.num_objects):
+            winner = errors[:,obj_i].argmin()
+            wins[winner] += 1
+            print "Winner for object %i: %s with error %f"%(obj_i+1, self.trackers[winner].__class__.__name__, errors[winner][obj_i])
         print
-        for i, winner in enumerate(winner_indices):
-            print "Parameter %i: %s with cumulative difference %f"%(i, self.trackers[winner].__class__.__name__, self.sum_diffs[winner][i])
-        print
+
+        winners = numpy.where(wins == wins.max())
+        print "The following trackers had the most wins (%i):"%(wins.max())
+        for tracker_i in winners:
+            print self.trackers[tracker_i].__class__.__name__
         
         print "##################################################"
         print "#               END OF TEST RESULTS              #"
@@ -127,7 +136,7 @@ def run_cli():
     num_particles = 100
 
     from common import cliutils
-    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] [-p LP] [-a WEIGHT_POWER] TRACKER_CLASSES...")
+    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] [-v PRINT_VIDEO] [-p LP] [-a WEIGHT_POWER] TRACKER_CLASSES...")
 
     video_name, database_name, class_names = args
     if "PARTICLES" in op_args.keys():
@@ -151,10 +160,15 @@ def run_cli():
     else:
         benchmark.run()
 
-    if "OUTPUT_NAME" in op_args.keys():
-        benchmark.export_results(op_args["OUTPUT_NAME"])
-    else:
-        benchmark.export_results()
+    print_video = True
+    if "PRINT_VIDEO" in op_args.keys():
+        print_video = op_args["PRINT_VIDEO"] == "True"
+
+    if print_video:
+        if "OUTPUT_NAME" in op_args.keys():
+            benchmark.export_results(op_args["OUTPUT_NAME"])
+        else:
+            benchmark.export_results()
 #    benchmark.evaluate_results()
 #    benchmark.animate(0)
 
