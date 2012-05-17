@@ -19,14 +19,14 @@ class wlayermanager(gtk.DrawingArea):
     layers=[]
     current_frame=0
 
-    def __init__(self,layers=None):
+    def __init__(self,layers=None, width=512, height=512):
         """
         Arguments: layers either one layer or multiple
         """
         gtk.DrawingArea.__init__(self)
         self.connect("expose-event",self.expose)
         self.connect("motion-notify-event",self.motion)
-        self.set_size_request(512,512)
+        self.set_size_request(width,height)
         
         if not layers is None:
             map(lambda l:self.add_layer(l), layers)
@@ -55,14 +55,14 @@ class wlayermanager(gtk.DrawingArea):
         self.current_frame=i
         self.queue_draw() #queue the redrawing of this drawingarea
     
-    def expose(self,widget,event):
+    def expose(self,widget,event,width=512,height=512):
         """
 
         """
         context=widget.window.cairo_create()
 
         context.set_source_rgba(0,0,0,1)
-        context.rectangle(0,0,512,512)
+        context.rectangle(0,0,width,height)
         context.fill()
         
         self.render(context,self.current_frame)
@@ -76,13 +76,13 @@ class wlayermanager(gtk.DrawingArea):
             return 0
         return max(map(lambda layer:len(layer),self.layers))
 
-    def exportPNGVIN(self,video_dir=None):
+    def exportPNGVIN(self,video_dir=None, width=512, height=512):
         """
 
         """
         assert re.match(".+\.(PNGVIN|pngvin)$",video_dir)
         #The index of the file is saved as the first element in the pair
-        surfaces=map(lambda frame:(frame,cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)),xrange(len(self)))
+        surfaces=map(lambda frame:(frame,cairo.ImageSurface(cairo.FORMAT_ARGB32,width,height)),xrange(len(self)))
         contexts=map(lambda surface:(surface[0],cairo.Context(surface[1])),surfaces)
         map(lambda context:self.render(context[1],context[0]),contexts)
         

@@ -80,7 +80,7 @@ class wvideo(wlayer):
         padding_size=abs(len(self)-len(other))
         assert(padding_size==0) #padding some somehow broken
         imgs=map(lambda (i,j):i*j,izip(self.imgs,other.imgs))
-        imgs.extend(map(lambda dummy:wimage((512,512)),range(padding_size)))
+        imgs.extend(map(lambda dummy:wimage(self.image_shape()),range(padding_size)))
         return wvideo(imgs)
 
     def __len__(self):

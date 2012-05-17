@@ -2,6 +2,7 @@ __all__ = ["Generator"]
 
 from common.settings import make_video_path
 from wdb import create_database, delete_database, StateTransitionDatabase
+from wgenerator.settings import IMAGE_WIDTH, IMAGE_HEIGHT
 from wgui.wlayermanager import wlayermanager
 import numpy
 import os
@@ -62,7 +63,7 @@ class Generator:
             print "Movie generated."
             
             print "Saving movie to %s"%(save_dir)
-            wlm.exportPNGVIN(save_dir)
+            wlm.exportPNGVIN(save_dir, width=IMAGE_WIDTH, height=IMAGE_HEIGHT)
             print "Movie saved."
             
             print "Finished generating movie %i of %i"%(movie_i+1, self.number_of_movies)

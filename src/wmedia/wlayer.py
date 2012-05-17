@@ -16,8 +16,8 @@ class wlayer:
     def __len__(self):
         return 1
 
-    def get_imagesurface(self):
-        img = cairo.ImageSurface(cairo.FORMAT_ARGB32, 512, 512)
+    def get_imagesurface(self, width=512, height=512):
+        img = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         context = cairo.Context(img)
         self.render(context)
         return img

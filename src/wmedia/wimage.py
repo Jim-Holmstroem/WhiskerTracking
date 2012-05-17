@@ -14,7 +14,7 @@ class wimage(wlayer):
     Has a numpy array as basis 
     """
     data=None
-    def __init__(self,input_data,alpha=1.0):
+    def __init__(self,input_data,alpha=1.0, width=512, height=512):
         """
         The input data can be a filename,numpy array or cairo.ImageSurface
         If numpy.array it connects the data else is just copied at __init__
@@ -34,7 +34,7 @@ class wimage(wlayer):
             if isinstance(input_data, wimage):
                 self.init_with_array(input_data.data.copy())
             else:
-                self.init_with_imagesurface(input_data.get_imagesurface())
+                self.init_with_imagesurface(input_data.get_imagesurface(width=width, height=height))
         else:
             raise Exception("Invalid input type, not (ndarray/basestring/imagesurface):"+str(type(input_data)))
     
@@ -79,7 +79,7 @@ class wimage(wlayer):
         return wimage(self.data+other.data)
     def __mul__(self,other):
         if(other==None):
-            return wimage((512,512))
+            return wimage(self.data.shape)
         return wimage(numpy.multiply(self.data,other.data))
 
     def shape(self):
