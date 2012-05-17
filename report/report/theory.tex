@@ -249,6 +249,60 @@ deformations are small we have the ...
 
 
 
+\begin{theorem} %TODO svagare?
+    \label{thm:response_max}
+    Let $f$ be a positive Riemann function with compact support, then
+    \begin{equation}
+        \argmax{\bar{e}}{\sum\limits_{\Omega}{f(\bar{x})f(\bar{x}-\bar{e})}}=0
+    \end{equation}
+\end{theorem}
+\begin{proof}
+    Firstly define the window function as
+    \begin{equation}
+        W_a^b(x)=
+        \begin{cases}
+            0,~& x<a\\
+            1,~& a=<x=<b\\
+            0,~& x>b
+        \end{cases}
+    \end{equation}
+    Define multiplication
+    \begin{equation}
+        (W_a^bW_c^d(x)=W_{\max(a,c)}^{\min(b,d)}(x)
+    \end{equation}
+    and translation
+    \begin{equation}
+        W_a^b(x-e)=W_{a+e}^{b+e}(x)
+    \end{equation}
+    and integration
+    \begin{equation}
+        \label{eq:int_window}
+        \sum{W_a^b(x)dx}=\Theta{b-a}
+    \end{equation}
+
+    \begin{equation}
+        \begin{split}
+            \argmax{e}{&\sum\limits_{\Omega}{W_a^b(x)W_a^b(x-e)}}=\\
+            \argmax{e}{&\sum{W_a^b(x)W_{a+e}^{b+e}(x)}}=\\
+            \argmax{e}{&\sum{W_{\max(a,a+e)}^{\min(b,b+e)(x)}}=\\
+            \argmax{e}{&\Theta(\min(b,b+e)-\max(a,a+e))}=\\
+            \left\{&\mathrm{max the min and min the max at the same time}\right\}=\\
+            &0
+        \end{split}
+    \end{equation}
+    
+    This trivially holds with superposition of windows, since all windows will scale and translate the same way. 
+    With a finite support $e=0$ is the only solution. Additionaly this also hold in higher finite dimensions since we can just repeat the process for one dimension at a time.
+    
+    All riemann functions can be written as a superposition of windows like this
+    \begin{equation}
+        f=\sum{c_iW^{a_i,b_i}}
+    \end{equation}
+
+    $\therefore$ Each riemann function $f$ with finite support will have a $e=0\qed$
+
+\end{proof}
+
 =============================
 
 \subsubsection{ Theoretical evalutaion (formal methods)}
