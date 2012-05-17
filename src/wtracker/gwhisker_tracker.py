@@ -2,6 +2,7 @@ DEBUG = False
 if DEBUG:
     import cairo
 import numpy
+import os
 import wmath
 
 from common.settings import IMAGE_WIDTH, IMAGE_HEIGHT
@@ -23,7 +24,6 @@ class GWhiskerTracker(Tracker):
     def __init__(self, db, video, start_states, *other_args, **kwargs):
         Tracker.__init__(self, db, video, start_states, *other_args, **kwargs)
         self.lp_space = int(kwargs['LP'])
-        self.lp_space_for_error = int(kwargs['ERROR_LP'])
         self.weight_power = int(kwargs['WEIGHT_POWER'])
         self.goodness_power = int(kwargs['GOODNESS_POWER'])
         self.sample_std_modifier = float(kwargs['SAMPLE_STD_MODIFIER'])
@@ -92,20 +92,47 @@ class GWhiskerTracker(Tracker):
     def sample(self, prev_particle):
         return self.db.sample_weighted_average(prev_particle, self.weight_function) + numpy.array(map(numpy.random.normal, numpy.zeros_like(self.STDEVS), self.STDEVS*self.sample_std_modifier))
 
-    def calculate_error(self, correct_states):
+    def calculate_error(self, correct_states, error_norms=(2, 4, 8)):
+        """Generate error matrices.
+
+        First dimension: Index of the tracked object
+        Second dimension: P in the L^P norm: 2, 4, 8
+        Third dimension: Time step
+        """
         self.absolute_error = []
         self.relative_error = []
         for track, correct in izip(self.tracks, correct_states):
-            distances = numpy.array(map(wmath.spline_lp_distances, track, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space_for_error, len(track))))
-            correct_norms = numpy.array(map(wmath.spline_lp_norms, correct, repeat(self.renderer_length, len(track)), repeat(self.lp_space_for_error, len(track))))
-            relative_errors = distances / correct_norms
-            self.absolute_error.append(distances)
-            self.relative_error.append(relative_errors)
+            distances = []
+            relative_errors = []
+            for P in error_norms:
+                distances_P = numpy.array(wmath.spline_lp_distances(track, correct, self.renderer_length, P))
+                correct_norms_P = numpy.array(wmath.spline_lp_norms(correct, self.renderer_length, P))
+                relative_errors_P = distances_P / correct_norms_P
+                distances.append(distances_P)
+                relative_errors.append(relative_errors_P)
+
+            self.absolute_error.append(numpy.array(distances))
+            self.relative_error.append(numpy.array(relative_errors)) 
+       
         self.absolute_error = numpy.array(self.absolute_error)
         self.relative_error = numpy.array(self.relative_error)
-        return self.relative_error.sum(axis=1)
+
+    def make_results_name(self):
+        return "%s_n=%i_p=%i_a=%i_g=%i_s=%s"%(self.__class__.__name__, self.num_particles, self.lp_space, self.weight_power, self.goodness_power, self.STDEVS*self.sample_std_modifier)
+
+    def make_results_dir(self):
+        results_dir = make_path("results", self.make_results_name())
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
+        return results_dir
 
     def save_error(self):
-        for filesuffix, error in (("absolute", self.absolute_error,), ("relative", self.relative_error)):
-            save_file = make_path("results", "%s_n=%i_p=%i_P=%i_a=%i_g=%i_s=%s_%s.npy"%(self.__class__.__name__, self.num_particles, self.lp_space, self.lp_space_for_error, self.weight_power, self.goodness_power, self.STDEVS*self.sample_std_modifier, filesuffix))
+        for error_type, error in (("absolute", self.absolute_error,), ("relative", self.relative_error)): 
+            save_file = os.path.join(self.make_results_dir(), error_type + "_error.npy")
             numpy.save(save_file, error)
+
+    def export_results(self, pngvin_dir):
+        for name, draw_all in zip(("only_track", "all_particles"), (False, True)):
+            self.make_animators(track=True, resampled_particles=draw_all, preresampled_particles=draw_all, highest_weight_particles=draw_all)
+            pngvin_dir = os.path.join(self.make_results_dir(), name + ".pngvin")
+            Tracker.export_results(self, pngvin_dir)

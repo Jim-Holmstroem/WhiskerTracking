@@ -54,12 +54,17 @@ class TrackerRunner:
         print
 
     def evaluate_results(self):
+        for t in self.trackers:
+            t.calculate_error(self.correct_states)
+            t.save_error()
+        """OLD: Declare a winner
         print "##################################################"
         print "#                  TEST RESULTS                  #"
         print "##################################################"
         print
 
         # Rows: trackers, Cols: objects
+
         errors = numpy.array([t.calculate_error(self.correct_states) for t in self.trackers])
         
         for tracker_i, err in enumerate(errors):
@@ -88,6 +93,7 @@ class TrackerRunner:
 
         for i, t in enumerate(self.trackers):
             t.save_error()
+        """
     
     def animate(self, tracker_i):
         print "Animating test results"
@@ -103,17 +109,21 @@ class TrackerRunner:
         print
     
     def export_results(self, name=None):
+        for tracker in self.trackers:
+            tracker.export_results(None)
+        """
         if name == None:
             name = self.video_name
         for name_suffix, draw_all in zip(("_only_track", "_all_particles"), (False, True)):
             for tracker in self.trackers:
                 tracker.make_animators(track=True, resampled_particles=draw_all, preresampled_particles=draw_all, highest_weight_particles=draw_all)
                 pngvin_dir = make_run_path(name + name_suffix + "_" + tracker.__class__.__name__ + ".pngvin")
-                print "Saving results of tracker %s to %s"%(tracker.__class__.__name__, pngvin_dir)
+                print "Saving tracking results"
                 tracker.export_results(pngvin_dir)
+        """
 
 def run_cli():
-    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] [-p LP] [-P ERROR_LP] [-a WEIGHT_POWER] [-g GOODNESS_POWER] [-s SAMPLE_STD_MODIFIER] Classes...
+    """Usage: python track.py VIDEO_NAME DB_NAME [-o OUTPUT_NAME] [-n NUM_PARTICLES] [-b (True|False)] [-p LP] [-a WEIGHT_POWER] [-g GOODNESS_POWER] [-s SAMPLE_STD_MODIFIER] Classes...
     
     Runs the benchmark for each of the named classes. All named classes must be
     present in the wtracker module. The benchmark is carried out with the
@@ -138,7 +148,7 @@ def run_cli():
     num_particles = 100
 
     from common import cliutils
-    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] [-v PRINT_VIDEO] [-p LP] [-P ERROR_LP] [-a WEIGHT_POWER] [-g GOODNESS_POWER] [-s SAMPLE_STD_MODIFIER] TRACKER_CLASSES...")
+    args, op_args = cliutils.extract_variables(sys.argv[1:], "VIDEO_NAME DATABASE_NAME [-o OUTPUT_NAME] [-n PARTICLES] [-b BENCHMARK] [-v PRINT_VIDEO] [-p LP] [-a WEIGHT_POWER] [-g GOODNESS_POWER] [-s SAMPLE_STD_MODIFIER] TRACKER_CLASSES...")
 
     video_name, database_name, class_names = args
     if "PARTICLES" in op_args.keys():
