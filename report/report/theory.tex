@@ -69,22 +69,22 @@ Here the particle filter algorithm is stated. An elaboration on what this actual
 \li \Return $X_t$
 \end{codebox}
 
-\begin{codebox}
-\Procname{$\proc{Particle-Filter} (X_{t-1}, z_t)$}
-\li Let $\bar{X_t} = \emptyset$.
-\li For $m:=1$ to $\left|X_{t-1}\right|$:
-\li \Do Draw $x_t^m$ with probability $p\left(x_t^m | x_{t-1}^m\right)$.
-\li Let $w_t^m := q\left(z_t | x_t^m\right)$.
-\li Add $(x_t^m, w_t^m)$ to $\bar{X_t}$.
-\End
-\li Let $X_t := \emptyset$.
-\li For $m:=1$ to $\left|X_{t-1}\right|$:
-\li \Do
-    Draw $x_t^m$ with probability proportional to $w_t^m$
-    \li Add $x_t^m$ to $X_t$.
-    \End
-\li Return $X_t$.
-\end{codebox}
+%\begin{codebox}
+%\Procname{$\proc{Particle-Filter} (X_{t-1}, z_t)$}
+%\li Let $\bar{X_t} = \emptyset$.
+%\li For $m:=1$ to $\left|X_{t-1}\right|$:
+%\li \Do Draw $x_t^m$ with probability $p\left(x_t^m | x_{t-1}^m\right)$.
+%\li Let $w_t^m := q\left(z_t | x_t^m\right)$.
+%\li Add $(x_t^m, w_t^m)$ to $\bar{X_t}$.
+%\End
+%\li Let $X_t := \emptyset$.
+%\li For $m:=1$ to $\left|X_{t-1}\right|$:
+%\li \Do
+%    Draw $x_t^m$ with probability proportional to $w_t^m$
+%    \li Add $x_t^m$ to $X_t$.
+%    \End
+%\li Return $X_t$.
+%\end{codebox}
 
 
 We draw a set $\bar{X}_t = \xtmN{x}{m}{t}{N}$ of samples from $p$. These samples roughly represent a probability distribution for the current state $x_t$, but we have yet to consider our observation. Therefore, we will create a new probability distribution weighted by how probable the observation $z_t$ is. For each $x_t^m$, we let $w_t^m := q\left(z_t | x_t\right)$. This defines a discrete probability distribution where $x_t^m$ is assumed with a probability proportional to $w_t^m$. From this final distribution we again draw $N$ samples $X_t$, which will be our estimate of the current state. The elements $x_t^m$ are referred to as \emph{particles} and the set $X_t$ as the \emph{belief at time $t$}.
@@ -131,7 +131,7 @@ or maintain samples and density decreases drastically
 2D->3D
 even worse
 
-To have a sample density of C we need $O(C^n)$ samples for n-dimensional data,
+To have a sample density of C we need $\Ordo{C^n}$ samples for n-dimensional data,
 that is the number of samples grows exponential on the number of dimensions.
 And a consequence of this is that in order to approximate some
 function defined in higher dimensional space one needs many more samples.

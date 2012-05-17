@@ -37,6 +37,17 @@
 \newcommand{\argmax}[1]{\underset{#1}{argmax}}
 \newcommand{\argmin}[1]{\underset{#1}{argmin}}
 
+%
+\newcommand{\prob}[1]{p{\left(#1\right)}}
+\newcommand{\cprob}[2]{\prob{\left. #1 \middle\vert #2 \right.}}
+\newcommand{\cprobnext}[1]{\cprob{#1_{n+1}}{#1_n}}
+\newcommand{\ndist}[2]{\mathcal{N}\left(#1, #2\right)}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+\newcommand{\Lp}[1]{\mathrm{L}^{#1}}
+
+\newcommand{\Ordo}[1]{\mathcal{O}{\left(#1\right)}}
+
+
 \title{
     Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video
     Sequences\\ <FIRST DRAFT>
