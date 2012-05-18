@@ -49,7 +49,8 @@
 \newcommand{\cprobnext}[1]{\cprob{#1_t}{#1_{t-1}}}
 \newcommand{\ndist}[2]{\mathcal{N}\left(#1, #2\right)}
 \newcommand{\norm}[1]{\left\|#1\right\|}
-\newcommand{\Lp}[1]{\mathrm{L}^{#1}}
+\newcommand{\Lpnorm}[2][2]{\left\vert\left\vert #2 \right\vert\right\vert_{\Lp{#1}}}
+\newcommand{\Lp}[1][p]{\mathrm{L}^{#1}}
 
 \newcommand{\Ordo}[1]{\mathcal{O}{\left(#1\right)}}
 
@@ -62,6 +63,10 @@
 \newcommand{\bel}[1]{
   bel\left(#1\right)
 }
+
+\newcommand{\tf}{f_{\text{from}}}
+\renewcommand{\tt}{f_{\text{to}}}
+
 \title{
     Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video
     Sequences\\ <FIRST DRAFT>
