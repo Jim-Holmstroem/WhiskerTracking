@@ -46,13 +46,13 @@ class GWhiskerTracker(Tracker):
                 return r
             return None
 
-        self.animators = map(lambda t,r,p,trans,hi: GWhiskerAnimator(
+        self.animators = map(lambda t,r,p,trans,hi,dl,length,width: GWhiskerAnimator(
                 return_None_if_false(track, t),
                 return_None_if_false(resampled_particles, r),
                 return_None_if_false(preresampled_particles, p),
                 highest_weight_particles=return_None_if_false(highest_weight_particles, hi),
-                translate=trans),
-                self.tracks, self.resampled_particles, self.preresampled_particles, (d["translate"] for d in self.metadata), self.highest_weight_particles)
+                translate=trans, dl=dl, length=length, width=width),
+                self.tracks, self.resampled_particles, self.preresampled_particles, (d["translate"] for d in self.metadata), self.highest_weight_particles, repeat(self.renderer_dl, len(self.tracks)), repeat(self.renderer_length, len(self.tracks)), repeat(self.renderer_width, len(self.tracks)))
         return self.animators
 
     def preprocess_image(self, image):
