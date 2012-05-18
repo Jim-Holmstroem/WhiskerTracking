@@ -38,11 +38,6 @@ Suppose we have a system described by the state $x_t$ at time $t$. $x_t$ can be 
 
 Using $p$ and knowing $x_{t-1}$, we can generate a set of hypotheses $\xtmN{\bar{x}}{t}{m}{N}$ for the current state $x_t$. Using $q$ and knowing $z_t$, we can evaluate how likely the hypotheses are. If it is likely to observe $z_t$ if the current state is $x_t$, then $x_t$ is probably a good estimate of the current state. With this information, we select the most probable hypotheses and let them be our estimate of the current system state.
 
-
-
-
-
-
 The main idea can be outlined as follows.
 
 Suppose we have a system described by the state $x_t$ at time $t$. $x_t$ can be thought of as a vector of state parameters. Suppose that we know the previous state $x_{t-1}$ and have an observation $z_t$ of the system at the current time. In general, it is difficult to accurately determine $x_t$ from the observation alone, and the observation may suffer from interference. Therefore, we cannot directly read $x_t$ from $z_t$. However, we can estimate $x_t$ if we know the following things about the system:
@@ -63,7 +58,6 @@ The particle filter works recursively in two steps:
 \end{enumerate}
 
 In the next section, the particle filter algorithm will be stated. Implementing the filter in itself is only a matter of implementing the stated pseudocode, and is not difficult. The difficult part is designing the probability functions $p$ and $q$ for the given system. A probabilistic implementation of these functions is proposed in chapters TODO.
-
 
 \subsection{Hidden Markov Processes}
 
@@ -102,7 +96,6 @@ The particle filter works recursively in two steps:
 \end{enumerate}
 
 In the next section, the particle filter algorithm will be stated. Implementing the filter in itself is only a matter of implementing the stated pseudocode, and is not difficult. The difficult part is designing the probability functions $p$ and $q$ for the given system. A probabilistic implementation of these functions is proposed in chapters TODO.
-
 
 \subsubsection{Formal description of the particle filter}
 Here the particle filter algorithm is stated. An elaboration on what this actually does and why is offered below.
@@ -163,10 +156,8 @@ We draw a set $\bar{X}_t = \xtmN{x}{m}{t}{N}$ of samples from $p$. These samples
 
 In this thesis, $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set $X_{t-1}$ of $N$ particles. In this case, $x_t^m$ is sampled with probability $p\left(x_t^m | x_{t-1}^m\right)$.
 
-
-
 \subsubsection{Curse of Dimensonality}
-One phenomena that becomes apperant in higher dimensional space is the Curse of dimensionality<2xref>.
+One phenomena that becomes apperant in higher dimensional space is the Curse of dimensionality<2xref,encyclo,original>.
 The problem is that the search-volume grows exponentialy with
 the number of dimensions. It originates from the fact that to have 
 a sample density of $C$ we need $\Ordo{C^n}$ samples for $n$-dimensional data.
@@ -176,7 +167,6 @@ The other drawback with high dimensional space is the large ``boundaries''
 of the sample-set compared to lower dimensional space which results in orders of
 magnitude higher chance for an point one want to approximate to fall outside
 the sample-set and needs to be extrapolated instead of the better alternative of interpolation.
-
 
 \begin{example}
 The effect on $128$ samples transformed $1D\rightarrow2D\rightarrow3D$
@@ -191,17 +181,27 @@ The effect on $128$ samples transformed $1D\rightarrow2D\rightarrow3D$
 \end{example}
 
 \begin{example}
-    For a model with $16$ degrees of freedom
-    \footnote{The number of adjustable parameters in the model} (DOF) 
-    one needs $10^16=10$quadrillion datapoints to acquire a density
+    For a $16$ DOF model one needs $10^16=10$quadrillion datapoints to acquire a density
     of $10$ samples per volume unit. We would need millions of gigabytes only to save the result.
 \end{example}
 
 \begin{example}
-    Exhausted search of $3$ dimensional space can be done as in for example in houghtransform.
+    Exhausted search of $2$ dimensional feature space is done in Hough-transforms<ref:"Hough, P.V.C. [1962]. "Methods and Means for Recognizing Complext Patterns," U.S. Patent 3,069,654">, 
+    where the search is done trough the $\rho\theta$ space of line responses in images.
 \end{example}
 
+\subsubsection{Overcoming the Curse}
+    One way to overcome the curse in the context of \emph{tracking} is to performe a directed search. Let the search be in $N$ dimensional space with a grid of $g$ grid lines in each direction.
+    \begin{enumerate}
+        \item Use the information about the last \footnote{In the bayesian case, probable} location and assume that the tracked object cannot travel more then 
+        $R$ gridsteps foreach timestep, reduces the discrete search-spaces volume from $\Ordo{g^N}$ to $\Ordo{Rg^{N-1}}=\Ordo{g^{N-1}}$.
+        \begin{proof}
+            Change the coordinate system to generalized spherical coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional search surface, sum up the fixated $r$'s to get the total search space.
+        \end{proof}
+        \item With prior knowledge of the objects movements in form of transitions probabilities<ref:HMM> we can direct our search proportional to how probable it is for the tracked object to be there, we have got a probabilistic search-cloud. 
+        This reduces the search-space depending on how much variance we have in the prior knownledge.
 
+    \end{enumerate} 
 %This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionality".
 
 %One way to somewhat overcome this emptyness in space is to have a dynamic (active?) algorithm that adopts the sample density 
@@ -263,13 +263,6 @@ The effect on $128$ samples transformed $1D\rightarrow2D\rightarrow3D$
 % probablities of the dynamic system from ones state to the next
 %"""
 %
-
-
-
-
-
-
-===================
 
 \begin{definition}
     The render function $R$ takes an hypotesis $x$ and renders an image with an
