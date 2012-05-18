@@ -1,7 +1,15 @@
-The interest in studying rodent whiskers has recently seen a significant increase, particularly in the field of neurophysiology. As a result, there is a need for automatic tracking of whisker movements. Currently available commercial solutions either are extremely expensive, restrict the experiment setup, or fail in the presecens of \emph{clutter} or occlusion. A cheap, reliable solution to the tracking problem is needed.
+The interest in studying rodent whiskers has recently seen a significant increase, 
+particularly in the field of neurophysiology. As a result, there is a need for automatic 
+tracking of whisker movements. Currently available commercial solutions either are 
+extremely expensive, restrict the experiment setup, or fail in the presence of 
+\emph{clutter} or occlusion. 
 
-This thesis proposes a proof-of-concept implementation of a probabilistic tracking system. This solution uses a technique known as the \emph{Particle Filter} to propagate a whisker model between frames of high speed video. In each frame, the next state of the model is predicted by filtering the result from a pre-trained database through the Particle Filter. The implementation is written in Python using NumPy and an SQLite3 database.
+This thesis proposes a proof-of-concept implementation of a probabilistic tracking system. 
+This solution uses a technique known as the \emph{Particle Filter} to propagate a whisker model between frames of high speed video. 
+In each frame, the next state of the model is predicted by querying a pre-trained database and filtering the results 
+through the Particle Filter. The implementation is written in Python using NumPy and an SQLite3 database.
 
-There are two main strengths of the proposed solution. First, it successfully tracks multiple whiskers at once, even under clutter. Second, being a standalone program operating on pre-recorded video, it does not notably restrict the experiment.\\
+First, it successfully tracks multiple whiskers at once, even under clutter. 
+Second, being a standalone program operating on pre-recorded video, it does not notably restrict the experiment.\\
 
-\textbf{Keywords:} Tracking, Multiple, Whisker, Particle Filter, Visual Cue, Model Evaluation, Proof-of-Concept
+\textbf{Keywords:} Tracking, Multiple, Whisker, Particle Filter, Transition Database, Model Evaluation, Proof-of-Concept

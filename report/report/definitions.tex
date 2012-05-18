@@ -6,9 +6,8 @@
 %and its often wanted to have it rotational and scale invariant (if your not 
 %intending to measure things like angles or size that is)
 
-\section{Data}
-\subsection{Images and videos}
-\subsubsection{Grayscale image}
+\section{Images and videos}
+\subsection{Grayscale image}
 A grayscale image can be defined as a function
 \begin{equation}
     \begin{array}{ccc}
@@ -57,13 +56,24 @@ In a computer an \emph{image} is represented as a integer matrix, often 8 bit in
     \end{tabular}
 \end{example}
 
-\subsubsection{Video}
+\subsection{Video}
 A \emph{video} is a function mapping an integer to an image $I$:
 \begin{equation}
     \text{video} : \NN \rightarrow I.
 \end{equation}
+\section{Image Processing}
 
-\subsection{States, hypotheses and estimates}
+\begin{definition}
+  The rendering function $R$ takes a hypothesis $x$ and renders an image with a resemblance of how a real whisker would have looked like having the same underlying model and parameters as $x$.
+  \begin{equation}
+    \begin{split}
+      R : \XS &\rightarrow \IS\\
+      x &\mapsto \text{Render}(x)
+    \end{split}
+  \end{equation}
+\end{definition}
+
+\section{States, hypotheses and estimates}
 A system is said to have a \emph{state}. The state is some quantity that defines the qualities of the system.
 
 \begin{description}
@@ -81,22 +91,10 @@ It is not always possible to directly record the state $Z$ of a system. In these
   All of the above are model dependent.
 \end{note}
 
-\subsection{Image Processing}
-
-\begin{definition}
-  The rendering function $R$ takes a hypothesis $x$ and renders an image with a resemblance of how a real whisker would have looked like having the same underlying model and parameters as $x$.
-  \begin{equation}
-    \begin{split}
-      R : \XS &\rightarrow \IS\\
-      x &\mapsto \text{Render}(x)
-    \end{split}
-  \end{equation}
-\end{definition}
-
-\subsubsection{Prob. function as a collection of points with attached weight.}
-
-\subsubsection{Dynamic system}
-    It's a tuple <space,update,time>
-    Any mechanical system following newton physics (or relativistic for that matter) can be considered to be an dynamic system
-    in our case the tuple whould be <feature\_space,update\_rule (the one we are trying to preprocess data to approximate),time>
+%\subsection{Prob. function as a collection of points with attached weight.}
+%
+%\subsection{Dynamic system}
+%    It's a tuple <space,update,time>
+%    Any mechanical system following newton physics (or relativistic for that matter) can be considered to be an dynamic system
+%    in our case the tuple whould be <feature\_space,update\_rule (the one we are trying to preprocess data to approximate),time>
 
