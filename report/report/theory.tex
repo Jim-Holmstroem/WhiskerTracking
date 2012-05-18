@@ -85,8 +85,9 @@ One way to overcome the curse in the context of tracking is to perform a directe
       % \begin{proof}
       %   Change the coordinate system to generalized spherical coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional search surface, sum up the fixated $r$'s to get the total search space.
       % \end{proof}
-    \item With prior knowledge of how the tracked objects move\footnote{Such as the state transition 
-    probabilitis $\cprobnext{Z}$ in a HMM} we can direct our search to specific regions in the state space, 
+    \item With prior knowledge of how the tracked objects move
+    \footnote{Such as the state transition probabilites $\cprobnext{Z}$ in a HMM} 
+    we can direct our search to specific regions in the state space, 
     depending on how probable it is for the tracked object to be located there. This reduces the size of the
     search space depending on how sure we are of the previous state.
 \end{enumerate} 
