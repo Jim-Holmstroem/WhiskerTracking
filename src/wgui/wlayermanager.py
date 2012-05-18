@@ -4,6 +4,7 @@ import gtk
 import cairo
 import os
 import re
+from common import settings
 
 def video_format_filename(i):
     """Get a frame filename for the given integer
@@ -19,7 +20,7 @@ class wlayermanager(gtk.DrawingArea):
     layers=[]
     current_frame=0
 
-    def __init__(self,layers=None, width=512, height=512):
+    def __init__(self,layers=None, width=settings.IMAGE_WIDTH, height=settings.IMAGE_HEIGHT):
         """
         Arguments: layers either one layer or multiple
         """
@@ -55,7 +56,7 @@ class wlayermanager(gtk.DrawingArea):
         self.current_frame=i
         self.queue_draw() #queue the redrawing of this drawingarea
     
-    def expose(self,widget,event,width=512,height=512):
+    def expose(self,widget,event,width=settings.IMAGE_WIDTH,height=settings.IMAGE_HEIGHT):
         """
 
         """
@@ -76,7 +77,7 @@ class wlayermanager(gtk.DrawingArea):
             return 0
         return max(map(lambda layer:len(layer),self.layers))
 
-    def exportPNGVIN(self,video_dir=None, width=512, height=512):
+    def exportPNGVIN(self,video_dir=None, width=settings.IMAGE_WIDTH, height=settings.IMAGE_HEIGHT):
         """
 
         """

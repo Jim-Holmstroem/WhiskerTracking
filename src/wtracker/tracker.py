@@ -78,7 +78,7 @@ class Tracker:
     def export_results(self, pngvin_dir):
         from wgui import wlayermanager
         
-        print "Exporting results as PNGVIN video..."
+        print "Exporting results as PNGVIN video to %s"%(pngvin_dir)
         wl = wlayermanager()
         wl.add_layer(self.video)
         map(wl.add_layer, self.animators)

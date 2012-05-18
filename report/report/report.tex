@@ -1,4 +1,5 @@
 \documentclass[a4paper,11pt]{kth-mag}
+\usepackage[pdftex]{graphicx}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{lmodern}
@@ -13,7 +14,6 @@
 
 \usepackage{clrscode}
 \usepackage{hyperref}
-
 \usepackage{graphicx}
 
 \usepackage{tikz}
@@ -21,10 +21,8 @@
 
 \graphicspath{{figures/}{figures/smiley/}{figures/hmm-graph/}{figures/gwhisker_database/}{figures/COD/}}
 
-\newcommand{\ForEach}{\textbf{foreach} }
-\newcommand{\In}{\textbf{in} }
-
-\newcommand{\Spline}[1]{a_3#1^3+a_2#1^2+a_1#1}
+%%% Graphics search paths %%%
+\graphicspath{{figures/}{figures/hmm-graph/}{figures/gwhisker_database/}{figures/gwhiskers/}}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
@@ -32,13 +30,14 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{note}{Note}
 
+\newcommand{\ForEach}{\textbf{foreach} }
+\newcommand{\In}{\textbf{in} }
+\newcommand{\Spline}[1]{a_3#1^3+a_2#1^2+a_1#1}
+
 \newcommand{\NN}{\ensuremath{\mathbb{N}}}
 \newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
 \newcommand{\RR}{\ensuremath{\mathbb{R}}}
 \newcommand{\CC}{\ensuremath{\mathbb{C}}}
-
-
-%all spaces
 \newcommand{\HS}{\ensuremath{\mathcal{H}}}
 \newcommand{\IS}{\ensuremath{\mathcal{I}}}
 \newcommand{\XS}{\ensuremath{\mathcal{X}}}
@@ -48,7 +47,7 @@
 \newcommand{\argmax}[1]{\underset{#1}{argmax}}
 \newcommand{\argmin}[1]{\underset{#1}{argmin}}
 
-%
+\newcommand{\xnmN}[4]{\left\{#1\right\}
 \newcommand{\prob}[1]{p{\left(#1\right)}}
 \newcommand{\cprob}[2]{\prob{\left. #1 \middle\vert #2 \right.}}
 \newcommand{\cprobnext}[1]{\cprob{#1_{n+1}}{#1_n}}
@@ -58,7 +57,15 @@
 
 \newcommand{\Ordo}[1]{\mathcal{O}{\left(#1\right)}}
 
-
+\newcommand{\xtmN}[4]{
+  \left\{#1_{#2}^{#3}\right\}_{#2=1}^{#4}
+}
+\newcommand{\interval}[2]{
+  \left[#1, #2\right]
+}
+\newcommand{\bel}[1]{
+  bel\left(#1\right)
+}
 \title{
     Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video
     Sequences\\ <FIRST DRAFT>
@@ -105,6 +112,10 @@
     \label{sec:introduction}
     \input{introduction}
 
+\chapter{Background}
+    \label{sec:Background}
+    \input{background}
+
 \chapter{Related Work}
     \label{sec:related_work}
     \input{related_work}
@@ -113,29 +124,22 @@
     \label{sec:definitions}
     \input{definitions}
 
-\chapter{Background}
-    \label{sec:Background}
-    \input{background}
-
 \chapter{Theory}
     \label{sec:theory}
     \input{theory}
 
-
-%TODO impl.. or Impl..?
-\chapter{Algorithms \& Implementations}
+\chapter{Algorithms and Implementations}
     \label{sec:algorithms_implementations}
     \input{algorithms_implementations}
 
 
 %TODO results or Results?
 %TODO does one write benchmarking? and results?
-\chapter{Benchmarking \& Results}
+\chapter{Results}
     \label{sec:benchmarks_results}
     \input{experiment}
 
-%TODO discussion or Discussion?
-\chapter{Analysis \& Discussion}
+\chapter{Analysis and Discussion}
     \label{sec:analysis_discussion}
     \input{analysis_discussion}
 

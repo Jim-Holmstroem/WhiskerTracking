@@ -1,4 +1,5 @@
 import cairo
+from common import settings
 
 class wlayer:
     """
@@ -16,7 +17,7 @@ class wlayer:
     def __len__(self):
         return 1
 
-    def get_imagesurface(self, width=512, height=512):
+    def get_imagesurface(self, width=settings.IMAGE_WIDTH, height=settings.IMAGE_HEIGHT):
         img = cairo.ImageSurface(cairo.FORMAT_ARGB32, width, height)
         context = cairo.Context(img)
         self.render(context)
