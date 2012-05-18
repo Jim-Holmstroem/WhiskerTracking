@@ -1,5 +1,86 @@
+\subsection{Introduction}
+The core of tracking engine used is a technique known as the \emph{particle filter}. The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses, also known as \emph{particles} to approximate continuous probability distributions \cite{ProbRob}. It builds upon the theory of \emph{Markov Processes} and the \emph{Hidden Markov Model}.
+
+\subsection{Markov processes and the Hidden Markov Model}
+A Markov process is a special case of a stochastic process. For a Markov process, the next state depends only on the present state and not on past states. For this reason, a Markov process is often said to be ``forgetful''.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{hmm-graph.pdf}
+  \caption{Schematic image of a Hidden Markov Model.}
+  \label{fig:hmm-graph}
+\end{figure}
+
+\subsection{Hidden Markov Processes}
+
+Our solution is based on \emph{Markov processes}, which are 
+An example of a Markov process is that of throwing dice and summing the results: the possible states (sums) after the next throw depends only on the current state.
+
+In mathematical terms, a Markov process satisfies the following:
+\begin{equation}
+ p\left(Z_{n+1}|Z_n \wedge Z_{n-1} \wedge Z_{n-2} \wedge \dots \wedge Z_0\right) = p\left(Z_{n+1}|Z_n\right),
+\end{equation}
+where $Z_n$ is the system's \emph{state} after step $n$ and $p\left(Z_{n+1}|Z_n, Z_{n-1}, Z_{n-2}, \dots, Z_0\right)$ is the probability that the system will have state $Z_{n+1}$ in the next step, given that the previous states where $Z_n, Z_{n-1}, Z_{n-2}, \dots, Z_0$.
+
+A \emph{hidden Markov model} (HMM) describes a Markov process where one cannot measure the state $Z$ of the system directly - it is ``hidden''\cite{EncyclopediaMachineLearning}. Instead we obtain an \emph{observation} $I$\footnote{In this project, the observation is a grayscale \emph{image}, which is why we use the symbol $I$.}  of the state. This \emph{perception} is generally non-deterministic, so we need to denote it as $p(I_n|Z_n)$ which is the probability that we will observe $I_n$ if the current state of the system is $Z_n$.
 
 \subsection{The particle filter}
+
+\subsubsection{Introduction}
+The core of tracking engine used is a technique known as the \emph{particle filter}. The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses to approximate continuous probability distributions \cite{ProbRob}. The main idea can be outlined as follows.
+
+Suppose we have a system described by the state $x_t$ at time $t$. $x_t$ can be thought of as a vector of state parameters. Suppose that we know the previous state $x_{t-1}$ and have an observation $z_t$ of the system at the current time. In general, it is difficult to accurately determine $x_t$ from the observation alone, and the observation may suffer from interference. Therefore, we cannot directly read $x_t$ from $z_t$. However, we can estimate $x_t$ if we know the following things about the system:
+
+\begin{itemize}
+\item A probability function $p$, where $p\left(x_t | x_{t-1}\right)$ is the probability that the current state is $x_t$ if the previous state was $x_{t-1}$.
+\item A probability function $q$, where $q\left(z_t | x_t\right)$ is the probability that we observe $z_t$ if the current state is $x_t$.
+\end{itemize}
+
+Using $p$ and knowing $x_{t-1}$, we can generate a set of hypotheses $\xtmN{\bar{x}}{t}{m}{N}$ for the current state $x_t$. Using $q$ and knowing $z_t$, we can evaluate how likely the hypotheses are. If it is likely to observe $z_t$ if the current state is $x_t$, then $x_t$ is probably a good estimate of the current state. With this information, we select the most probable hypotheses and let them be our estimate of the current system state.
+
+
+
+
+
+
+The main idea can be outlined as follows.
+
+Suppose we have a system described by the state $x_t$ at time $t$. $x_t$ can be thought of as a vector of state parameters. Suppose that we know the previous state $x_{t-1}$ and have an observation $z_t$ of the system at the current time. In general, it is difficult to accurately determine $x_t$ from the observation alone, and the observation may suffer from interference. Therefore, we cannot directly read $x_t$ from $z_t$. However, we can estimate $x_t$ if we know the following things about the system:
+
+\begin{itemize}
+\item A probability function $p$, where $p\left(x_t | x_{t-1}\right)$ is the probability that the current state is $x_t$ if the previous state was $x_{t-1}$.
+\item A probability function $q$, where $q\left(z_t | x_t\right)$ is the probability that we observe $z_t$ if the current state is $x_t$.
+\end{itemize}
+
+Using $p$ and knowing $x_{t-1}$, we can generate a set of hypotheses $\xtmN{\bar{x}}{t}{m}{N}$ for the current state $x_t$. Using $q$ and knowing $z_t$, we can evaluate how likely the hypotheses are. If it is likely to observe $z_t$ if the current state is $x_t$, then $x_t$ is probably a good estimate of the current state. With this information, we select the most probable hypotheses and let them be our estimate of the current system state.
+
+The particle filter works recursively in two steps:
+
+\begin{enumerate}
+\item The \emph{sampling step} is the generation of the hypotheses, known as \emph{particles}, from the previous state $x_{t-1}$. The belief $\bel{x_{t-1}}$, see below, is used as an estimate for $x_{t-1}$. What makes this recursive is the fact that $\bel{x_t}$ is calculated using $\bel{x_{t-1}}$.
+
+\item The \emph{resampling step} is the final selection of the most probable particles. After resampling the set $\bar{X_t} := \xtmN{\bar{x}}{t}{m}{N}$ we get the \emph{belief} $\bel{x_t}$, which often includes multiple copies of the most probable particles. This set is used as an estimate for $x_t$, and is used to estimate $x_{t+1}$.
+\end{enumerate}
+
+In the next section, the particle filter algorithm will be stated. Implementing the filter in itself is only a matter of implementing the stated pseudocode, and is not difficult. The difficult part is designing the probability functions $p$ and $q$ for the given system. A probabilistic implementation of these functions is proposed in chapters TODO.
+
+
+\subsection{Hidden Markov Processes}
+
+Our solution is based on \emph{Markov processes}, which are a special case of stochastic processes. For a Markov process, the next state depends only on the present state and not on past states.
+
+An example of a Markov process is that of throwing dice and summing the results: the possible states (sums) after the next throw depends only on the current state.
+
+In mathematical terms, a Markov process satisfies the following:
+\begin{equation}
+ p\left(Z_{n+1}|Z_n \wedge Z_{n-1} \wedge Z_{n-2} \wedge \dots \wedge Z_0\right) = p\left(Z_{n+1}|Z_n\right),
+\end{equation}
+where $Z_n$ is the system's \emph{state} after step $n$ and $p\left(Z_{n+1}|Z_n, Z_{n-1}, Z_{n-2}, \dots, Z_0\right)$ is the probability that the system will have state $Z_{n+1}$ in the next step, given that the previous states where $Z_n, Z_{n-1}, Z_{n-2}, \dots, Z_0$.
+
+A \emph{hidden Markov model} (HMM) describes a Markov process where one cannot measure the state $Z$ of the system directly - it is ``hidden''\cite{EncyclopediaMachineLearning}. Instead we obtain an \emph{observation} $I$\footnote{In this project, the observation is a grayscale \emph{image}, which is why we use the symbol $I$.}  of the state. This \emph{perception} is generally non-deterministic, so we need to denote it as $p(I_n|Z_n)$ which is the probability that we will observe $I_n$ if the current state of the system is $Z_n$.
+
+\subsection{The particle filter}
+
 \subsubsection{Introduction}
 The core of tracking engine used is a technique known as the \emph{particle filter}. The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses to approximate continuous probability distributions \cite{ProbRob}. The main idea can be outlined as follows.
 

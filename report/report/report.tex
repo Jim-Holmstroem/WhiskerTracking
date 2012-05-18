@@ -1,4 +1,5 @@
 \documentclass[a4paper,11pt]{kth-mag}
+\usepackage[pdftex]{graphicx}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage{lmodern}
@@ -17,6 +18,9 @@
 
 \graphicspath{{figures/}{figures/smiley/}{figures/hmm-graph/}{figures/gwhisker_database/}}
 
+%%% Graphics search paths %%%
+\graphicspath{{figures/}{figures/hmm-graph/}{figures/gwhisker_database/}{figures/gwhiskers/}}
+
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
@@ -31,7 +35,6 @@
 \newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
 \newcommand{\RR}{\ensuremath{\mathbb{R}}}
 \newcommand{\CC}{\ensuremath{\mathbb{C}}}
-
 \newcommand{\HS}{\ensuremath{\mathcal{H}}}
 \newcommand{\IS}{\ensuremath{\mathcal{I}}}
 \newcommand{\XS}{\ensuremath{\mathcal{X}}}
@@ -60,7 +63,6 @@
 \newcommand{\bel}[1]{
   bel\left(#1\right)
 }
-
 \title{
     Probabilistic Tracking of Multiple Rodent Whiskers in Monocular Video
     Sequences\\ <FIRST DRAFT>
@@ -123,21 +125,18 @@
     \label{sec:theory}
     \input{theory}
 
-
-%TODO impl.. or Impl..?
-\chapter{Algorithms \& Implementations}
+\chapter{Algorithms and Implementations}
     \label{sec:algorithms_implementations}
     \input{algorithms_implementations}
 
 
 %TODO results or Results?
 %TODO does one write benchmarking? and results?
-\chapter{Benchmarking \& Results}
+\chapter{Results}
     \label{sec:benchmarks_results}
     \input{experiment}
 
-%TODO discussion or Discussion?
-\chapter{Analysis \& Discussion}
+\chapter{Analysis and Discussion}
     \label{sec:analysis_discussion}
     \input{analysis_discussion}
 
