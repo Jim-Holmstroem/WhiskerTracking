@@ -19,6 +19,14 @@ The implementation consists of three main parts:
     A plug-n-play algorithm which only lacks the problem-domain<ref:encyc> specific parts:$x_0$, $\cprob{x_t}{x_{t-1}}$ and $\cprob{I_t}{x_t}$
     \subsection{Initilization $x_0$}
         The particle filter only does tracking thus we need to have an initial guess for $t=0$ which in our case will be hand labeled foreach whisker.
+   ======
+
+Since the algorithm only does tracking, we also need to initialize the algorithm with a start guess $x_0$. 
+Using this we take a number of samples $X_0 \sim \ndist{x_0}{\Sigma}$ and let the set $X_0$ be an approximation 
+of $\prob{Z_0}$. However, the problem of automatic initialization is a difficult one\cite{Hedvig}, and is not covered in this thesis. 
+In the testing implementation, knowledge of the start state $Z_0$ is assumed, meaning $x_0 := Z_0$ and $\Sigma := 0$.
+=====
+    
     \subsection{Goodness $\kappa\cprob{x_t}{I_t}$}
         It also needs an direction to know how good the hypothesis $x_t$ matches the given image $I_t$.
 
