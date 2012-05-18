@@ -1,26 +1,38 @@
 \section{Introduction}
-The core of the tracking engine used is a technique known as the \emph{particle filter}. The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses, also known as \emph{particles}, to approximate continuous probability distributions \cite{ProbRob}. It builds upon the theory of \emph{Markov Processes} and the \emph{Hidden Markov Model}.
+The core of the tracking engine is a technique known as the \emph{particle filter}. 
+The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses, 
+also known as \emph{particles}, to approximate continuous PDF \cite{ProbRob}.
+It builds upon the theory of \emph{Markov processes} and the \emph{hidden Markov model}.
 
 \section{Markov processes}
-A Markov process is a special case of a stochastic process. For a Markov process, the next state depends only on the present state and not on past states. For this reason, a Markov process is often said to be ``forgetful''.
+A Markov process is a special case of a stochastic process. For a Markov process, 
+the next state depends only on the present state and not on past states. 
+For this reason, a Markov process is often said to be ``forgetful''.
 
 In mathematical terms, a Markov process satisfies the following:
 \begin{equation}
  p\left(Z_t|Z_{t-1} \wedge Z_{t-2} \wedge \dots \wedge Z_0\right) = p\left(Z_t|Z_{t-1}\right),
 \end{equation}
-where $Z_t$ is the system's \emph{state} at time $t$ and $p\left(Z_t|Z_{t-1} \wedge Z_{t-2} \wedge \dots \wedge Z_0\right)$ is the probability that the system will have state $Z_t$ at time $t$, given that the previous states where $Z_{t-1}, Z_{t-2},\dots, Z_0$.
-
+$p\left(Z_t|Z_{t-1} \wedge Z_{t-2} \wedge \dots \wedge Z_0\right)$ 
+is the probability that the system will have state $Z_t$ at time $t$, 
+given that the previous states where $Z_{t-1}, Z_{t-2},\dots, Z_0$.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{hmm-graph.pdf}
-  \caption{Schematic image of a Hidden Markov Model.}
+  \caption{Schematic image of a hidden Markov model.}
   \label{fig:hmm-graph}
 \end{figure}
 
+<<figure of markov process only>>
+
 \section{The Hidden Markov Model}
 
-The working principle of the particle filter is based on the \emph{Hidden Markov Model} (HMM). A HMM describes a Markov process where we cannot measure the state $Z_t$ of the system directly - it is ``hidden''\cite{EncyclopediaMachineLearning}. Instead we obtain an \emph{observation} $I$\footnote{In this thesis, the observation is a grayscale \emph{image}, therefore the observation is denoted $I$.}  of the state. This \emph{perception} is generally non-deterministic, so we need to denote it as $p(I_t|Z_t)$ which is the probability that we will observe $I_t$ if the state of the system is $Z_t$.
+The working principle of the particle filter is based on the \emph{hidden Markov model} (HMM).
+A HMM describes a Markov process where we cannot measure the state directly - it is ``hidden''\cite{EncyclopediaMachineLearning}.
+Instead we obtain an \emph{observation} $I$\footnote{In this thesis, the observation is always a grayscale \emph{image}, 
+therefore the observation is denoted $I$.}  of the state. This \emph{perception} is generally non-deterministic, 
+so we need to denote it as $p(I_t|Z_t)$ which is the probability that we will observe $I_t$ if the state is $Z_t$.
 
 \section{Curse of Dimensionality}
 A phenomenon that becomes apparent in higher dimensional spaces is the so-called ``Curse of dimensionality'' \cite{EncyclopediaMachineLearning}. The problem is that the search volume grows exponentialy with the number of dimensions. It originates from the fact that to have a sample density of $C$ we need $\Ordo{C^n}$ samples for $n$-dimensional data.
@@ -47,7 +59,9 @@ The other drawback of high-dimensional spaces is the constricted ``borders'' of 
 \end{example}
 
 \begin{example}
-  In 2 dimensions it is sometimes feasible to use an exhaustive search. An example of this is Hough transforms \cite{DigitalImageProcessing}, where the search is done through the $\rho\theta$ space of line responses in images. TODO
+  In 2 dimensions it is sometimes feasible to use an exhaustive search.
+  An example of this is Hough transforms \cite{DigitalImageProcessing}, 
+  where the search is done through the $\rho\theta$ space of line responses in images.
 \end{example}
 
 \subsection{Overcoming the Curse}
@@ -126,37 +140,49 @@ One way to overcome the curse in the context of \emph{tracking} is to perform a 
 
 \section{The Particle Filter}
 
-One way to compute the state $Z_t$ would be to perform an exhaustive search in the state space, and select the state for which $\cprob{I_t}{Z_t}$ is maximised. However, as the number of parameter grows, the state space can get very large. If the state is defined by $n$ independent parameters, the volume of the state space grows exponentially with $n$.
+One na\"{i}ve way to compute the state $Z_t$ would be to perform an exhaustive search in the state space, and select the state for which $\cprob{I_t}{Z_t}$ is maximised.<ref:COD> 
 
-The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses to approximate the probabilities $\cprobnext{Z}$.
-
-The Particle Filter is a technique for tracking a process described by a HMM. It uses a finite set $X_t$ of hypotheses to approximate the probability function $\cprobnext{Z}$. The hypotheses $X_t$ are also known as \emph{particles}, thereby the term ``particle filter''.
+The particle filter is a technique for reducing the search space<ref:COD>. It uses a finite set $X_t$ of hypotheses to approximate the PDF $\cprobnext{Z}$ of a HMM. The hypotheses $X_t$ are also refered to as \emph{particles}, thereby the term ``particle filter''.
 
 \begin{figure}
   \centering
   \includegraphics[width=0.8\textwidth]{hmm-pf-graph/hmm-graph.pdf}
-  \caption{Schematic image of the Particle Filter working alongside a Hidden Markov Model.}
+  \caption{Schematic image of the particle filter alongside a HMM.}
   \label{fig:hmm-graph}
 \end{figure}
 
-Figure \ref{fig:hmm-graph} shows the working principle of the Particle Filter working alongside a Hidden Markov Model. The following is the core function of the Particle Filter:
+Figure \ref{fig:hmm-graph} shows the principle of the particle filter working alongside a hidden Markov model. The following is the core function of the particle filter:
 
 \begin{quote}
-  \emph{The particle filter attempts to approximate the probability density function $\cprobnext{Z}$ as a set $X_t$ of discrete hypotheses.}
+  \emph{The particle filter attempts to approximate the PDF $\cprobnext{Z}$ as a set $X_t$ of discrete hypotheses.}
 \end{quote}
 
-More particles mean greater accuracy, since the PDF can then be approximated more closely. However, using many particles is also computationally expensive. Therefore the number of particles is an important quantity. The Particle Filter employs a few tricks to \emph{filter} the hypotheses, keeping probable ones and throwing improbable ones away, in order to reduce the number of particles needed for a good approximation. The filter works in four steps:
+More particles mean greater accuracy, since the PDF can then be approximated more closely. However, using many particles increses computational cost.
+Therefore the number of particles is an important trade-off. 
+The particle filter employs a few tricks to \emph{filter} the hypotheses, 
+tending to keep probable ones and throwing improbable ones away, in order to intelligently reduce the number 
+of particles needed for a good approximation. The filter works in four steps:
 
 \begin{description}
-\item[Prediction] The hypotheses $X_t$ are updated in the \emph{prediction} step to an approximation of $\cprobnext{Z}$. This is done by drawing new samples $\bar{X}_t \sim \cprobnext{x}$, for each $x_{t-1}$ in $X_{t-1}$.
+\item[Prediction] The hypotheses $X_{t-1}$ are updated in the \emph{prediction} step to an approximation $\bar{X}_t$ of $\cprobnext{Z}$.
+This is done by drawing new samples $\cprobnext{x}$, for each $x_{t-1}$ in $X_{t-1}$.
 \item[Perception] By measuring the state of the system, we gain an \emph{observation} $I_t \sim \cprob{I_t}{Z_t}$ of the state $Z_t$.
-\item[Filtering] The observation $I_t$ of the system is then used for filtering bad hypotheses out of $\bar{X}_t$. We draw samples $X_t$ from $\bar{X}_t$ with probabilities given by $\cprob{I_t}{\bar{X}_t}$. As a result, $X_t$ will be a subset of $\bar{X}_t$ where more probable hypotheses appear multiple times. For this reason, this is also known as the \emph{resampling} step. The set $X_t$ is the \emph{belief}, our approximation of $\cprobnext{Z}$.
-\item[Selection] Finally, we produce a single hypothesis $x_t$ from $X_t$ as our \emph{estimate} of the state $Z_t$. Supposing $X_t$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, the mean value of $X_t$ is a good estimate since it approximates the expectation of $\cprobnext{Z}$. If $\cprobnext{Z}$ is multimodal, however, the mean could be a bad estimate since it may be in a region of very low probability even if $X_t$ is a good approximation of $\cprobnext{Z}$.
+\item[Filtering] The observation $I_t$ of the system is then used for filtering bad hypotheses out of $\bar{X}_t$. 
+We draw samples $X_t$ from $\bar{X}_t$ with probabilities given by $\cprob{I_t}{\bar{X}_t}$. As a result, 
+$X_t$ will be a subset of $\bar{X}_t$ where more probable hypotheses appear multiple times. 
+For this reason, this is also known as the \emph{resampling} step. The set $X_t$ is the \emph{belief}, 
+our approximation of $\cprobnext{Z}$.
+\item[Selection] Finally, we produce a single hypothesis $x_t$ from $X_t$ as our \emph{estimate} 
+of the state $Z_t$. Supposing $X_t$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, 
+the means value of $X_t$ is a good estimate since it approximates the expectation of $\cprobnext{Z}$. 
+If $\cprobnext{Z}$ is multimodal, however, the mean could be a bad estimate since it may be in a 
+region of very low probability even if $X_t$ is a good approximation of $\cprobnext{Z}$.
 \end{description}
 
-Since the algorithm only does tracking, we also need to initialize the algorithm with a start guess $x_0$. Using this we take a number of samples $X_0 \sim \ndist{x_0}{\Sigma}$ and let the set $X_0$ be an approximation of $\prob{Z_0}$. However, the problem of initialization is a difficult one\cite{Hedvig}, and is not covered in this thesis. In the testing implementation, knowledge of the start state $Z_0$ is assumed, meaning $x_0 := Z_0$ and $\Sigma := 0$.
-
-
+Since the algorithm only does tracking, we also need to initialize the algorithm with a start guess $x_0$. 
+Using this we take a number of samples $X_0 \sim \ndist{x_0}{\Sigma}$ and let the set $X_0$ be an approximation 
+of $\prob{Z_0}$. However, the problem of initialization is a difficult one\cite{Hedvig}, and is not covered in this thesis. 
+In the testing implementation, knowledge of the start state $Z_0$ is assumed, meaning $x_0 := Z_0$ and $\Sigma := 0$.
 
 \subsection{The Particle Filter algorithm}
 \begin{table}
@@ -176,19 +202,24 @@ Since the algorithm only does tracking, we also need to initialize the algorithm
     \li \While $\abs{X_t} < \abs{\bar{X}_t}$
     \li \Do
     \li Take $\left<x_t, w\right>$ from $\bar{X}_t$ with probability $\propto w$
-    \li Add $x_t$ to $X_t$
+    \li Append $x_t$ to $X_t$
     \End
     \li \Return $X_t$
   \end{codebox}
-  \caption{The Particle Filter algorithm.}
+  \caption{The particle filter algorithm.}
   \label{alg:pf}
 \end{table}
 
-Table \ref{alg:pf} shows the particle filter algorithm. Note that the functions \textsc{Predict} and \textsc{Importance} are unspecified - they are specific to each use case. They correspond to the probability functions $\cprobnext{x}$ and $\cprob{I_t}{x_t}$, respectively.
+Table \ref{alg:pf} shows the particle filter algorithm. Note that the functions \textsc{Predict} and \textsc{Importance} are unspecified
+- they are problem specific. They correspond to the PDF $\cprobnext{x}$ and $\cprob{I_t}{x_t}$, respectively.
 
-We draw a set $\bar{X}_t = \xtmN{x}{t}{i}{N}$ of samples from $p$. These samples roughly represent a probability distribution for the current state $x_t$, but we have yet to consider our observation. Therefore, we will create a new probability distribution weighted by how probable the observation $z_t$ is. For each $x_t^m$, we let $w_t^m := q\left(z_t | x_t\right)$. This defines a discrete probability distribution where $x_t^m$ is assumed with a probability proportional to $w_t^m$. From this final distribution we again draw $N$ samples $X_t$, which will be our estimate of the current state. The elements $x_t^m$ are referred to as \emph{particles} and the set $X_t$ as the \emph{belief at time $t$}.
+%We draw a set $\bar{X}_t = \xtmN{x}{t}{i}{N}$ of samples from $p$. These samples roughly represent a PDF for the current state $x_t$, but we have yet to consider our observation. 
+%Therefore, we will create a new PDF weighted by how probable the observation $z_t$ is. For each $x_t^m$,
+%we let $w_t^m := q\left(z_t | x_t\right)$. This defines a discrete PDF where $x_t^m$ is assumed with a probability 
+%proportional to $w_t^m$. From this final distribution we again draw $N$ samples $X_t$, which will be our estimate of the current state.
+%The elements $x_t^m$ are referred to as \emph{particles} and the set $X_t$ as the \emph{belief at time $t$}.
 
-In this thesis, $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set $X_{t-1}$ of $N$ particles. In this case, $x_t^m$ is sampled with probability $p\left(x_t^m | x_{t-1}^m\right)$.
+In this thesis, the real $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set $X_{t-1}$ of $N$ particles.
 
 \section{Sensory Cues}
 
