@@ -28,7 +28,6 @@ One way to compute the state $Z_t$ would be to perform an exhaustive search in t
 
 The particle filter is a kind of Bayesian filtering where one uses discrete hypotheses to approximate the probabilities $\cprobnext{Z}$.
 
-
 The Particle Filter is a technique for tracking a process described by a HMM. It uses a finite set $X_t$ of hypotheses to approximate the probability function $\cprobnext{Z}$. The hypotheses $X_t$ are also known as \emph{particles}, thereby the term ``particle filter''.
 
 \begin{figure}
@@ -83,9 +82,64 @@ We draw a set $\bar{X}_t = \xtmN{x}{t}{i}{N}$ of samples from $p$. These samples
 
 In this thesis, $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set $X_{t-1}$ of $N$ particles. In this case, $x_t^m$ is sampled with probability $p\left(x_t^m | x_{t-1}^m\right)$.
 
+\subsubsection{Curse of Dimensonality}
+One phenomena that becomes apperant in higher dimensional space is the Curse of dimensionality<2xref,encyclo,original>.
+The problem is that the search-volume grows exponentialy with
+the number of dimensions. It originates from the fact that to have 
+a sample density of $C$ we need $\Ordo{C^n}$ samples for $n$-dimensional data.
+The first consequence of this is that in order to approximate some
+function defined in higher dimensional space needs order of magnitudes more samples.
+The other drawback with high dimensional space is the large ``boundaries'' 
+of the sample-set compared to lower dimensional space which results in orders of
+magnitude higher chance for an point one want to approximate to fall outside
+the sample-set and needs to be extrapolated instead of the better alternative of interpolation.
 
+\begin{example}
+The effect on $128$ samples transformed $1D\rightarrow2D\rightarrow3D$
+\begin{figure}
+    \begin{tabular}{rcl}
+        \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{1D.pdf}&
+        \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{2D.pdf}&
+        \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{3D.pdf}
+    \end{tabular}
+    \caption{Plot of $128$ scattered samples in $1$ (left), $2$ (center) and $3$ (right) dimensions.}
+\end{figure}
+\end{example}
 
-\subsubsection{Curse of dimensonality}
+\begin{example}
+    For a $16$ DOF model one needs $10^16=10$quadrillion datapoints to acquire a density
+    of $10$ samples per volume unit. We would need millions of gigabytes only to save the result.
+\end{example}
+
+\begin{example}
+    Exhausted search of $2$ dimensional feature space is done in Hough-transforms<ref:"Hough, P.V.C. [1962]. "Methods and Means for Recognizing Complext Patterns," U.S. Patent 3,069,654">, 
+    where the search is done trough the $\rho\theta$ space of line responses in images.
+\end{example}
+
+\subsubsection{Overcoming the Curse}
+    One way to overcome the curse in the context of \emph{tracking} is to performe a directed search. Let the search be in $N$ dimensional space with a grid of $g$ grid lines in each direction.
+    \begin{enumerate}
+        \item Use the information about the last \footnote{In the bayesian case, probable} location and assume that the tracked object cannot travel more then 
+        $R$ gridsteps foreach timestep, reduces the discrete search-spaces volume from $\Ordo{g^N}$ to $\Ordo{Rg^{N-1}}=\Ordo{g^{N-1}}$.
+        \begin{proof}
+            Change the coordinate system to generalized spherical coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional search surface, sum up the fixated $r$'s to get the total search space.
+        \end{proof}
+        \item With prior knowledge of the objects movements in form of transitions probabilities<ref:HMM> we can direct our search proportional to how probable it is for the tracked object to be there, we have got a probabilistic search-cloud. 
+        This reduces the search-space depending on how much variance we have in the prior knownledge.
+
+    \end{enumerate} 
+%This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionality".
+
+%One way to somewhat overcome this emptyness in space is to have a dynamic (active?) algorithm that adopts the sample density 
+%according to the models relative frequency in that area and this results in, for a given amount of samples, its more likely 
+%for an sampled model to occure in a more densly pre-sampled (pre-sampled?) area, in fact this method when doing it right (ideally) 
+%gives: given a set of samples the overall density for all the samples in the sampledatabase would be optimal) [proof for this will be given in <blabla>]
+%... (use the world hypotesis instead of sample, or perhaps sampled-hypotesis)
+%(below is perhaps somewhat redudant, but one can pick bits and pieces from both)
+%So having a bias towards trying out more plausible hypotesis for the models innerstate is better than 
+%doing a naive exhausted search tru the entire feature space, this could only be used if you have $\le$ 3 DOF as in for example finding straight edges with houghtransformation[ref].
+%...
+%One method that uses prior knowledge of the models PDF and a pretrained database containing knowledge on how to approximate the models PDF in the next timestep is particle filter which is an (instance?) of the ideal bayesian filter.
 
 
 % """
@@ -104,35 +158,16 @@ In this thesis, $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set
 %unit interval. (Adapted from an example by R. E. Bellman, see below.)
 % """
 
-from:
-"R. Bellman, Adaptive control Processes, p.94, Princeton University Press, NJ,
-1961."
+%from:
+%"R. Bellman, Adaptive control Processes, p.94, Princeton University Press, NJ,
+%1961."
 
-“In view of all that we have said in the foregoing
-sections, the many obstacles we appear to have
-surmounted. What casts the pall over our victory
-celebration? It is the curse of dimensionality, a
-malediction that has plagued the scientist from
-earliest days.”
-
-
-show curse of dimensionallity with a simple like in bik12.lecture7
-1D->2D
-either maintain density samples increases drastically
-or maintain samples and density decreases drastically
-2D->3D
-even worse
-
-To have a sample density of C we need $\Ordo{C^n}$ samples for n-dimensional data,
-that is the number of samples grows exponential on the number of dimensions.
-And a consequence of this is that in order to approximate some
-function defined in higher dimensional space one needs many more samples.
-
-One more thing with the high dimensional space is the large boundaries 
-of the sample-set then from lower dimensional space which results in orders of
-magnitude higher chance for an point one want to approximate to fall outside
-the sample-set and needs to be extrapolated instead of interpolate which is
-much better.
+%“In view of all that we have said in the foregoing
+%sections, the many obstacles we appear to have
+%surmounted. What casts the pall over our victory
+%celebration? It is the curse of dimensionality, a
+%malediction that has plagued the scientist from
+%earliest days.”
 
 % """
 %
@@ -154,30 +189,6 @@ much better.
 % probablities of the dynamic system from ones state to the next
 %"""
 %
-
-
-
-
-The 8 DOF in our model produces vast amounts of space in our feature space and this has the consequence that we need proportional to $n^8$ datapoints to fill it to an specified density c.
-
-For instance, we would need $4^8=65536$ samples just to make a grid with 4 samples in each DOF which in many cases (aspecially for hand labeled data). 
-
-This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionality".
-
-One way to somewhat overcome this emptyness in space is to have a dynamic (active?) algorithm that adopts the sample density 
-according to the models relative frequency in that area and this results in, for a given amount of samples, its more likely 
-for an sampled model to occure in a more densly pre-sampled (pre-sampled?) area, in fact this method when doing it right (ideally) 
-gives: given a set of samples the overall density for all the samples in the sampledatabase would be optimal) [proof for this will be given in <blabla>]
-... (use the world hypotesis instead of sample, or perhaps sampled-hypotesis)
-(below is perhaps somewhat redudant, but one can pick bits and pieces from both)
-So having a bias towards trying out more plausible hypotesis for the models innerstate is better than 
-doing a naive exhausted search tru the entire feature space, this could only be used if you have $\le$ 3 DOF as in for example finding straight edges with houghtransformation[ref].
-...
-One method that uses prior knowledge of the models PDF and a pretrained database containing knowledge on how to approximate the models PDF in the next timestep is particle filter which is an (instance?) of the ideal bayesian filter.
-
-
-
-===================
 
 \begin{definition}
     The render function $R$ takes an hypotesis $x$ and renders an image with an
