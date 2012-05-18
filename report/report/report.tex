@@ -16,7 +16,7 @@
 \usepackage{hyperref}
 \usepackage{graphicx}
 
-\graphicspath{{figures/}{figures/smiley/}{figures/hmm-graph/}{figures/gwhisker_database/}{figures/gwhiskers/}}
+\graphicspath{{figures/}{figures/smiley/}{figures/hmm-graph/}{figures/hmm-pf-graph/}{figures/gwhisker_database/}{figures/gwhiskers/}}
 
 \theoremstyle{definition}
 \newtheorem{definition}{Definition}
@@ -24,7 +24,7 @@
 \newtheorem{theorem}{Theorem}
 \newtheorem{note}{Note}
 
-\newcommand{\ForEach}{\textbf{foreach} }
+\newcommand{\ForEach}{\textbf{for each} }
 \newcommand{\In}{\textbf{in} }
 \newcommand{\Spline}[1]{a_3#1^3+a_2#1^2+a_1#1}
 
@@ -38,13 +38,13 @@
 \newcommand{\ZS}{\ensuremath{\mathcal{Z}}}
 
 %operators
+\newcommand{\abs}[1]{\left\vert #1 \right\vert}
 \newcommand{\argmax}[1]{\underset{#1}{argmax}}
 \newcommand{\argmin}[1]{\underset{#1}{argmin}}
 
-\newcommand{\xnmN}[4]{\left\{#1\right\}}
-\newcommand{\prob}[1]{p{\left(#1\right)}}
+\newcommand{\prob}[1]{p{(#1)}}
 \newcommand{\cprob}[2]{\prob{\left. #1 \middle\vert #2 \right.}}
-\newcommand{\cprobnext}[1]{\cprob{#1_{n+1}}{#1_n}}
+\newcommand{\cprobnext}[1]{\cprob{#1_t}{#1_{t-1}}}
 \newcommand{\ndist}[2]{\mathcal{N}\left(#1, #2\right)}
 \newcommand{\norm}[1]{\left\|#1\right\|}
 \newcommand{\Lp}[1]{\mathrm{L}^{#1}}
@@ -52,7 +52,7 @@
 \newcommand{\Ordo}[1]{\mathcal{O}{\left(#1\right)}}
 
 \newcommand{\xtmN}[4]{
-  \left\{#1_{#2}^{#3}\right\}_{#2=1}^{#4}
+  \left\{#1_{#2}^{#3}\right\}_{#3=1}^{#4}
 }
 \newcommand{\interval}[2]{
   \left[#1, #2\right]
