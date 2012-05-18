@@ -34,7 +34,9 @@ for idx=1:size(test_range,2)
     hold on;
     warning('ref_centroid hardcoded')
 %    plot(260+position_data(idx,2),85+position_data(idx,3),'rx');
-    h=plot(299,57,'rx');
+    h=plot(230,53,'rx');
+    h=plot(295,57,'rx');
+    h=plot(291,64,'rx');
     h=plot(288,73,'rx');
     h=plot(240,77,'rx');
     size(whisker_imgs(:,:,idx))

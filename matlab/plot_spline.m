@@ -49,7 +49,7 @@ for n = 1:size(points, 3)
     Y = X * a;
     %Y = a(1) + a(2)*X + a(3)*X.^2 + a(4)*X.^3;% + a(5)*X.^4;
     
-    plot(X,Y, 'g--');
+    plot(plotX,Y, 'g--');
 end
 
 print(figure(1), 'rat-vanilla.png', '-dpng');
