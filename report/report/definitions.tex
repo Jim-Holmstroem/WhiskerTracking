@@ -7,39 +7,35 @@
 %intending to measure things like angles or size that is)
 
 \section{Data}
-\subsection{Image}
-In a computer an \emph{image} is represented as an array of numbers, mostly 8bit integers ranging between $\left[0,255\right]$ 
-
-\subsubsection{RGB image}
-A color image can be defined as
-\begin{equation}
-    \begin{array}{ccc}
-    RGBimage : \NN^2 &\rightarrow& \NN^3\\
-    RGBimage : position&\rightarrow&color
-    \end{array}
-\end{equation}
-Which basically is foreach position in the image we have a response color.
-An alternitve represenation whould be $\NN^5=\langle pos,value\rangle$.
-
-The RGB image space is denoted by
-\begin{equation}
-    RGBimage\in \IS_{RGB}
-\end{equation}
-
+\subsection{Images and videos}
 \subsubsection{Grayscale image}
-A grayscale image can, similary to RGB images, be defined as a function
+A grayscale image can be defined as a function
 \begin{equation}
     \begin{array}{ccc}
     I : \NN^2 &\rightarrow& \NN\\
-    I : position&\rightarrow&intensity
+    I : \text{position}&\rightarrow&\text{intensity}.
     \end{array}
 \end{equation}
-or alternatively $\NN^3=\langle pos,intensity\rangle$.
+It can also be identified with $\NN^3$ as the tuple $\langle \text{position}, \text{intensity}\rangle$. The \emph{image space} is denoted as $\IS$ in this thesis.
 
-Finally the $image$-space is denoted by
-\begin{equation}
-    I \in \IS
-\end{equation}
+In a computer an \emph{image} is represented as a matrix, often of 8 bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
+
+%\subsubsection{Color image}
+%A color image, can similary to grayscale images, be defined as
+%\begin{equation}
+%    \begin{array}{ccc}
+%    RGBimage : \NN^2 &\rightarrow& \NN^3\\
+%    RGBimage : position&\rightarrow&color
+%    \end{array}
+%\end{equation}
+%Which basically is foreach position in the image we have a response color.
+%An alternitve represenation whould be $\NN^5=\langle pos,value\rangle$.
+%
+%The RGB image space is denoted by
+%\begin{equation}
+%    RGBimage\in \IS_{RGB}
+%\end{equation}
+
 
 \begin{example}~\\
     \begin{tabular}{lcr}
@@ -62,41 +58,42 @@ Finally the $image$-space is denoted by
 \end{example}
 
 \subsubsection{Video}
-A \emph{video} can be represented as a function mapping an integer to the designated image $I$
+A \emph{video} is a function mapping an integer to an image $I$:
 \begin{equation}
-    video : \NN \rightarrow I
+    \text{video} : \NN \rightarrow I.
 \end{equation}
 
-\subsection{State}
-<intro about state>
+\subsection{States, hypotheses and estimates}
+A system is said to have a \emph{state}. The state is some quantity that defines the qualities of the system.
+
+\begin{description}
+\item[State] The state of a system is denoted $Z$. When time is relevant, the state at time $t$ is denoted $Z_t$.
+\item[State space] The set $\ZS$ of all possible states, $Z \in \ZS$.
+\item[Hypothesis] A guess $x$ at the state $Z$ of a system.
+\item[Hypothesis space] The set $\XS$ of all possible hypotheses, $x \in \XS$. In general, $\XS \neq \ZS$ since most models are simplifications of the system.
+\item[Estimate] A belief $x^*$ of the state $Z$ of a system.
+\item[Observation]
+It is not always possible to directly record the state $Z$ of a system. In these cases, we instead get an \emph{observation} $I$ of the state. The observation is not necessarily deterministic, meaning we need to consider the PDF $\cprob{I}{Z}$. In this thesis, the observation is always an image.
+\item[Degrees of Freedom] The number of adjustable parameters in a model, often abbreviated DOF.
+\end{description}
+
 \begin{note}
-    State and hypothesis is model dependant.
+  All of the above are model dependent.
 \end{note}
-\subsubsection{State}
-$x$
-\subsubsection{State-space}
-$x\in\XS$ %TODO(collides with X?)
-\subsubsection{Hypothesis}
-$z$
 
-Explain: Hypotesis (in the context of PF), sample, DOF?, 
+\subsection{Image Processing}
 
-\subsubsection{Hypothesis-space}
-$z\in\ZS$
+\begin{definition}
+  The rendering function $R$ takes a hypothesis $x$ and renders an image with a resemblance of how a real whisker would have looked like having the same underlying model and parameters as $x$.
+  \begin{equation}
+    \begin{split}
+      R : \XS &\rightarrow \IS\\
+      x &\mapsto \text{Render}(x)
+    \end{split}
+  \end{equation}
+\end{definition}
 
-\subsubsection{Estimate}
-The algorithms estimate of the ground truth
-$x^*$ 
-
-\subsubsection{Degrees of Freedom (DOF}
-The number of adjustable parameters in a model.
-
-\subsubsection{Observation}
-<placement?><denotation?>
-
-\subsection{MISC?}
-
-\subsubsection{Prop. function as a collection of points with attached weight.}
+\subsubsection{Prob. function as a collection of points with attached weight.}
 
 \subsubsection{Dynamic system}
     It's a tuple <space,update,time>
