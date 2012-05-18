@@ -12,13 +12,13 @@
 A grayscale image can be defined as a function
 \begin{equation}
     \begin{array}{ccc}
-    I : \NN^2 &\rightarrow& \NN\\
+    I : \NN^2 &\rightarrow& \RR^+\\
     I : \text{position}&\rightarrow&\text{intensity}.
     \end{array}
 \end{equation}
-It can also be identified with $\NN^3$ as the tuple $\langle \text{position}, \text{intensity}\rangle$. The \emph{image space} is denoted as $\IS$ in this thesis.
+It can also be identified with $\NN^2\times R^+$ as the tuple $\langle \text{position}, \text{intensity}\rangle$. The \emph{image space} is denoted as $\IS$ in this thesis.
 
-In a computer an \emph{image} is represented as a matrix, often of 8 bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
+In a computer an \emph{image} is represented as a integer matrix, often 8 bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
 
 %\subsubsection{Color image}
 %A color image, can similary to grayscale images, be defined as
