@@ -46,88 +46,87 @@ Figure \ref{fig:hmm-graph} shows the working principle of the Particle Filter wo
 More particles mean greater accuracy, since the PDF can then be approximated more closely. However, using many particles is also computationally expensive. Therefore the number of particles is an important quantity. The Particle Filter employs a few tricks to \emph{filter} the hypotheses, keeping probable ones and throwing improbable ones away, in order to reduce the number of particles needed for a good approximation. The filter works in four steps:
 
 \begin{description}
-%\item[Initialization:] Since the algorithm only does tracking, we need to initialize the algorithm with a start guess $x_0$. Using this we take a number of samples $X_0 \sim \ndist{x_0}{\Sigma}$ and let the set $X_0$ be an approximation of $\prob{Z_0}$. \footnote{The problem of initialization is a difficult one\cite{Hedvig}, and is not covered in this project. $\Sigma = 0$ was used in the testing implementation.}
-
-\item[Prediction] The hypotheses $X_t$ are updated in the \emph{prediction} step to an approximation of $\cprobnext{Z}$. This is done by drawing new samples $\bar{X}_t \sim \cprobnext{X}$.
+\item[Prediction] The hypotheses $X_t$ are updated in the \emph{prediction} step to an approximation of $\cprobnext{Z}$. This is done by drawing new samples $\bar{X}_t \sim \cprobnext{x}$, for each $x_{t-1}$ in $X_{t-1}$.
 \item[Perception] By measuring the state of the system, we gain an \emph{observation} $I_t \sim \cprob{I_t}{Z_t}$ of the state $Z_t$.
 \item[Filtering] The observation $I_t$ of the system is then used for filtering bad hypotheses out of $\bar{X}_t$. We draw samples $X_t$ from $\bar{X}_t$ with probabilities given by $\cprob{I_t}{\bar{X}_t}$. As a result, $X_t$ will be a subset of $\bar{X}_t$ where more probable hypotheses appear multiple times. For this reason, this is also known as the \emph{resampling} step. The set $X_t$ is the \emph{belief}, our approximation of $\cprobnext{Z}$.
 \item[Selection] Finally, we produce a single hypothesis $x_t$ from $X_t$ as our \emph{estimate} of the state $Z_t$. Supposing $X_t$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, the mean value of $X_t$ is a good estimate since it approximates the expectation of $\cprobnext{Z}$. If $\cprobnext{Z}$ is multimodal, however, the mean could be a bad estimate since it may be in a region of very low probability even if $X_t$ is a good approximation of $\cprobnext{Z}$.
 \end{description}
 
+Since the algorithm only does tracking, we also need to initialize the algorithm with a start guess $x_0$. Using this we take a number of samples $X_0 \sim \ndist{x_0}{\Sigma}$ and let the set $X_0$ be an approximation of $\prob{Z_0}$. However, the problem of initialization is a difficult one\cite{Hedvig}, and is not covered in this thesis. In the testing implementation, knowledge of the start state $Z_0$ is assumed, meaning $x_0 := Z_0$ and $\Sigma := 0$.
+
+
+
 \subsubsection{The Particle Filter algorithm}
-\begin{codebox}
-\Procname{$\proc{Particle-Filter} (X_{t-1},I_t)$}
-\li $\bar{X}_t \gets \emptyset$
-\li \ForEach $x_{t-1}^i \in X_{t-1}$
-\li \Do
-  \li $x_t^i \gets \proc{Predict}(x_{t-1}^i)$
-  \li $w^i \gets \proc{Importance}(x_t^i,I_t)$
-  \li Add $\left<x_t^i, w^i\right>$ to $\bar{X}_t$
-\End
-\li
+\begin{table}
+  \begin{codebox}
+    \Procname{$\proc{Particle-Filter} (X_{t-1},I_t)$}
+    \li $\bar{X}_t \gets \emptyset$
+    \li \ForEach $x_{t-1} \in X_{t-1}$
+    \li \Do
+    \li $x_t \gets \proc{Predict}(x_{t-1})$
+    \li $w \gets \proc{Importance}(x_t,I_t)$
+    \li Append $\left<x_t, w\right>$ to $\bar{X}_t$
+    \End
+    \li
+    
+    \li $X_t \gets \emptyset$
+    
+    \li \While $\abs{X_t} < \abs{\bar{X}_t}$
+    \li \Do
+    \li Take $\left<x_t, w\right>$ from $\bar{X}_t$ with probability $\propto w$
+    \li Add $x_t$ to $X_t$
+    \End
+    \li \Return $X_t$
+  \end{codebox}
+  \caption{The Particle Filter algorithm.}
+  \label{pf-algorithm}
+\end{table}
 
-\li $X_t \gets \emptyset$
-
-\li \While $\abs{X_t} < \abs{\bar{X}_t}$
-\li \Do
-  \li Take $\left<x_t^i, w^i\right>$ from $\bar{X}_t$ with probability $\propto w^i$, with replacement
-  \li Add $x_t^i$ to $X_t$
-\End
-\li \Return $X_t$
-\end{codebox}
-
-
+Table \ref{pf-algorithm} shows the particle filter algorithm. Note that the functions \textsc{Predict} and \textsc{Importance} are unspecified - they are specific to each use case. They correspond to the probability functions $\cprobnext{x}$ and $\cprob{I_t}{x_t}$, respectively.
 
 We draw a set $\bar{X}_t = \xtmN{x}{t}{i}{N}$ of samples from $p$. These samples roughly represent a probability distribution for the current state $x_t$, but we have yet to consider our observation. Therefore, we will create a new probability distribution weighted by how probable the observation $z_t$ is. For each $x_t^m$, we let $w_t^m := q\left(z_t | x_t\right)$. This defines a discrete probability distribution where $x_t^m$ is assumed with a probability proportional to $w_t^m$. From this final distribution we again draw $N$ samples $X_t$, which will be our estimate of the current state. The elements $x_t^m$ are referred to as \emph{particles} and the set $X_t$ as the \emph{belief at time $t$}.
 
 In this thesis, $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated with a set $X_{t-1}$ of $N$ particles. In this case, $x_t^m$ is sampled with probability $p\left(x_t^m | x_{t-1}^m\right)$.
 
-\subsubsection{Curse of Dimensonality}
-One phenomena that becomes apperant in higher dimensional space is the Curse of dimensionality<2xref,encyclo,original>.
-The problem is that the search-volume grows exponentialy with
-the number of dimensions. It originates from the fact that to have 
-a sample density of $C$ we need $\Ordo{C^n}$ samples for $n$-dimensional data.
-The first consequence of this is that in order to approximate some
-function defined in higher dimensional space needs order of magnitudes more samples.
-The other drawback with high dimensional space is the large ``boundaries'' 
-of the sample-set compared to lower dimensional space which results in orders of
-magnitude higher chance for an point one want to approximate to fall outside
-the sample-set and needs to be extrapolated instead of the better alternative of interpolation.
+\subsubsection{Curse of Dimensionality}
+A phenomenon that becomes apparent in higher dimensional spaces is the so-called ``Curse of dimensionality'' \cite{EncyclopediaMachineLearning}. The problem is that the search volume grows exponentialy with the number of dimensions. It originates from the fact that to have a sample density of $C$ we need $\Ordo{C^n}$ samples for $n$-dimensional data.
+
+The first consequence of this is that in order to approximate a high-dimensional PDF one needs orders of magnitude more samples.
+
+The other drawback of high-dimensional spaces is the constricted ``borders'' of the sample set. For example, consider an interval on a number line, where we cover the middle third of the interval with samples. If we randomly select a number from the interval, there is a one in three chance that our selected number is in the region with samples. Take this to two dimensions, and we have covered only a ninth of the space, and so on. This means that the chance that the point we want to approximate falls outside the sample set is orders of magnitude higher in higher dimensional spaces, compared to lower dimensional ones. We need more samples in order to be able to interpolate between samples.
 
 \begin{example}
-The effect on $128$ samples transformed $1D\rightarrow2D\rightarrow3D$
-\begin{figure}
+  Figure \ref{fig:curse-of-dimensionality} shows 128 randomly scattered points in 1, 2 and 3 dimensions. Notice how the density decreases with increasin dimension.
+  \begin{figure}
     \begin{tabular}{rcl}
-        \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{1D.pdf}&
-        \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{2D.pdf}&
-        \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{3D.pdf}
+      \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{1D.pdf}&
+      \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{2D.pdf}&
+      \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{3D.pdf}
     \end{tabular}
-    \caption{Plot of $128$ scattered samples in $1$ (left), $2$ (center) and $3$ (right) dimensions.}
-\end{figure}
+    \caption{Plots of $128$ scattered samples in $1$, $2$ and $3$ dimensions, respectively.}
+    \label{fig:curse-of-dimensionality}
+  \end{figure}
 \end{example}
 
 \begin{example}
-    For a $16$ DOF model one needs $10^16=10$quadrillion datapoints to acquire a density
-    of $10$ samples per volume unit. We would need millions of gigabytes only to save the result.
+  For a $16$ DOF model one needs $10^{16}=10$ quadrillion datapoints to acquire a density of $10$ samples per volume unit. Millions of gigabytes would be needed just to store the samples.
 \end{example}
 
 \begin{example}
-    Exhausted search of $2$ dimensional feature space is done in Hough-transforms<ref:"Hough, P.V.C. [1962]. "Methods and Means for Recognizing Complext Patterns," U.S. Patent 3,069,654">, 
-    where the search is done trough the $\rho\theta$ space of line responses in images.
+  In 2 dimensions it is sometimes feasible to use an exhaustive search. An example of this is Hough transforms \cite{DigitalImageProcessing}, where the search is done through the $\rho\theta$ space of line responses in images. TODO
 \end{example}
 
 \subsubsection{Overcoming the Curse}
-    One way to overcome the curse in the context of \emph{tracking} is to performe a directed search. Let the search be in $N$ dimensional space with a grid of $g$ grid lines in each direction.
-    \begin{enumerate}
-        \item Use the information about the last \footnote{In the bayesian case, probable} location and assume that the tracked object cannot travel more then 
-        $R$ gridsteps foreach timestep, reduces the discrete search-spaces volume from $\Ordo{g^N}$ to $\Ordo{Rg^{N-1}}=\Ordo{g^{N-1}}$.
-        \begin{proof}
-            Change the coordinate system to generalized spherical coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional search surface, sum up the fixated $r$'s to get the total search space.
-        \end{proof}
-        \item With prior knowledge of the objects movements in form of transitions probabilities<ref:HMM> we can direct our search proportional to how probable it is for the tracked object to be there, we have got a probabilistic search-cloud. 
-        This reduces the search-space depending on how much variance we have in the prior knownledge.
+One way to overcome the curse in the context of \emph{tracking} is to perform a directed search. Let the search be in an $n$ dimensional space with a grid of $g$ grid lines in each direction.
 
-    \end{enumerate} 
+\begin{enumerate}
+\item Use the information about the most recent\footnote{In the Bayesian case, the most recent estimate} location and assume that the tracked object cannot travel more than $R < g$ grid steps in one time step. This reduces the volume of the (discrete) search space from $\Ordo{g^n}$ to $\Ordo{R^n}$.
+  % \begin{proof}
+  %   Change the coordinate system to generalized spherical coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional search surface, sum up the fixated $r$'s to get the total search space.
+  % \end{proof}
+\item With prior knowledge of how the tracked objects move\footnote{Such as the state transition probabilitis $\cprobnext{Z}$ in a HMM} we can direct our search to specific regions in the state space, depending on how probable it is for the tracked object to be there. This reduces the size of the search space depending on how sure we are of the previous state.
+\end{enumerate} 
+
 %This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionality".
 
 %One way to somewhat overcome this emptyness in space is to have a dynamic (active?) algorithm that adopts the sample density 
@@ -189,19 +188,6 @@ The effect on $128$ samples transformed $1D\rightarrow2D\rightarrow3D$
 % probablities of the dynamic system from ones state to the next
 %"""
 %
-
-\begin{definition}
-    The render function $R$ takes an hypotesis $x$ and renders an image with an
-    reassemblance on how a real whisker would have looked like having the same
-    underlying model and parameters as $x$.
-    \begin{equation}
-        \begin{split}
-            R : \HS &\rightarrow \IS\\
-                x &\mapsto render(x)
-        \end{split}
-    \end{equation}
-\end{definition}
-
 
 \subsection{Sensory Cues}
 
