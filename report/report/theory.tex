@@ -181,10 +181,10 @@ Since the algorithm only does tracking, we also need to initialize the algorithm
     \li \Return $X_t$
   \end{codebox}
   \caption{The Particle Filter algorithm.}
-  \label{pf-algorithm}
+  \label{alg:pf}
 \end{table}
 
-Table \ref{pf-algorithm} shows the particle filter algorithm. Note that the functions \textsc{Predict} and \textsc{Importance} are unspecified - they are specific to each use case. They correspond to the probability functions $\cprobnext{x}$ and $\cprob{I_t}{x_t}$, respectively.
+Table \ref{alg:pf} shows the particle filter algorithm. Note that the functions \textsc{Predict} and \textsc{Importance} are unspecified - they are specific to each use case. They correspond to the probability functions $\cprobnext{x}$ and $\cprob{I_t}{x_t}$, respectively.
 
 We draw a set $\bar{X}_t = \xtmN{x}{t}{i}{N}$ of samples from $p$. These samples roughly represent a probability distribution for the current state $x_t$, but we have yet to consider our observation. Therefore, we will create a new probability distribution weighted by how probable the observation $z_t$ is. For each $x_t^m$, we let $w_t^m := q\left(z_t | x_t\right)$. This defines a discrete probability distribution where $x_t^m$ is assumed with a probability proportional to $w_t^m$. From this final distribution we again draw $N$ samples $X_t$, which will be our estimate of the current state. The elements $x_t^m$ are referred to as \emph{particles} and the set $X_t$ as the \emph{belief at time $t$}.
 
