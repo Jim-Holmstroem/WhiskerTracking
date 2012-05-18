@@ -1,46 +1,102 @@
-\subsection{Invariances}
-Section about invariances and why they are needed in localization.
+%TODO 
+%\section{Invariances}
+%Section about invariances and why they are needed in localization.
 
-The "filter" must give the same response invariant of the position in the image 
-and its often wanted to have it rotational and scale invariant (if your not 
-intending to measure things like angles or size that is)
+%The "filter" must give the same response invariant of the position in the image 
+%and its often wanted to have it rotational and scale invariant (if your not 
+%intending to measure things like angles or size that is)
 
-\subsection{Data}
-\subsubsection{Image}
-In a computer an image is represented as an array of 
-numbers, mostly 8bit numbers ranging between [0,255] 
+\section{Data}
+\subsection{Image}
+In a computer an \emph{image} is represented as an array of numbers, mostly 8bit integers ranging between $\left[0,255\right]$ 
 
-[should one use N or [0,255] instead of Z?]
-\subsubsection{RGB image is a function}
-image: ZxZ=pos->ZxZxZ=color (mapping each position into an RGBcolor)
-that is foreach pixel a value for Red,Green,Blue is defined.
-But one might as well see it as a list of pixels $Z^5=<pos,color>$
+\subsubsection{RGB image}
+A color image can be defined as
+\begin{equation}
+    \begin{array}{ccc}
+    RGBimage : \NN^2 &\rightarrow& \NN^3\\
+    RGBimage : position&\rightarrow&color
+    \end{array}
+\end{equation}
+Which basically is foreach position in the image we have a response color.
+An alternitve represenation whould be $\NN^5=\langle pos,value\rangle$.
 
-\subsubsection{Grayscale image is in the same way as an RGB image but without the RGB part}
-just a function;
-image: ZxZ->Z
-or alternatively list of $Z^3=<pos,value>$
+The RGB image space is denoted by
+\begin{equation}
+    RGBimage\in \IS_{RGB}
+\end{equation}
+
+\subsubsection{Grayscale image}
+A grayscale image can, similary to RGB images, be defined as a function
+\begin{equation}
+    \begin{array}{ccc}
+    I : \NN^2 &\rightarrow& \NN\\
+    I : position&\rightarrow&intensity
+    \end{array}
+\end{equation}
+or alternatively $\NN^3=\langle pos,intensity\rangle$.
+
+Finally the $image$-space is denoted by
+\begin{equation}
+    I \in \IS
+\end{equation}
+
+\begin{example}~\\
+    \begin{tabular}{lcr}
+        $
+        \begin{pmatrix} 
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&  255&  255&    0&  255&  255&    0&  255&  255&  255\\
+        255&  255&  255&    0&  255&  255&    0&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&    0&  255&  255&  255&  255&  255&  255&    0&  255\\
+        255&  255&    0&  255&  255&  255&  255&    0&  255&  255\\
+        255&  255&  255&    0&    0&    0&    0&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
+        255&  255&  255&  255&  255&  255&  255&  255&  255&  255
+        \end{pmatrix}
+       $
+       &$\Rightarrow$& \parbox[c]{1em}{\includegraphics[scale=10.0]{smiley.png}}
+    \end{tabular}
+\end{example}
+
 \subsubsection{Video}
-Ordered list of images
+A \emph{video} can be represented as a function mapping an integer to the designated image $I$
+\begin{equation}
+    video : \NN \rightarrow I
+\end{equation}
 
-
-\subsubsection{Feature}
-
-\subsubsection{Feature Space}
-One configuration of the object corresponds to one point in the feature space
-<example with a plot>
-
-
+\subsection{State}
+<intro about state>
+\begin{note}
+    State and hypothesis is model dependant.
+\end{note}
+\subsubsection{State}
+$x$
+\subsubsection{State-space}
+$x\in\XS$ %TODO(collides with X?)
 \subsubsection{Hypothesis}
+$z$
+
 Explain: Hypotesis (in the context of PF), sample, DOF?, 
 
-\subsubsection{Prop. function as a collection of points with attached weight.}
+\subsubsection{Hypothesis-space}
+$z\in\ZS$
 
+\subsubsection{Estimate}
+The algorithms estimate of the ground truth
+$x^*$ 
+
+\subsubsection{Observation}
+<placement?><denotation?>
+
+\subsection{MISC?}
+
+\subsubsection{Prop. function as a collection of points with attached weight.}
 
 \subsubsection{Dynamic system}
     It's a tuple <space,update,time>
     Any mechanical system following newton physics (or relativistic for that matter) can be considered to be an dynamic system
     in our case the tuple whould be <feature\_space,update\_rule (the one we are trying to preprocess data to approximate),time>
-
-
 
