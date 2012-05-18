@@ -8,16 +8,16 @@
 
 \section{Images and videos}
 \subsection{Grayscale image}
-A grayscale image can be defined as a function
+A grayscale \emph{image} can be defined as a function
 \begin{equation}
     \begin{array}{ccc}
     I : \NN^2 &\rightarrow& \RR^+\\
     I : \text{position}&\rightarrow&\text{intensity}.
     \end{array}
 \end{equation}
-It can also be identified with $\NN^2\times R^+$ as the tuple $\langle \text{position}, \text{intensity}\rangle$. The \emph{image space} is denoted as $\IS$ in this thesis.
+It can also be identified with $\NN^2\times \RR^+$ as the tuple $\langle \text{position}, \text{intensity}\rangle$. The \emph{image space} is denoted as $\IS$ in this thesis.
 
-In a computer an \emph{image} is represented as a integer matrix, often 8 bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
+In a computer an image is represented as a integer matrix, often 8 bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
 
 %\subsubsection{Color image}
 %A color image, can similary to grayscale images, be defined as
@@ -57,9 +57,9 @@ In a computer an \emph{image} is represented as a integer matrix, often 8 bit in
 \end{example}
 
 \subsection{Video}
-A \emph{video} is a function mapping an integer to an image $I$:
+A \emph{video} is a function mapping an integer to an image:
 \begin{equation}
-    \text{video} : \NN \rightarrow I.
+    \text{video} : \NN \rightarrow \IS.
 \end{equation}
 \section{Image Processing}
 
@@ -73,6 +73,18 @@ A \emph{video} is a function mapping an integer to an image $I$:
   \end{equation}
 \end{definition}
 
+\begin{definition}
+    The image transformation $\phi$ takes an image $I$ and returns a transformed image of the same size as $I$.
+    \begin{equation}
+        \begin{split}
+            \phi_{cue} : \IS &\rightarrow \IS\\
+                I &\mapsto \text{Cue}(I)
+        \end{split}
+    \end{equation}
+    If the cue function for any cue is under consideration we simply denote that with $\phi$.
+\end{definition}
+
+
 \section{States, hypotheses and estimates}
 A system is said to have a \emph{state}. The state is some quantity that defines the qualities of the system.
 
@@ -81,15 +93,13 @@ A system is said to have a \emph{state}. The state is some quantity that defines
 \item[State space] The set $\ZS$ of all possible states, $Z \in \ZS$.
 \item[Hypothesis] A guess $x$ at the state $Z$ of a system.
 \item[Hypothesis space] The set $\XS$ of all possible hypotheses, $x \in \XS$. In general, $\XS \neq \ZS$ since most models are simplifications of the system.
-\item[Estimate] A belief $x^*$ of the state $Z$ of a system.
+\item[Estimate] The hypothesis $x^*$ we believe approximates $Z$ best.
 \item[Observation]
-It is not always possible to directly record the state $Z$ of a system. In these cases, we instead get an \emph{observation} $I$ of the state. The observation is not necessarily deterministic, meaning we need to consider the PDF $\cprob{I}{Z}$. In this thesis, the observation is always an image.
+In general, it is not possible to directly record the state $Z$ of a system.\footnote{If it were, there would be no need for tracking.} We instead get an \emph{observation} $I$ of the state.
 \item[Degrees of Freedom] The number of adjustable parameters in a model, often abbreviated DOF.
 \end{description}
 
-\begin{note}
-  All of the above are model dependent.
-\end{note}
+Note that all of the above depend on the  model used.
 
 %\subsection{Prob. function as a collection of points with attached weight.}
 %
