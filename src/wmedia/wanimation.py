@@ -4,7 +4,7 @@ __all__ = ['wanimation']
 import collections
 
 from wmedia.wlayer import wlayer
-
+from common import settings
 import cairo
 
 class wanimation(wlayer):
@@ -28,24 +28,24 @@ class wanimation(wlayer):
         else:
             raise Exception("Data is not sequence nor callable")
 
-    def export_frame(self,i):
+    def export_frame(self,i,width=settings.IMAGE_WIDTH,height=settings.IMAGE_HEIGHT):
         """
         Export certain frame to cairo.ImageSurface
         """
-        img = cairo.ImageSurface(cairo.FORMAT_ARGB32,512,512)
+        img = cairo.ImageSurface(cairo.FORMAT_ARGB32,width,height)
         context = cairo.Context(img)
         self.render(context,i)
         context.paint()
         return img
 
-    def export(self,srange=None):
+    def export(self,srange=None, width=settings.IMAGE_WIDTH, height=settings.IMAGE_HEIGHT):
         """
         Export to a list of cairo.ImageSurface
         """
         if srange:
             raise NotImplemented("export range not implemented yet")
 
-        return map(self.export_frame,range(len(self)))
+        return map(self.export_frame,range(len(self)), width=width, height=height)
 
     def __len__(self):
         raise Exception("must define __len__ in child to wanimation")

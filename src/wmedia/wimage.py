@@ -5,6 +5,7 @@ from PIL import Image
 import numpy
 import cairo
 
+from common import settings
 from wmedia.wlayer import wlayer
 from scipy.ndimage.filters import gaussian_filter
 
@@ -14,7 +15,7 @@ class wimage(wlayer):
     Has a numpy array as basis 
     """
     data=None
-    def __init__(self,input_data,alpha=1.0, width=512, height=512):
+    def __init__(self,input_data,alpha=1.0, width=settings.IMAGE_WIDTH, height=settings.IMAGE_HEIGHT):
         """
         The input data can be a filename,numpy array or cairo.ImageSurface
         If numpy.array it connects the data else is just copied at __init__

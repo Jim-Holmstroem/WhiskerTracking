@@ -43,12 +43,16 @@ for idx=1:size(test_range,2)
     %imwrite(img,strcat('frames/',dirname,'/preprocessed_solid/seq',int2str(min(test_range)),'-',int2str(max(test_range)),'/frame-0',int2str(test_range(idx)),'.png'),'PNG');    
 
     hold on;
-    %OLDh=plot(299,57,'rx');
-    %OLDh=plot(288,73,'rx');
-    %OLDh=plot(240,77,'rx');
-    plot(292,56,'rx');
-
-    %title(strcat('response=',int2str(position_data(idx,4))));
+    warning('ref_centroid hardcoded')
+%    plot(260+position_data(idx,2),85+position_data(idx,3),'rx');
+    plot(230,53,'rx');
+    plot(295,57,'rx');
+    plot(291,64,'rx');
+    plot(288,73,'rx');
+    plot(240,77,'rx');
+    size(whisker_imgs(:,:,idx))
+    disp('test')
+    title(strcat('response=',int2str(position_data(idx,4))));
     drawnow;
 %    pause;
 end
