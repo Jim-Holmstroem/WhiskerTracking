@@ -1,15 +1,19 @@
-The testing implementation was developed with high modularity in mind, since is meant to be a proof-of-concept implementation and not a production grade system. High modularity also makes development easier and the system more robust against changes, two very important qualities for this project.
-
+The testing implementation was developed with high modularity in
+mind, since it is meant to be a proof-of-concept implementation and
+not a a production grade system. High modularity also makes
+development easier and the system more robust against changes, two
+very important qualities during this project.
 
 The implementation consists of three main parts:
 \begin{description}
-  \item[Particle Filter] An implementation of the procedure in table \ref{pf-algorithm}.
-  \item[Database] A database with functions for extracting transition hypotheses. Provides the prediction probability function $\cprobnext{x}$ to the particle filter.
-  \item[Tracker] Manages the model and performs matching between hypotheses and images. Provides the filtering probability function $\cprob{I_n}{x_n}$ to the particle filter.
+  \item[Particle Filter] An implementation of the procedure in table \ref{alg:pf}.
+  \item[Database] A database with functions for extracting transition
+    hypotheses. Provides the prediction PDF $\cprobnext{x}$ to the
+    particle filter.
+  \item[Tracker] Manages the model and performs matching between
+    hypotheses and images. Provides the filtering PDF
+    $\cprob{I_n}{x_n}$ to the particle filter.
 \end{description}
-
-
-
 
 \section{The particle filter}
     A plug-n-play algorithm which only lacks the problem-domain<ref:encyc> specific parts:$x_0$, $\cprob{x_t}{x_{t-1}}$ and $\cprob{I_t}{x_t}$
