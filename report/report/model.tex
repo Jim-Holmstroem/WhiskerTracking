@@ -27,12 +27,9 @@ The tracking problem is then to find a function $\text{whisker}^*$
 that approximates $\text{whisker}$. The function class used in a
 model must satisfy the following conditions:
 
-\begin{itemize}
+\begin{enumerate}
 \item It must be able to approximate the whisker sufficiently
-  well. The distance between two functions will be defined as the
-  $\Lp$ norm of their difference, for some $p$. This means that the
-  model must be such that $\Lpnorm{\text{whisker} - \text{whisker*}}$
-  can be made arbitrarily small.
+  well.
 
   \begin{example}
     A straight line will not suffice since the $\text{whisker}$ is
@@ -42,7 +39,7 @@ model must satisfy the following conditions:
   
 \item The functions must be $C_1$ and be possible to represent with a
   finite number of parameters.
-\end{itemize}
+\end{enumerate}
 
 With this in mind, two classes of functions immediately appear as
 candidates:
@@ -87,8 +84,15 @@ where $D>0$ is the thickness at the root and $L>0$ is the total length of the
 whisker.
 
 
-\subsection{$L_p$}
-    <<>>
+\subsection{Difference measure}
+The standard way to quantify distance between functions defined on an
+interval $\interval{a}{b}$ is to use the norm in the $\Lp[2](a, b)$
+Hilbert space. In this thesis, the norms for $p = 2, 4, 8$ will be
+used, and the impact of the choice of $p$ will be investigated. This
+means that condition 1 above says the model must be such that the
+$\Lp$ distance $\Lpnorm{\text{whisker} - \text{whisker*}}$ can be made
+arbitrarily small.
+
 
 \subsection{Polynomial $\Spline{\omega}$}
 
