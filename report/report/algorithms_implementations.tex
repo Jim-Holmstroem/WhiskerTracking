@@ -6,15 +6,37 @@ very important qualities during this project.
 
 The implementation is written in Python and consists of three main parts:
 \begin{description}
-  \item[Tracker] Manages the model and performs matching between
-    hypotheses and images. Provides the filtering PDF
-    $\cprob{I_n}{x_n}$ to the particle filter.
+  \item[Particle Filter] A direct  implementation of the procedure in
+    table \ref{alg:pf}.
   \item[Database] A database with functions for extracting transition
     hypotheses. Provides the prediction PDF $\cprobnext{x}$ to the
     particle filter.
-  \item[Particle Filter] A direct  implementation of the procedure in
-    table \ref{alg:pf}.
+  \item[Tracker] Manages the model and performs matching between
+    hypotheses and images. Provides the filtering PDF
+    $\cprob{I_n}{x_n}$ to the particle filter.
 \end{description}
+
+\section{The particle filter}
+The particle filter implementation is a direct implementation of the
+procedure in table \ref{alg:pf}. It is implemented as a function that
+takes the parameters $X_{t-1}$, $I_t$, \texttt{importance\_function} and
+\texttt{sampling\_function}. The parameters are the hypotheses from
+the last time step, the current video frame and the functions to use
+as \textsc{Predict} and \textsc{Importance} in \ref{alg:pf},
+respectively. This means that the particle filter function is general
+and independent of the model used. The implementations of
+\textsc{Predict} and \textsc{Importance} are provided by the database
+and tracker, respectively.
+
+\subsection{Initilization $x_0$}
+The test implementation needs to be manually initialized. When
+tracking generated whiskers, the states were always known and program
+could therefore be programmatically inserted. When testing on real
+whiskers, the start states were calculated by manually
+selecting pixels along each whisker and using a MATLAB script to find
+the least squares solution for the coefficients $\langle a_1, a_2, a_3
+\rangle$. The problem of automatic initialization is a difficult one
+\cite{Hedvig}, and is not covered in this thesis.
 
 \section{The state transition database}
 
@@ -71,26 +93,6 @@ see figure \ref{fig:x-to-the-minus-a}.
 
 
 
-
-\section{The particle filter}
-The particle filter implementation is a direct implementation of the
-procedure in table \ref{alg:pf}. It is implemented as a function that
-takes the parameters $X_{t-1}$, $I_t$, \texttt{importance\_function} and
-\texttt{sampling\_function}. The parameters are the hypotheses from
-the last time step, the current video frame and the functions to use
-as \textsc{Predict} and \textsc{Importance} in \ref{alg:pf},
-respectively. This means that the particle filter function is general
-and independent of the model used.
-
-\subsection{Initilization $x_0$}
-The test implementation needs to be manually initialized. When
-tracking generated whiskers, the states were always known and program
-could therefore be programmatically inserted. When testing on real
-whiskers, the start states were calculated by manually
-selecting pixels along each whisker and using a MATLAB script to find
-the least squares solution for the coefficients $\langle a_1, a_2, a_3
-\rangle$. The problem of automatic initialization is a difficult one
-\cite{Hedvig}, and is not covered in this thesis.
 
 \subsection{Prediction $\cprobnext{x}$}
 
