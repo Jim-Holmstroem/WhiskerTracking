@@ -1,19 +1,5 @@
 \section{Background}
 
-%- Video tracking (finding) is interesting
-%- Biologists want to track the movements of animals or parts of animals
-%- Most of the software available for this purpose is expensive
-%- Most of the software available cannot handle too many whiskers at once (clutter)
-%- Hedvig developed a way to track human motion in 3d using monocular video
-%- We want to use the same method for tracking whiskers (different mechanical model)
-%- What does Ekeberg want and why?
-
-%KEYWORDS
-%- Spatial/temporal resolution
-
-%PROSE (kind of) BELOW THIS POINT
-
-
 With the ever increasing power and mobility of computers, computer vision has recently seen a large increase in interest. 
 Encompassing problems such as classification, recognition, perception and tracking, application of the discipline could make many tasks easier and more efficient.
 
@@ -21,21 +7,30 @@ In particular, biology and neuroscience researchers are interested in tracking t
 One such field aims to study the movements of rodent whiskers. However, most whisker tracking software available today suffers a few fundamental flaws.
 They are either so expensive that not even well funded laboratories feel they can afford them or have problems tracking multiple whiskers at once, often requiring removal of almost all whiskers. 
 Some higher precision systems impose other restrictions on the experiment, such as restraining the animal or attaching motion 
-capture markers to the whiskers \cite{BadExample1}. Such restrictions may cause systematic errors and not give 
+capture markers to the whiskers. \cite{BadExample1} Such restrictions may cause systematic errors and not give 
 a representative view of how the animal naturally uses its whiskers.
 
 \section{Difficulties}
 In general, the main difficulty in tracking and localization is to separate the tracked object from clutter
 and occlusion. In the case of whisker tracking, the dominant problems are that whiskers often overlap, 
-and the relatively low spatial and temporal resolution\cite{WhiskerVideography} in highspeed video results in subpixel whiskers and motion blur.
+and the relatively low spatial and temporal resolution in highspeed
+video results in subpixel whiskers and motion blur. \cite{WhiskerVideography}
 
-In 2001, Hedvig Sidenbladh investigated probabilistic methods for tracking three-dimensional human motion in monocular video \cite{Hedvig}. 
-Many of the problems inherent in computer vision were regarded, and the most apperent ones for the instance of whisker tracking is occlusion, 2D-3D projection and motion blur.
+In 2001, Hedvig Sidenbladh investigated probabilistic methods for
+tracking three-dimensional human motion in monocular
+video. \cite{Hedvig} Many of the problems inherent in computer vision
+were regarded, and the thesis shows that powerful conclusions can be
+drawn by combining multiple visual cues.\footnote{The solution in this
+thesis employs only a single visual cue.}
 
-But also problem specific problems appear like having the whisker root constantly occluded by facial hairs gives us problem with not knowing where the whiskers is rooted\footnote{Which our algorithm assumes is given}.
+The most apperent problems in whisker tracking is occlusion, 3D to 2D
+projection inambiguities and motion blur. Other, more subtle problems
+include that the whisker root is constantly occluded by facial
+hairs. This gives us the problem of not knowing where the whiskers are
+rooted, making the whiskers more difficult to model.
 
 \section{Approache the difficulties}
-    The problems above will be addressed as they appear in the thesis.
+The problems above will be addressed as they appear in the thesis.
 
 \section{Contributions of this thesis}
 The contributions in this thesis can be divided into
