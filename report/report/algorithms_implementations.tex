@@ -36,19 +36,19 @@ selecting pixels along each whisker and using a MATLAB script to find
 the least squares solution for the coefficients $\langle a_1, a_2, a_3 \rangle$.
 
 \subsection{Prediction $\cprobnext{x}$}
-The \textsc{Predict} function was implemented as a weighted mean of the
+The \textsc{Predict} function is implemented as a weighted mean of the
 state transitions in the database. The function is stated in table
 \ref{alg:predict}. Notice the parameters $a$ and $p$. $p$ is a
 positive integer that determines which $\Lp$ space to compute the norm
 in. $a$ is a positive number, and determines how fast the weight $w$
-declines with the distance $\Lpnorm[p]{\tf - x_{t-1}}$, see figure
-\ref{fig:x-to-the-minus-a}. A high $a$ means closer transitions get a
-much higher weight than ones far away.
+declines with the distance $\Lpnorm[p]{\tf - x_{t-1}}$. A high $a$
+means closer transitions get a much higher weight than ones far away,
+see figure \ref{fig:x-to-the-minus-a}.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth,trim=20mm 20mm 20mm 20mm]{x-to-the-minus-a.pdf}
-  \caption{$x^{-a}$ versus $x$. TODO: Crop it!}
+  \includegraphics[width=0.4\textwidth,trim=65mm 65mm 65mm 65mm]{x-to-the-minus-a.pdf}
+  \caption{$x^{-a}$ versus $x$.}
   \label{fig:x-to-the-minus-a}
 \end{figure}
 
