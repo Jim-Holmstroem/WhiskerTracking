@@ -9,6 +9,8 @@ This solution uses a technique known as the \emph{Particle Filter} to propagate 
 In each frame, the next state of the model is predicted by querying a pre-trained database and filtering the results 
 through the Particle Filter. The implementation is written in Python using NumPy and an SQLite3 database.
 
+Testing results indicate that the approach is feasible. Tests on real whisker
+videos 
 First, it successfully tracks multiple whiskers at once, even under clutter. 
 Second, being a standalone program operating on pre-recorded video, it does not notably restrict the experiment.\\
 
