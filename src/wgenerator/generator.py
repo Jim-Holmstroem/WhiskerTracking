@@ -9,7 +9,7 @@ import os
 import pickle
 
 class Generator:
-    def __init__(self, dataset, number_of_objects=1, number_of_transitions=1000, number_of_frames=64, number_of_movies=4, debug=False, dt=1):
+    def __init__(self, dataset, number_of_objects=1, number_of_transitions=1000, number_of_frames=64, number_of_movies=4, debug=False, dt=1, **other_kwargs):
         if isinstance(debug, str):
             debug = (debug == "True")
 
