@@ -1,10 +1,21 @@
 
-Intresset för att studera morrhår på gnagare har på senare tid ökat, speciellt inom neurofysiologi.
-Som ett result finns det ett behov av automatisk följning av morrhår.
+Intresset för att studera morrhår på gnagare har på senare tid ökat, speciellt inom neurofysiologin.
+Som ett result av detta finns det ett behov av automatisk följning av morrhår.
 Nuvarande kommersiella lösningar är antingen extremt dyr, sätter begräsningar på experiment uppställningen
 eller misslyckas i stökiga miljöer eller under överlappning.
-Arbetets mål är en proof-of-concept implementering av ett statiskt följningssystem. Lösningen använder sig av 
-en teknik känd som partikelfilter för att propagera en morrhårmodell mellan bildrutor på höghastighetsvideo.
-För varje bildruta förutspås nästa tillstånd genom att fråga en förtränad databas via partikelfiltret.
+
+Arbetets mål är en proof-of-concept implementering av ett statiskt följningssystem. 
+Lösningen använder sig av 
+en teknik känd som partikelfilter för att propagera en morrhårmodell mellan bildrutor 
+på höghastighetsvideo.
+För varje bildruta förutspås nästa tillstånd genom att fråga en förtränad databas 
+via partikelfiltret. 
+Implementationen är skriven i Python 2.6 och använder sig av programbiblioteken NumpPy\cite{NumPy} and SQLite3\cite{SQLite3}.
+
+Testresultaten indikerar att metoden är rimligt. 
+Med endast en grovt snarlik databas lyckades trackern 
+tracka multipla morrhår, fast bara under korta sekvenser i taget. 
+Bättre träningsdata, som hand-markerad riktig data, skulle kunna ändra resultatet enormt.
+
 
 \textbf{Nyckelord:} Följning, Multipla, Morrhår, Partikelfilter, Övergångsdatabas, Modelevaluering, Proof-of-Concept
