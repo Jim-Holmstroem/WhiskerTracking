@@ -32,9 +32,9 @@ and tracker, respectively.
 The test implementation needs to be manually initialized. When
 tracking generated whiskers, the states were always known and program
 could therefore be programmatically inserted. When testing on real
-whiskers, the start states were calculated by manually
-selecting pixels along each whisker and using a MATLAB script to find
-the least squares solution for the coefficients $\langle a_1, a_2, a_3
+whiskers, the start states were calculated by manually selecting five
+or six pixels along each whisker and using a MATLAB script to find the
+least squares solution for the coefficients $\langle a_1, a_2, a_3
 \rangle$. The problem of automatic initialization is a difficult one
 \cite{Hedvig}, and is not covered in this thesis.
 
@@ -42,19 +42,35 @@ the least squares solution for the coefficients $\langle a_1, a_2, a_3
 
 \subsection{Data format}
 A \emph{state transition} is a pair $\trans$ that denotes we have
-observed a system go from state $\tf$ to state $\tt$ in one time step.
+observed a system go from state $\tf$ to state $\tt$ in one time
+step. Technically, the state transition database is implemented as an
+SQLite3 database. One transition is represented in the database as a
+row with the state parameters of the model before and after the
+transition.
 
-Technically, the state transition database is implemented as an SQLite3
-database. One transition is represented in the database as a row with
-the state parameters of the model before and after the
-transition. The database also has support for independent sets of
-parameters. For instance, the $x$ positions and velocities of an
-object may be independent of the $y$ positions and velocities. In this
-case, the database would consist of one table of transitions for the
-$x$ part of the state and one table with the $y$ part, and the set of
-stored transitions would be the Cartesian product of the two
-tables. However, this property is not used in the whisker model since
-the state parameters are not known to be independent.
+\begin{comment}
+If some state parameters are known to be independent, the database can
+be ``compressed'' in the sense that we need fewer observations to fill
+the state space. The parameters are then partitioned into independent
+\emph{parameter groups}. The parameters in a parameter group may be
+internally dependent, but are independent of parameters in other
+parameter groups. The extreme cases are when all parameters are
+independent, and when all parameters are dependent. In the former
+case, each parameter group will contain only one parameter, and in the
+latter there will be one single parameter group containing all
+parameters. In any case, the database would contain one table for each
+parameter group, and the set of stored transition would be the
+Cartesian product of these tables.
+\begin{example}
+  The $x$ positions and velocities of an object may be independent of
+  the $y$ positions and velocities. In this case, we would divide the
+  parameters into two parameter groups. The database would consist of
+  two tables, with transitions for the $x$ and $y$ parts respectively.
+\end{example}
+
+The whisker model used treats all parameters as dependent since they
+are not known to be independent.
+\end{comment}
 
 \subsection{Prediction $\cprobnext{x}$}
 
