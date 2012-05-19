@@ -7,7 +7,7 @@ extremely expensive, restrict the experiment setup, or fail in the presence of
 This thesis proposes a proof-of-concept implementation of a probabilistic tracking system. 
 This solution uses a technique known as the \emph{Particle Filter} to propagate a whisker model between frames of high speed video. 
 In each frame, the next state of the model is predicted by querying a pre-trained database and filtering the results 
-through the Particle Filter. The implementation is written in Python using NumPy and an SQLite3 database.
+through the Particle Filter. The implementation is written in Python 2.6 using NumPy\cite{NumPy} and an SQLite3\cite{SQLite3}.
 
 Testing results indicate that the approach is feasible. Even using a
 rather crude database, the tracker manages to track multiple real
