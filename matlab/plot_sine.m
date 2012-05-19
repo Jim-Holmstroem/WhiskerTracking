@@ -17,6 +17,7 @@ points = cat(3, [
                     149 146;
                     136 166;
                     122 185]);
+
 I = plot_spline_load_image();
 figure(1);
 imshow(I);
@@ -26,31 +27,37 @@ clf;
 imshow(I);
 hold on;
 
-degree = 3;
+order = 3;
 
 for n = 1:size(points, 3)
     x = points(:,1,n);
-    y = points(:,2,n);
+    x0 = x(1);
+    x = x - x0;
+    L = x(5);
     
-    A = zeros(length(x),degree+1);
-    for m=0:degree
-        A(:,m+1) = x.^m;
+    y = points(:,2,n);
+    y0 = y(1);
+    y = y - y0;
+    
+    A = zeros(length(x),order);
+    for m=1:order
+        A(:,m) = sin(pi * x * m / 2 / L);
     end
     %x.^2 x.^3 x.^4];
     a = A\y;
     
     plotX = min(x):max(x);
 
-    X = zeros(length(plotX), degree+1);
-    for m=0:degree
-        X(:,m+1) = plotX.^(m);
+    X = zeros(length(plotX), order);
+    for m=1:order
+        X(:,m) = sin(pi * plotX * m / 2 / L);
     end
 
     Y = X * a;
     %Y = a(1) + a(2)*X + a(3)*X.^2 + a(4)*X.^3;% + a(5)*X.^4;
     
-    plot(plotX,Y, 'g--', points(:,1,n), points(:,2,n), 'rx');
+    plot(plotX + x0, Y + y0, 'g--', points(:,1,n), points(:,2,n), 'rx');
 end
 
 print(figure(1), 'rat-vanilla.png', '-dpng');
-print(figure(2), 'rat-splines.png', '-dpng');
+print(figure(2), 'rat-sines.png', '-dpng');
