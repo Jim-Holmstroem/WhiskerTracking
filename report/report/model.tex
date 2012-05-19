@@ -74,7 +74,6 @@ the whisker thickness as
 
 \begin{equation}
     d(\omega) = \begin{cases}
-        D,~& \omega=0\\
         D-\frac{D\omega}{L},~& \omega<L\\
         0,~& \omega\ge L
     \end{cases}
@@ -83,22 +82,20 @@ the whisker thickness as
 where $D>0$ is the thickness at the root and $L>0$ is the total length of the
 whisker.
 
-
 \subsection{Difference measure}
-The standard way to quantify distance between functions defined on an
-interval $\interval{a}{b}$ is to use the norm in the $\Lp[2](a, b)$
-Hilbert space. In this thesis, the norms for $p = 2, 4, 8$ will be
-used, and the impact of the choice of $p$ will be investigated. This
-means that condition 1 above says the model must be such that the
-$\Lp$ distance $\Lpnorm{\text{whisker} - \text{whisker*}}$ can be made
-arbitrarily small.
-
+    The standard way to quantify distance between functions defined on an
+    interval $\interval{a}{b}$ is to use the norm in the $\Lp[2](a, b)$
+    Hilbert space. In this thesis, the norms for $p = 2, 4, 8$ will be
+    used, and the impact of the choice of $p$ will be investigated. This
+    means that condition 1 above says the model must be such that the
+    $\Lp$ distance $\Lpnorm{\text{whisker} - \text{whisker*}}$ can be made
+    arbitrarily small.
 
 \subsection{Polynomial $\Spline{\omega}$}
 
     Our first and simplest candidate is the third degree polynom $\Spline{\omega}$.
 
-    Parametrically define as
+    Parametrically defined as
     \begin{equation}
         (\omega,\Spline{\omega})
     \end{equation}
@@ -115,6 +112,13 @@ arbitrarily small.
 
 \subsection{Sinus serie$\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$}
     Another promising candidate is the sinus series.
+    
+    Parametrically defined as
+    \begin{equation}
+        (\omega,\sum{a_n\sin (\frac{2\pi n}{L}\omega)})
+    \end{equation}
+
+    
     The Fourier transform becomes $\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$ when
     considering (\ref{eq:bv_root}). One can choose just a few $n$ which can be
     viewed as a few different waves propagating trough the whisker propelled by
