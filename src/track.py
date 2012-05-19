@@ -110,7 +110,7 @@ class TrackerRunner:
     
     def export_results(self, name=None):
         for tracker in self.trackers:
-            tracker.export_results(None)
+            tracker.export_results(name)
         """
         if name == None:
             name = self.video_name
@@ -180,7 +180,7 @@ def run_cli():
         if "OUTPUT_NAME" in op_args.keys():
             benchmark.export_results(op_args["OUTPUT_NAME"])
         else:
-            benchmark.export_results()
+            benchmark.export_results(video_name)
 #    benchmark.evaluate_results()
 #    benchmark.animate(0)
 
