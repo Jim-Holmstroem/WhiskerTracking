@@ -9,6 +9,8 @@ class RWhiskerGenerator(GWhiskerGenerator):
     B_LIMITS = 0.004 * numpy.array((0, 1))
     C_LIMITS = 2 * numpy.array((0, 1))
 
+    DT = 2*math.pi/25
+
     def __init__(self, *args, **kwargs):
         kwargs['WHISKER_LENGTH'] = 200
         kwargs['WHISKER_WIDTH'] = 1
