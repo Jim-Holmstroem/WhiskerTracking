@@ -24,36 +24,53 @@ A whisker can be modeled as a function:
 \end{definition}
 
 The tracking problem is then to find a function $\text{whisker}^*$
-that approximates $\text{whisker}$. The function class used in a model
-must satisfy the following conditions:
+that approximates $\text{whisker}$. The function class used in a
+model must satisfy the following conditions:
 
-It must be able to sufficiently approximate the whisker
-\begin{equation}
-    \forall \text{whisker} \exists \text{whisker}^* : \text{whisker} \approx \text{whisker}^*
-\end{equation}
-that is, the model must be able to sufficiently fill the range of the $\text{whisker}$ function.
+\begin{enumerate}
+\item It must be able to approximate the whisker sufficiently
+  well.
 
-\begin{example}
-    A straight line will not suffice since the $\text{whisker}$ is generally
-    curved and straight lines can not fill that partition of the space.
-\end{example}
+  \begin{example}
+    A straight line will not suffice since the $\text{whisker}$ is
+    generally curved and straight lines can not fill that partition of
+    the space.
+  \end{example}
+  
+\item The functions must be $C_1$ and be possible to represent with a
+  finite number of parameters.
+\end{enumerate}
 
-Additionally it must of course be $C_1$ and have finitely many parameters.
-We might also assume that a whisker has one fix point at the origin, which we
-choose as origo, the boundary condition is equivalent to
+With this in mind, two classes of functions immediately appear as
+candidates:
+\begin{itemize}
+\item Polynomials $\sum_{i=0}^{n} a_i\omega^i$
+\item Fourier series $\sum_{k=0}^{n} a_k\sin(k\omega) +
+  b_k\cos(k\omega)$
+\end{itemize}
+
+A brief analysis of both follows.
+
+\subsection{Simplifications}
+One simplification one might make is to assume that the root of the
+whisker is fixed in some point on the cheek. This means that we can
+let the whisker function be defined in a head-fixed coordinate system
+for each whisker, with the root of the whisker at the origin. This
+gives us the boundary condition
 \begin{equation}
     \label{eq:bv_root}
-    \text{whisker}^*(0)=\bar{0}
+    \text{whisker}^*(0)=\bar{0}.
 \end{equation}
-this is not the case in the real data, generally we have time dependency
-\begin{equation}
-    \text{whisker}(0,t)\neq\bar{0} 
-\end{equation}
-<<restate the following sentence>>
-since rodents seems to have the ability to move around their whiskers root on
-the chins surface.
 
-We are for all cases assuming that the whisker thickness is defined by
+Manual inspection of whisker videos suggests that this is not the case
+for real whiskers. However, there seems to be some point within the
+cheek that stays approximately still and can be regarded as the root
+of the whisker. A better model could take this into account, but that
+will not be covered in this thesis.
+
+The thickness of a whisker is not constant, but decreases as the
+distance from the head increases. A simple model for this is to define
+the whisker thickness as
 
 \begin{equation}
     d(\omega) = \begin{cases}
@@ -67,8 +84,15 @@ where $D>0$ is the thickness at the root and $L>0$ is the total length of the
 whisker.
 
 
-\subsection{$L_p$}
-    <<>>
+\subsection{Difference measure}
+The standard way to quantify distance between functions defined on an
+interval $\interval{a}{b}$ is to use the norm in the $\Lp[2](a, b)$
+Hilbert space. In this thesis, the norms for $p = 2, 4, 8$ will be
+used, and the impact of the choice of $p$ will be investigated. This
+means that condition 1 above says the model must be such that the
+$\Lp$ distance $\Lpnorm{\text{whisker} - \text{whisker*}}$ can be made
+arbitrarily small.
+
 
 \subsection{Polynomial $\Spline{\omega}$}
 
