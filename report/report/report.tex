@@ -37,7 +37,7 @@
 
 \newcommand{\ForEach}{\textbf{for each} }
 \newcommand{\In}{\textbf{in} }
-\newcommand{\Spline}[1]{a_3#1^3+a_2#1^2+a_1#1}
+\newcommand{\Spline}[2][a]{#1_3#2^3 + #1_2#2^2 + #1_1#2}
 
 \newcommand{\NN}{\ensuremath{\mathbb{N}}}
 \newcommand{\ZZ}{\ensuremath{\mathbb{Z}}}
@@ -47,6 +47,7 @@
 \newcommand{\IS}{\ensuremath{\mathcal{I}}}
 \newcommand{\XS}{\ensuremath{\mathcal{X}}}
 \newcommand{\ZS}{\ensuremath{\mathcal{Z}}}
+\newcommand{\TS}{\ensuremath{\mathcal{T}}}
 
 %operators
 \newcommand{\abs}[1]{\left\vert #1 \right\vert}
@@ -56,7 +57,7 @@
 \newcommand{\prob}[1]{p{(#1)}}
 \newcommand{\cprob}[2]{\prob{\left. #1 \middle\vert #2 \right.}}
 \newcommand{\cprobnext}[1]{\cprob{#1_t}{#1_{t-1}}}
-\newcommand{\ndist}[2]{\mathcal{N}\left(#1, #2\right)}
+\newcommand{\ndist}[2]{\mathcal{N}{\left(#1, #2\right)}}
 \newcommand{\norm}[1]{\left\vert\left\vert#1\right\vert\right\vert}
 \newcommand{\Lp}[1][p]{\mathrm{L}^{#1}}
 \newcommand{\Lpnorm}[2][p]{\norm{#2}_{\Lp[#1]}}

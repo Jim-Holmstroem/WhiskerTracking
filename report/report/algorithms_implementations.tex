@@ -46,7 +46,7 @@ observed a system go from state $\tf$ to state $\tt$ in one time
 step. Technically, the state transition database is implemented as an
 SQLite3 database. One transition is represented in the database as a
 row with the state parameters of the model before and after the
-transition.
+transition. The set of transitions in the database will be denoted \TS.
 
 \subsection{Prediction $\cprobnext{x}$}
 
@@ -55,34 +55,48 @@ transition.
     \Procname{$\proc{DB-Predict} (x_{t-1})$}
     \li $ x_t \gets 0$
     \li $ W \gets 0$
-    \li \ForEach $(\tf, \tt) \in \proc{Database}$
+    \li \ForEach $(\tf, \tt) \in \TS$
     \li \Do
       \li $ w \gets \left(\Lpnorm[p]{\tf - x_t}\right)^{-a}$
       \li $ x_t \gets x_t + w \cdot \tt$
       \li $ W \gets W + w$
     \End
-    \li \Return $x_t / W$
+    \li Take $v \sim \ndist{0}{\Sigma}$
+    \li \Return $ x_t / W + v $
   \end{codebox}
   \caption{Pseudocode for the prediction function, with the parameters $a$ and $p$.}
   \label{alg:predict}
 \end{table}
 
-The \textsc{Predict} function in table \ref{alg:pf} is implemented as a weighted mean of the
-state transitions in the database. The function is stated in table
-\ref{alg:predict}. Notice the parameters $a$ and $p$. $p$ is a
-positive integer that determines which $\Lp$ space to compute the norm
-in. $a$ is a positive number, and determines how fast the weight $w$
-declines with the distance $\Lpnorm[p]{\tf - x_{t-1}}$. A high $a$
-means closer transitions get a much higher weight than ones far away,
-see figure \ref{fig:x-to-the-minus-a}.
+The \textsc{Predict} function in table \ref{alg:pf} is implemented as
+a weighted mean of the state transitions in the database. The function
+is stated in table \ref{alg:predict}. Notice the parameters $a$ and
+$p$. $p$ is a positive integer that determines which $\Lp$ space to
+compute the norm in. $a$ is a positive number, and determines how fast
+the weight $w$ declines with the distance $\Lpnorm[p]{\tf -
+  x_{t-1}}$. A high $a$ means closer transitions get a much higher
+weight than ones far away, see figure \ref{fig:x-to-the-minus-a}.
 
-\begin{figure}[h]
+At this point, however, the prediction is still deterministic - the
+result for any given input $x_{t-1}$ is completely determined by the
+parameters $a$ and $p$ and the content of the database. A
+deterministic prediction function is not desirable, since the
+filtering step only removes improbable hypotheses and replaces them
+with duplicates of probable ones. This means that having a
+deterministic prediction effectively reduces the number of hypotheses
+with each filtering step. For this reason, the result is offset by a
+small normal distributed term\footnote{The offset $v$ is a polynomial
+  $\Spline[b]{\omega}$ where coefficient $b_i \sim \ndist{0}{\sigma_i}
+  $ and $\sigma_i$ is different for the different $i$.} $v$ to make
+the prediction nondeterministic.
+
+\begin{figure}[ht]
   \centering
   \includegraphics[width=0.4\textwidth,trim=65mm 65mm 65mm 65mm]{x-to-the-minus-a.pdf}
-  \caption{$x^{-a}$ versus $x$.}
+  \caption{Transitions closer to $x_{t-1}$ recieve a much greater
+    weight if $a$ is large.}
   \label{fig:x-to-the-minus-a}
 \end{figure}
-
 
 \section{Tracker}
 
@@ -92,23 +106,32 @@ coefficients.
 
 \subsection{Filtering $\cprob{I_t}{x_t}$}
 
+\begin{table}[h]
+  \begin{codebox}
+    \Procname{$\proc{Importance} (x_t, I_t)$}
+    \li $ J \gets \phi(R(x_t)) * \phi(I_t)$
+    \li \Return $\mathrm{sum}(J)$
+  \end{codebox}
+  \caption{Pseudocode for the importance function. $p$.}
+  \label{alg:importance}
+\end{table}
+
 The \textsc{Importance} function in table \ref{alg:pf} is implemented
 as follows. Given a hypothesis $x_t$, the tracker renders an image
-$I_{x_t} = \text{Render}(x_t)$ depicting the whisker shape represented
-by $x_t$. An example can be seen in figure \ref{fig:example-mask}. The
-image $I_{x_t}$ is then multiplied with $I_t$. This has the result of
-``masking'' the image $I_t$, extracting the pixels that the whisker
-would occupy if its shape were given by $x_t$. The importance is then
-calculated as the sum of the pixels of $I_{x_t} * I_t$, meaning
-the importance is high if the image pixels along $x_t$ are bright.
+$R(x_t)$ depicting the whisker shape represented by $x_t$. An example
+can be seen in figure \ref{fig:example-mask}. The image $R(x_t)$ is
+then multiplied with $I_t$. This has the result of ``masking'' the
+image $I_t$, extracting the pixels that the whisker would occupy if
+its shape were given by $x_t$. The importance is then calculated as
+the sum of the pixels of $R(x_t) * I_t$, meaning the importance is
+high if the image pixels along $x_t$ are bright.
 
 \begin{figure}[h]
   \centering
   \includegraphics[width=0.38\textwidth]{example-mask.png}
-  \caption{An example $I_{x_t}$.}
+  \caption{Example rendered image $R(x_t)$ for some hypothesis $x_t$.}
   \label{fig:example-mask}
 \end{figure}
-
 
 \section{Preprocessing of real images}
 \label{prep-real}
