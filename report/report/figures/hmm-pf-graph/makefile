@@ -1,7 +1,7 @@
-all: hmm-graph.pdf
+all: hmm-pf-graph.pdf
 
 force:
-	pdflatex hmm-graph.tex
+	pdflatex hmm-pf-graph.tex
 
-hmm-graph.pdf: hmm-graph.tex
-	pdflatex hmm-graph.tex
+hmm-pf-graph.pdf: hmm-pf-graph.tex
+	pdflatex hmm-pf-graph.tex
