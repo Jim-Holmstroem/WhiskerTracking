@@ -139,5 +139,87 @@ high if the image pixels along $x_t$ are bright.
 In the images of real rodents used for testing, the rodent was
 illuminated from below, meaning it and its whiskers were dark against
 a bright background. The filtering function described in the previous
-section expects whisker pixels to be bright, so the images had to be
-preprocessed.
+section expects whisker pixels to be bright and the body has the same 
+pixel values as the whiskers, so the images had to be inverted.
+
+\subsection{Subtracting background}
+    Removing effects like difference in background illumination 
+    and static objects is prefered to minimize faulty responses. 
+
+    Assuming we always have a static camera setup foreach sequence and 
+    that we have a adiquit sequence without the rodent.
+    The background was captured a priori by taking a mean\ref{def:image_addition} 
+    of the 100\footnote{Just a sufficient number} first frames $BG$ then
+    \begin{equation}
+        I_{BG} = \frac{\sum\limits_{bg\in BG}{I_{bg}}}{\#\left\{BG\right\}}.
+    \end{equation}
+    <<image showing the background>>
+
+    Then we can simply subtract\ref{def:image_subtraction} the background $I_{BG}$ 
+    from the orignal image $I$
+    \footnote{
+    Worth noting is that more sofisticated methods exists to subtract the background, 
+    but this solution works relatively well considering the simplicity.
+    }
+   
+    \begin{equation}
+        I_{FG} = I - I_{BG}
+    \end{equation}
+    <<example with the 3 images involved above alongside eachother>>
+
+
+\subsection{Finding the body $\prob{\text{body}}$}
+    Finding the body has two purposes, firstly to find the head-coordinate system 
+    and secondly to subtract the body from the image to find whiskers.
+    \begin{definition}
+        \begin{equation}
+            \prob{\text{body}}\in \IS
+        \end{equation} Is an estimation\footnote{Only needs to be an indication on wether 
+        it is a body} on the probablity of the pixel to be a householding a rodent body.
+    \end{definition}
+    Assuming that the only non-static objects in the image is the whiskers and body.
+    One simple feature that easily classifies $\prob{\text{whisker}}$ from 
+    $\prob{\text{body}}$ is size. Bluring the image removes fine structures 
+    and retains larger ones.
+    This was performed by convoluting the image with a gaussian with ${\sigma=9}$px\footnote{The value for $\sigma$ was obtained by manual testing.}
+    \begin{equation}
+        \prob{\text{body}} = I_{blur} = I_{FG}\star \text{gauss}(0,\sigma)
+    \end{equation}
+    <<example of the blur showing that the whiskers has almost disapeared>>
+    Which then was made to a mask by 
+    \begin{equation}
+        \text{body} = \prob{\text{body}}>0.6 \in \IS.\footnote{0.6 found to be a value making the body stable between frames}
+    \end{equation}
+    representing the location of the body.
+    <<example showing p(body) och body alongside each other>>
+
+\subsection{Estimating $\prob{whisker}$}
+    Getting an indicator on the location of whiskers is needed for the <ref:filtering>.
+    \begin{definition}
+        \begin{equation}
+            \prob{whisker}\in \IS
+        \end{equation} Is an estimation\footnote{Only needs to be an indication on wether it is a whisker} on the probablity of the pixel to be a householding a rodent whisker.
+    \end{definition}
+    This is na\"{i}vly performed by
+    \begin{equation}
+        \prob{\text{whisker}} = I_{FG}*(1-\text{body})
+    \end{equation}
+
+    <<example showing the above>>
+
+\subsection{Estimate snout translation}
+    
+\subsection{Fixating the head virtually}
+
+    the mask was then again blured out with a $\sigma=$ px to smooth out the response
+
+
+    local search from the last location
+
+    transform the video to centered head coordinates to simply the tracking and analysis for the tracking, this will not effect the final result one night simply pass the change in coordinates to the tracker 
+
+
+
+
+
+
