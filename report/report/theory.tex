@@ -34,15 +34,26 @@ Instead we obtain an \emph{observation} $I$\footnote{In this thesis, the observa
 therefore the observation is denoted $I$.}  of the state. This \emph{perception} is generally non-deterministic, 
 so we need to denote it as $p(I_t|Z_t)$ which is the probability that we will observe $I_t$ if the state is $Z_t$.
 
-\section{Curse of Dimensionality}
-A phenomenon that becomes apparent in higher dimensional spaces is the so-called ``Curse of dimensionality'' \cite{EncyclopediaMachineLearning}. The problem is that the search volume grows exponentialy with the number of dimensions. It originates from the fact that to have a sample density of $C$ we need $\Ordo{C^n}$ samples for $n$-dimensional data.
+\section{The Curse of Dimensionality}
+A phenomenon that becomes apparent in high-dimensional spaces is the so-called ``Curse of dimensionality'' \cite{EncyclopediaMachineLearning}.
+The problem is that the search volume grows exponentially with the number of dimensions. 
+It originates from the fact that we need $\Ordo{C^n}$ samples to obtain a sample density of $C$ in a $n$-dimensional space.
 
-The first consequence of this is that in order to approximate a high-dimensional PDF one needs orders of magnitude more samples.
+The first consequence of this is that in order to approximate a high-dimensional function one needs orders of magnitude more samples.
 
-The other drawback of high-dimensional spaces is the constricted ``borders'' of the sample set. For example, consider an interval on a number line, where we cover the middle third of the interval with samples. If we randomly select a number from the interval, there is a one in three chance that our selected number is in the region with samples. Take this to two dimensions, and we have covered only a ninth of the space, and so on. This means that the chance that the point we want to approximate falls outside the sample set is orders of magnitude higher in higher dimensional spaces, compared to lower dimensional ones. We need more samples in order to be able to interpolate between samples.
+The other drawback with high dimensional space is the large ``borders'' 
+of the sample-set compared to lower dimensional space which results in orders of
+magnitude higher chance for an point one want to approximate to fall outside
+the sample-set and needs to be extrapolated instead of the better alternative of interpolation.
+
+%For example, consider an interval on a number line, where we cover the middle third of the interval with samples.
+%If we randomly select a number from the interval, there is a one in three chance that our selected number is in the region with samples. 
+%Take this to two dimensions, and we have covered only a ninth of the space, and so on. This means that the chance that the point we want to 
+%approximate falls outside the sample set is orders of magnitude higher in higher dimensional spaces, compared to lower dimensional ones. 
+%We need more samples in order to be able to interpolate between samples.
 
 \begin{example}
-  Figure \ref{fig:curse-of-dimensionality} shows 128 randomly scattered points in 1, 2 and 3 dimensions. Notice how the density decreases with increasin dimension.
+  Figure \ref{fig:curse-of-dimensionality} shows 128 randomly scattered points in 1, 2 and 3 dimensions. Notice how the density decreases with increasing dimension.
   \begin{figure}
     \begin{tabular}{rcl}
       \includegraphics[scale=0.3,trim=4cm 4cm 4cm 4cm]{1D.pdf}&
@@ -55,24 +66,30 @@ The other drawback of high-dimensional spaces is the constricted ``borders'' of 
 \end{example}
 
 \begin{example}
-  For a $16$ DOF model one needs $10^{16}=10$ quadrillion datapoints to acquire a density of $10$ samples per volume unit. Millions of gigabytes would be needed just to store the samples.
+  For a $16$ DOF model one needs $10^{16}=10$ quadrillion datapoints to acquire a density of $10$ samples per unit volume. Millions of gigabytes would be needed just to store the samples.
 \end{example}
 
 \begin{example}
   In 2 dimensions it is sometimes feasible to use an exhaustive search.
-  An example of this is Hough transforms \cite{DigitalImageProcessing}, 
-  where the search is done through the $\rho\theta$ space of line responses in images.
+  An example of this is the Hough transform \cite{DigitalImageProcessing}, 
+  where the search is done through the $\rho\theta$ space of line responses on images.
 \end{example}
 
 \subsection{Overcoming the Curse}
-One way to overcome the curse in the context of \emph{tracking} is to perform a directed search. Let the search be in an $n$ dimensional space with a grid of $g$ grid lines in each direction.
+One way to overcome the curse in the context of tracking is to perform a directed search. Let the search be in an $n$ dimensional space with a grid of $g$ grid lines in each direction.
 
 \begin{enumerate}
-\item Use the information about the most recent\footnote{In the Bayesian case, the most recent estimate} location and assume that the tracked object cannot travel more than $R < g$ grid steps in one time step. This reduces the volume of the (discrete) search space from $\Ordo{g^n}$ to $\Ordo{R^n}$.
-  % \begin{proof}
-  %   Change the coordinate system to generalized spherical coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional search surface, sum up the fixated $r$'s to get the total search space.
-  % \end{proof}
-\item With prior knowledge of how the tracked objects move\footnote{Such as the state transition probabilitis $\cprobnext{Z}$ in a HMM} we can direct our search to specific regions in the state space, depending on how probable it is for the tracked object to be there. This reduces the size of the search space depending on how sure we are of the previous state.
+    \item Use the information about the most recent\footnote{In the Bayesian case, the most recent estimate} 
+    location and assume that the tracked object cannot travel more than $R < g$ grid steps in one time step. 
+    This reduces the volume of the (discrete) search space from $\Ordo{g^n}$ to $\Ordo{R^n}$.
+      % \begin{proof}
+      %   Change the coordinate system to generalized spherical coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional search surface, sum up the fixated $r$'s to get the total search space.
+      % \end{proof}
+    \item With prior knowledge of how the tracked objects move
+    \footnote{Such as the state transition probabilites $\cprobnext{Z}$ in a HMM} 
+    we can direct our search to specific regions in the state space, 
+    depending on how probable it is for the tracked object to be located there. This reduces the size of the
+    search space depending on how sure we are of the previous state.
 \end{enumerate} 
 
 %This phenomen of having hue searchspace in highdimensinonal space is fairly common and have the name "Curse of dimensionality".
@@ -164,25 +181,20 @@ tending to keep probable ones and throwing improbable ones away, in order to int
 of particles needed for a good approximation. The filter works in four steps:
 
 \begin{description}
-\item[Prediction] The hypotheses $X_{t-1}$ are updated in the \emph{prediction} step to an approximation $\bar{X}_t$ of $\cprobnext{Z}$.
-This is done by drawing new samples $\cprobnext{x}$, for each $x_{t-1}$ in $X_{t-1}$.
-\item[Perception] By measuring the state of the system, we gain an \emph{observation} $I_t \sim \cprob{I_t}{Z_t}$ of the state $Z_t$.
-\item[Filtering] The observation $I_t$ of the system is then used for filtering bad hypotheses out of $\bar{X}_t$. 
-We draw samples $X_t$ from $\bar{X}_t$ with probabilities given by $\cprob{I_t}{\bar{X}_t}$. As a result, 
-$X_t$ will be a subset of $\bar{X}_t$ where more probable hypotheses appear multiple times. 
-For this reason, this is also known as the \emph{resampling} step. The set $X_t$ is the \emph{belief}, 
-our approximation of $\cprobnext{Z}$.
-\item[Selection] Finally, we produce a single hypothesis $x_t$ from $X_t$ as our \emph{estimate} 
-of the state $Z_t$. Supposing $X_t$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, 
-the means value of $X_t$ is a good estimate since it approximates the expectation of $\cprobnext{Z}$. 
-If $\cprobnext{Z}$ is multimodal, however, the mean could be a bad estimate since it may be in a 
-region of very low probability even if $X_t$ is a good approximation of $\cprobnext{Z}$.
-\end{description}
+    \item[Prediction] The hypotheses $X_{t-1}$ are updated in the \emph{prediction} step to an approximation $\bar{X}_t$ of $\cprobnext{Z}$.
+    This is done by drawing new samples $\cprobnext{x}$, for each $x_{t-1}$ in $X_{t-1}$.
+    \item[Perception] By measuring the state of the system, we gain an \emph{observation} $I_t \sim \cprob{I_t}{Z_t}$ of the state $Z_t$.
+    \item[Filtering] The observation $I_t$ of the system is then used for filtering bad hypotheses out of $\bar{X}_t$. 
+    We draw samples $X_t$ from $\bar{X}_t$ with probabilities given by $\cprob{I_t}{\bar{X}_t}$. The result will be a surjection, where
+    $X_t$ will be a subset of $\bar{X}_t$ where more probable hypotheses appear multiple times.<ref:problem without sigma>
+    For this reason, this is also known as the \emph{resampling} step. The set $X_t$ is the \emph{belief}, 
+    our approximation of $\cprobnext{Z}$.
+    \item[Selection] Finally, we produce a single hypothesis $x_t$ from $X_t$ as our \emph{estimate} 
+    of the state $Z_t$. Assuming $X_t$ is a good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is unimodal, 
+    the means value of $X_t$ is a good estimate since it approximates the expectation of $\cprobnext{Z}$. 
+    If $\cprobnext{Z}$ is multimodal, however, the mean could be a bad estimate since the expectation may be very improbable.
 
-Since the algorithm only does tracking, we also need to initialize the algorithm with a start guess $x_0$. 
-Using this we take a number of samples $X_0 \sim \ndist{x_0}{\Sigma}$ and let the set $X_0$ be an approximation 
-of $\prob{Z_0}$. However, the problem of initialization is a difficult one\cite{Hedvig}, and is not covered in this thesis. 
-In the testing implementation, knowledge of the start state $Z_0$ is assumed, meaning $x_0 := Z_0$ and $\Sigma := 0$.
+\end{description}
 
 \subsection{The Particle Filter algorithm}
 \begin{table}
@@ -224,12 +236,12 @@ In this thesis, the real $x_{t-1}$ is not known. Rather $x_{t-1}$ is estimated w
 \section{Sensory Cues}
 
 The biggest problem with computer vision is that computers do not have
-vision, but only a data input device in the form of a camera. 
+vision, only a data input device in the form of a camera. 
 
 
 !!Is a image transformation $\phi$ 
 !!that renders(depicts?) one property of the
- !!   image like intensity, edges or ridges.
+!!   image like intensity, edges or ridges.
 
 <ref to machine vs biological comparison study>
 
@@ -237,18 +249,6 @@ vision, but only a data input device in the form of a camera.
 <image showing the use of $\phi$>
 
 \input{model.tex}
-
-The equation of elastic line ... [Grundläggande Hållfasthetslära - Hans Lundh
-p94 (7.6)]
-
-The force that comes from the head moving on the base of the whisker is just 
-sucked up by the Boundaryvalues and it will still be valid assumptions for the
-elasticline to hold.
-
-Under just a few assumptions that the material is linear elastic and the
-deformations are small we have the ...
-
-
 
 \begin{theorem} %TODO svagare?
     \label{thm:response_max}

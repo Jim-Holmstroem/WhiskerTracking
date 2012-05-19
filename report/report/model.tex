@@ -15,38 +15,38 @@ First of we formalize the whisker by the definition
     Let 
     \begin{equation}
     \begin{split}
-        whisker : \RR^+ &\rightarrow \RR^2 \\
-                  \omega&\mapsto whisker(\omega)
+        \text{whisker} : \RR^+ &\rightarrow \RR^2 \\
+                  \omega&\mapsto \text{whisker}(\omega)
     \end{split}
     \end{equation}
 \end{definition}
 
-The idea is to find a function $whisker^*$ that approximates the $whisker$. The 
+The idea is to find a function $\text{whisker}^*$ that approximates the $\text{whisker}$. The 
 following class of functions are available for consideration:
 
 It must be able to sufficiently approximate the whisker
 \begin{equation}
-    \forall whisker \exists whisker^* : whisker \approx whisker^*
+    \forall \text{whisker} \exists \text{whisker}^* : \text{whisker} \approx \text{whisker}^*
 \end{equation}
-that is, the model must be able to fill the range/image of the $whisker$ function.
+that is, the model must be able to sufficiently fill the range of the $\text{whisker}$ function.
 
 \begin{example}
-    A straight line will not suffice since the $whisker$ is generally
+    A straight line will not suffice since the $\text{whisker}$ is generally
     curved and straight lines can not fill that partition of the space.
 \end{example}
 
 Additionally it must of course be $C_1$ and have finitely many parameters.
-
 We might also assume that a whisker has one fix point at the origin, which we
 choose as origo, the boundary condition is equivalent to
 \begin{equation}
     \label{eq:bv_root}
-    whisker^*(0)=\bar{0}
+    \text{whisker}^*(0)=\bar{0}
 \end{equation}
 this is not the case in the real data, generally we have time dependency
 \begin{equation}
-    whisker(0,t)\neq\bar{0} 
+    \text{whisker}(0,t)\neq\bar{0} 
 \end{equation}
+<<restate the following sentence>>
 since rodents seems to have the ability to move around their whiskers root on
 the chins surface.
 
@@ -60,7 +60,7 @@ We are for all cases assuming that the whisker thickness is defined by
     \end{cases}
 \end{equation}
 
-where $D>0$ is the thickness at the root and $L<0$ is the total length of the
+where $D>0$ is the thickness at the root and $L>0$ is the total length of the
 whisker.
 
 
@@ -95,9 +95,23 @@ whisker.
 
     <<Lp analytical>>
 
-\subsection{Verdict(?)}
-    It is hard to analytically justify the chose of $whisker^*$ since we do not
-    have an analytic model for the $whisker$.
+
+======================
+The equation of elastic line ... [Grundläggande Hållfasthetslära - Hans Lundh
+p94 (7.6)]
+
+The force that comes from the head moving on the base of the whisker is just 
+sucked up by the Boundaryvalues and it will still be valid assumptions for the
+elasticline to hold.
+
+Under just a few assumptions that the material is linear elastic and the
+deformations are small we have the ...
+======================
+
+
+\subsection{Model Summary}
+    It is hard to analytically justify the chose of $\text{whisker}^*$ since we do not
+    have an analytic model for the $\text{whisker}$.
 
 
 
