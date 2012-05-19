@@ -6,15 +6,71 @@ very important qualities during this project.
 
 The implementation is written in Python and consists of three main parts:
 \begin{description}
-  \item[Particle Filter] A direct  implementation of the procedure in
-    table \ref{alg:pf}.
-  \item[Database] A database with functions for extracting transition
-    hypotheses. Provides the prediction PDF $\cprobnext{x}$ to the
-    particle filter.
   \item[Tracker] Manages the model and performs matching between
     hypotheses and images. Provides the filtering PDF
     $\cprob{I_n}{x_n}$ to the particle filter.
+  \item[Database] A database with functions for extracting transition
+    hypotheses. Provides the prediction PDF $\cprobnext{x}$ to the
+    particle filter.
+  \item[Particle Filter] A direct  implementation of the procedure in
+    table \ref{alg:pf}.
 \end{description}
+
+\section{The state transition database}
+
+\subsection{Data format}
+A \emph{state transition} is a pair $\trans$ that denotes we have
+observed a system go from state $\tf$ to state $\tt$ in one time step.
+
+Technically, the state transition database is implemented as an SQLite3
+database. One transition is represented in the database as a row with
+the state parameters of the model before and after the
+transition. The database also has support for independent sets of
+parameters. For instance, the $x$ positions and velocities of an
+object may be independent of the $y$ positions and velocities. In this
+case, the database would consist of one table of transitions for the
+$x$ part of the state and one table with the $y$ part, and the set of
+stored transitions would be the Cartesian product of the two
+tables. However, this property is not used in the whisker model since
+the state parameters are not known to be independent.
+
+\subsection{Prediction $\cprobnext{x}$}
+
+\begin{table}[h]
+  \begin{codebox}
+    \Procname{$\proc{DB-Predict} (x_{t-1})$}
+    \li $ x_t \gets 0$
+    \li $ W \gets 0$
+    \li \ForEach $(\tf, \tt) \in \proc{Database}$
+    \li \Do
+      \li $ w \gets \left(\Lpnorm[p]{\tf - x_t}\right)^{-a}$
+      \li $ x_t \gets x_t + w \cdot \tt$
+      \li $ W \gets W + w$
+    \End
+    \li \Return $x_t / W$
+  \end{codebox}
+  \caption{Pseudocode for the prediction function, with the parameters $a$ and $p$.}
+  \label{alg:predict}
+\end{table}
+
+The \textsc{Predict} function in table \ref{alg:pf} is implemented as a weighted mean of the
+state transitions in the database. The function is stated in table
+\ref{alg:predict}. Notice the parameters $a$ and $p$. $p$ is a
+positive integer that determines which $\Lp$ space to compute the norm
+in. $a$ is a positive number, and determines how fast the weight $w$
+declines with the distance $\Lpnorm[p]{\tf - x_{t-1}}$. A high $a$
+means closer transitions get a much higher weight than ones far away,
+see figure \ref{fig:x-to-the-minus-a}.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.4\textwidth,trim=65mm 65mm 65mm 65mm]{x-to-the-minus-a.pdf}
+  \caption{$x^{-a}$ versus $x$.}
+  \label{fig:x-to-the-minus-a}
+\end{figure}
+
+
+
 
 \section{The particle filter}
 
@@ -36,39 +92,6 @@ selecting pixels along each whisker and using a MATLAB script to find
 the least squares solution for the coefficients $\langle a_1, a_2, a_3 \rangle$.
 
 \subsection{Prediction $\cprobnext{x}$}
-The \textsc{Predict} function is implemented as a weighted mean of the
-state transitions in the database. The function is stated in table
-\ref{alg:predict}. Notice the parameters $a$ and $p$. $p$ is a
-positive integer that determines which $\Lp$ space to compute the norm
-in. $a$ is a positive number, and determines how fast the weight $w$
-declines with the distance $\Lpnorm[p]{\tf - x_{t-1}}$. A high $a$
-means closer transitions get a much higher weight than ones far away,
-see figure \ref{fig:x-to-the-minus-a}.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=0.4\textwidth,trim=65mm 65mm 65mm 65mm]{x-to-the-minus-a.pdf}
-  \caption{$x^{-a}$ versus $x$.}
-  \label{fig:x-to-the-minus-a}
-\end{figure}
-
-\begin{table}
-  \begin{codebox}
-    \Procname{$\proc{Predict} (x_{t-1})$}
-    \li $ x_{t-1} \gets 0$
-    \li $ W \gets 0$
-    \li \ForEach $(\tf, \tt) \in \proc{Database-Get-All}()$
-    \li \Do
-      \li $ w \gets \left(\Lpnorm[p]{\tf - x_t}\right)^{-a}$
-      \li $ x_t \gets x_t + \tt$
-      \li $ W \gets W + w$
-    \End
-    \li \Return $x_t / W$
-  \end{codebox}
-  \caption{The prediction function, with the parameters $a$ and $p$.}
-  \label{alg:predict}
-\end{table}
-
 
 
 \subsection{Goodness $\kappa\cprob{x_t}{I_t}$}
@@ -77,10 +100,6 @@ It also needs an direction to know how good the hypothesis $x_t$ matches the giv
 TODO <ref:theorem>
 
 ...
-
-\section{The state transition database}
-
-
 
 
 
