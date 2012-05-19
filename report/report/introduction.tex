@@ -1,20 +1,32 @@
 \section{Background}
 
-With the ever increasing power and mobility of computers, computer vision has recently seen a large increase in interest. 
-Encompassing problems such as classification, recognition, perception and tracking, application of the discipline could make many tasks easier and more efficient.
+With the ever increasing power and mobility of computers, computer
+vision has recently seen a large increase in interest.  Encompassing
+problems such as classification, recognition, perception and tracking,
+application of the discipline could make many tasks easier and more
+efficient.
 
-In particular, biology and neuroscience researchers are interested in tracking the movements and posture \cite{WhiskerVideography} of animals or parts of animals.
-One such field aims to study the movements of rodent whiskers. However, most whisker tracking software available today suffers a few fundamental flaws.
-They are either so expensive that not even well funded laboratories feel they can afford them or have problems tracking multiple whiskers at once, often requiring removal of almost all whiskers. 
-Some higher precision systems impose other restrictions on the experiment, such as restraining the animal or attaching motion 
-capture markers to the whiskers. \cite{BadExample1} Such restrictions may cause systematic errors and not give 
-a representative view of how the animal naturally uses its whiskers.
+In particular, biology and neuroscience researchers are interested in
+tracking the movements and posture \cite{WhiskerVideography} of
+animals or parts of animals.  One such field aims to study the
+movements of rodent whiskers. However, most whisker tracking software
+available today suffers a few fundamental flaws.  They are either so
+expensive that not even well funded laboratories feel they can afford
+them or have problems tracking multiple whiskers at once, often
+requiring removal of almost all whiskers.  Some higher precision
+systems impose other restrictions on the experiment, such as
+restraining the animal or attaching motion capture markers to the
+whiskers. \cite{BadExample1} Such restrictions may cause systematic
+errors and not give a representative view of how the animal naturally
+uses its whiskers.
 
 \section{Difficulties}
-In general, the main difficulty in tracking and localization is to separate the tracked object from clutter
-and occlusion. In the case of whisker tracking, the dominant problems are that whiskers often overlap, 
-and the relatively low spatial and temporal resolution in highspeed
-video results in subpixel whiskers and motion blur. \cite{WhiskerVideography}
+In general, the main difficulty in tracking and localization is to
+separate the tracked object from clutter and occlusion. In the case of
+whisker tracking, the dominant problems are that whiskers often
+overlap, and the relatively low spatial and temporal resolution in
+highspeed video results in subpixel whiskers and motion
+blur. \cite{WhiskerVideography}
 
 In 2001, Hedvig Sidenbladh investigated probabilistic methods for
 tracking three-dimensional human motion in monocular
@@ -35,16 +47,14 @@ The problems above will be addressed as they appear in the thesis.
 \section{Contributions of this thesis}
 The contributions in this thesis can be divided into
 \begin{description}
-    \item[Functional model] 
-        Introducing a functional model $\text{whisker}$ and using the functional $L_p$-norm, 
-        to better represent "distance" between two models, 
-        for the sampling part of the particle filter.
-    \item[Proof of concept]
-        Providing a proof with examples on that this solution is indeed feasible.
-    \item[Parameter investigation]
-        Parameter analysis on the algorihtm and how the parameters effects the result\footnote{Result on the benchmark\ref{sec:benchmarks_results}.}.
+\item[Functional model] Introducing a functional model
+  $\text{whisker}$ and using the functional $L_p$-norm, to better
+  represent "distance" between two models, for the sampling part of
+  the particle filter.
+\item[Proof of concept] Providing a proof with examples on that this
+  solution is indeed feasible.
+\item[Parameter investigation] Parameter analysis on the algorihtm and
+  how the parameters effects the result\footnote{Result on the
+    benchmark\ref{sec:benchmarks_results}.}.
 
 \end{description}
-
-
-
