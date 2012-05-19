@@ -105,6 +105,7 @@ internally represents whiskers with the tuple $\coeffs$ of polynomial
 coefficients.
 
 \subsection{Filtering $\cprob{I_t}{x_t}$}
+\label{sec:filtering}
 
 \begin{table}[h]
   \begin{codebox}
@@ -149,11 +150,11 @@ pixel values as the whiskers, so the images had to be inverted.
     Assuming we always have a static camera setup foreach sequence and 
     that we have a adiquit sequence without the rodent.
     The background was captured a priori by taking a mean\ref{def:image_addition} 
-    of the 100\footnote{Just a sufficient number} first frames $BG$ then
+    of the 100\footnote{Just a sufficient number} first frames $BG$ 
     \begin{equation}
         I_{BG} = \frac{\sum\limits_{bg\in BG}{I_{bg}}}{\#\left\{BG\right\}}.
     \end{equation}
-    <<image showing the background>>
+    <<image showing the mean background>>
 
     Then we can simply subtract\ref{def:image_subtraction} the background $I_{BG}$ 
     from the orignal image $I$
@@ -194,7 +195,7 @@ pixel values as the whiskers, so the images had to be inverted.
     <<example showing p(body) och body alongside each other>>
 
 \subsection{Estimating $\prob{whisker}$}
-    Getting an indicator on the location of whiskers is needed for the <ref:filtering>.
+    Getting an indicator on the location of whiskers is needed for the filtering.\ref{sec:filtering}
     \begin{definition}
         \begin{equation}
             \prob{whisker}\in \IS
@@ -208,18 +209,29 @@ pixel values as the whiskers, so the images had to be inverted.
     <<example showing the above>>
 
 \subsection{Estimate snout translation}
+    Firstly we hand pick the first frame where the snout is fully visible and use this frame as reference to estimate the translation.
+    The mask is then again blured out with a $\sigma=$5px\footnote{Obtained by manual testing.} and filtered through a prewittfilter
     
-\subsection{Fixating the head virtually}
+    \begin{equation}
+       \text{snout}_{ref} = \sqrt{(\text{snout} \star \text{prewitt}_x)^2 + ( \text{snout} \star \text{prewitt}_y )^2}\in\IS
+    \end{equation}
+    to smooth out the response of the edges.
 
-    the mask was then again blured out with a $\sigma=$ px to smooth out the response
+    Then a local search within $5$px\footnote{This could easily be extended to include rotation.} from the last location was 
+    performed foreach image in the sequence
+    \begin{equation}
+       \text{translation} = \argmax{(x,y)\in\text{close}}
+                                {
+                                    (\sum 
+                                        \text{translate}(\text{snout}_{ref},-(x,y))*\text{snout}
+                                    )
+                                } \in \ZZ^2
+    \end{equation}
+    where $\text{snout}$ is the current image under the same filter as $\text{snout}_{ref}$
 
-
-    local search from the last location
-
-    transform the video to centered head coordinates to simply the tracking and analysis for the tracking, this will not effect the final result one night simply pass the change in coordinates to the tracker 
-
-
-
-
-
+\subsection{Fixate the head programmatically}
+    As a last touch we transform the video to fixate the head coordinates to 
+    simplify the tracking analysis, 
+    this will not effect the final result one could simply pass 
+    the moving coordinate system directly to the tracker. 
 
