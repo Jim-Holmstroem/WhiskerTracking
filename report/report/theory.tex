@@ -341,13 +341,10 @@ estimated with a set $X_{t-1}$ of $N$ particles.
 The biggest problem with computer vision is that computers do not have
 vision, only a data input device in the form of a camera.
 
-
-!!Is a image transformation $\phi$ 
-!!that renders(depicts?) one property of the
-!!image like intensity, edges or ridges.
+A \emph{visual cue} is an image transformation $\phi$ that extracts
+some property of the image, such as intensity, edges or ridges.
 
 <ref to machine vs biological comparison study>
-
 
 <image showing the use of $\phi$>
 
@@ -370,7 +367,7 @@ vision, only a data input device in the form of a camera.
     W_a^b(x)=
     \begin{cases}
       0,~& x<a\\
-      1,~& a=<x=<b\\
+      1,~& a \leq x \leq b\\
       0,~& x>b
     \end{cases}
   \end{equation}
