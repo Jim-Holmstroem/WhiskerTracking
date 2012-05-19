@@ -76,7 +76,7 @@ declines with the distance $\Lpnorm[p]{\tf - x_{t-1}}$. A high $a$
 means closer transitions get a much higher weight than ones far away,
 see figure \ref{fig:x-to-the-minus-a}.
 
-\begin{figure}
+\begin{figure}[h]
   \centering
   \includegraphics[width=0.4\textwidth,trim=65mm 65mm 65mm 65mm]{x-to-the-minus-a.pdf}
   \caption{$x^{-a}$ versus $x$.}
@@ -84,23 +84,36 @@ see figure \ref{fig:x-to-the-minus-a}.
 \end{figure}
 
 
-\subsection{Goodness $\kappa\cprob{x_t}{I_t}$}
-It also needs an direction to know how good the hypothesis $x_t$ matches the given image $I_t$.
+\section{Tracker}
 
-TODO <ref:theorem>
+The tracker uses the whisker model described in chapter 4 and
+internally represents whiskers with the tuple $\coeffs$ of polynomial
+coefficients.
 
-...
+\subsection{Filtering $\cprob{I_t}{x_t}$}
+
+The \textsc{Importance} function in table \ref{alg:pf} is implemented
+as follows. Given a hypothesis $x_t$, the tracker renders an image
+$I_{x_t} = \text{Render}(x_t)$ depicting the whisker shape represented
+by $x_t$. An example can be seen in figure \ref{fig:example-mask}. The
+image $I_{x_t}$ is then multiplied with $I_t$. This has the result of
+``masking'' the image $I_t$, extracting the pixels that the whisker
+would occupy if its shape were given by $x_t$. The importance is then
+calculated as the sum of the pixels of $I_{x_t} * I_t$, meaning
+the importance is high if the image pixels along $x_t$ are bright.
+
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=0.38\textwidth]{example-mask.png}
+  \caption{An example $I_{x_t}$.}
+  \label{fig:example-mask}
+\end{figure}
 
 
+\section{Preprocessing of real images}
 
-\section{Real data}
-    \subsection{Pre-processing}
-
-    We want to find the function $\prob{I=\text{whisker}}\in\IS$
-
-    >We want to have a measure on how probable it is for a pixel to hosehould a whisker
-
-
-
-
-
+In the images of real rodents used for testing, the rodent was
+illuminated from below, meaning it and its whiskers were dark against
+a bright background. The filtering function described in the previous
+section expects whisker pixels to be bright, so the images had to be
+preprocessed.
