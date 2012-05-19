@@ -4,6 +4,15 @@ The particle filter is a kind of Bayesian filtering where one uses discrete hypo
 also known as \emph{particles}, to approximate continuous PDF \cite{ProbRob}.
 It builds upon the theory of \emph{Markov processes} and the \emph{hidden Markov model}.
 
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.2\textwidth]{mp-graph.pdf}
+  \caption{Schematic image of a Markov process.}
+  \label{fig:hmm-graph}
+\end{figure}
+
+
 \section{Markov processes}
 A Markov process is a special case of a stochastic process. For a Markov process, 
 the next state depends only on the present state and not on past states. 
@@ -19,7 +28,7 @@ given that the previous states where $Z_{t-1}, Z_{t-2},\dots, Z_0$.
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{hmm-graph.pdf}
+  \includegraphics[width=0.35\textwidth]{hmm-graph.pdf}
   \caption{Schematic image of a hidden Markov model.}
   \label{fig:hmm-graph}
 \end{figure}
@@ -163,7 +172,7 @@ The particle filter is a technique for reducing the search space<ref:COD>. It us
 
 \begin{figure}
   \centering
-  \includegraphics[width=0.8\textwidth]{hmm-pf-graph/hmm-pf-graph.pdf}
+  \includegraphics[width=0.8\textwidth]{hmm-pf-graph.pdf}
   \caption{Schematic image of the particle filter alongside a HMM.}
   \label{fig:hmm-graph}
 \end{figure}
