@@ -79,6 +79,26 @@ A \emph{video} is a function mapping an integer to an image:
 \end{definition}
 
 \begin{definition}
+    The addition operation on images is performed by elementwise addition.
+        \begin{equation}
+            \begin{split}
+                + : \IS \times \IS &\rightarrow \IS\\
+                     (I_a,I_b) &\mapsto I_a+I_b
+            \end{split}
+        \end{equation}
+\end{definition}
+
+\begin{definition}
+    The multiplication operation on images is performed by elementwise multiplication.
+        \begin{equation}
+            \begin{split}
+                * : \IS \times \IS &\rightarrow \IS\\
+                     (I_a,I_b) &\mapsto I_a*I_b
+            \end{split}
+        \end{equation}
+\end{definition}
+
+\begin{definition}
     The image transformation $\phi$ takes an image $I$ and returns a transformed image of the same size as $I$.
     \begin{equation}
         \begin{split}
@@ -88,6 +108,27 @@ A \emph{video} is a function mapping an integer to an image:
     \end{equation}
 \end{definition}
 
+The structure $\langle \IS,+,*\rangle$ inherites the properties from $\langle \RR^+,+,*\rangle$ by just being a vectorized version.
+
+\begin{definition}
+   We will use subtraction loosely\footnote{Meaning, no analysis on the structure is done.} as elementwise subtraction and then subtract the smallest element on all elements to make the operation closed.
+        \begin{equation}
+            \begin{split}
+                - : \IS \times \IS &\rightarrow \IS\\
+                     (I_a,I_b) &\mapsto I_a-I_b
+            \end{split}
+        \end{equation}
+\end{definition}
+
+\begin{definition}
+    The image transformation $\phi$ takes an image $I$ and returns a transformed image.
+    \begin{equation}
+        \begin{split}
+            \phi : \IS &\rightarrow \IS\\
+                I &\mapsto \text{Transform}(I)
+        \end{split}
+    \end{equation}
+\end{definition}
 
 \section{States, hypotheses and estimates}
 A system is said to have a \emph{state}. The state is some quantity that defines the qualities of the system.
