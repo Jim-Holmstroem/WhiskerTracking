@@ -8,6 +8,8 @@
 
 \section{Images and videos}
 \subsection{Grayscale image}
+\begin{definition}
+
 A grayscale \emph{image} can be defined as a function
 \begin{equation}
     \begin{array}{ccc}
@@ -18,6 +20,7 @@ A grayscale \emph{image} can be defined as a function
 It can also be identified with $\NN^2\times \RR^+$ as the tuple $\langle \text{position}, \text{intensity}\rangle$. The \emph{image space} is denoted as $\IS$ in this thesis.
 
 In a computer an image is represented as a integer matrix, often 8 bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
+\end{definition}
 
 %\subsubsection{Color image}
 %A color image, can similary to grayscale images, be defined as
@@ -34,7 +37,6 @@ In a computer an image is represented as a integer matrix, often 8 bit integers.
 %\begin{equation}
 %    RGBimage\in \IS_{RGB}
 %\end{equation}
-
 
 \begin{example}~\\
     \begin{tabular}{lcr}
@@ -57,10 +59,13 @@ In a computer an image is represented as a integer matrix, often 8 bit integers.
 \end{example}
 
 \subsection{Video}
+\begin{definition}
 A \emph{video} is a function mapping an integer to an image:
 \begin{equation}
     \text{video} : \NN \rightarrow \IS.
 \end{equation}
+\end{definition}
+
 \section{Image Processing}
 
 \begin{definition}
