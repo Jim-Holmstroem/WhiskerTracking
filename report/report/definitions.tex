@@ -73,6 +73,7 @@
 \section{Image Processing}
 
 \begin{definition}
+ \label{def:hypothesis_render}
   The rendering function $R$ takes a hypothesis $x$ and renders an
   image with a resemblance of how a real whisker would have looked
   like having the same underlying model and parameters as $x$.
@@ -85,6 +86,7 @@
 \end{definition}
 
 \begin{definition}
+ \label{def:image_addition}
   The addition operation on images is performed by element-wise
   addition.
   \begin{equation}
@@ -96,6 +98,7 @@
 \end{definition}
 
 \begin{definition}
+ \label{def:image_multiplication}
   The multiplication operation on images is element-wise
   multiplication.
   \begin{equation}
@@ -107,6 +110,7 @@
 \end{definition}
 
 \begin{definition}
+\label{def:image_transform}
   The image transformation $\phi$ takes an image $I$ and returns a
   transformed image.
   \begin{equation}
@@ -121,6 +125,7 @@ The structure $\langle \IS,+,*\rangle$ inherits the properties from
 $\langle \RR^+,+,*\rangle$ by just being a vectorized version.
 
 \begin{definition}
+\label{def:image_subtraction}
   We will use subtraction loosely\footnote{Meaning, no analysis on the
     structure is done.} as elementwise subtraction and then subtract
   the smallest element on all elements to make the operation closed.
