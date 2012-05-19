@@ -22,7 +22,7 @@
   $\langle \text{position}, \text{intensity}\rangle$. The \emph{image
     space} is denoted as $\IS$ in this thesis.
 
-  In a computer an image is represented as a integer matrix, often 8
+  In a computer an image is represented as an integer matrix, often 8
   bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
 \end{definition}
 
@@ -79,13 +79,13 @@
   \begin{equation}
     \begin{split}
       R : \XS &\rightarrow \IS\\
-      x &\mapsto \text{Render}(x)
+      x &\mapsto R(x)
     \end{split}
   \end{equation}
 \end{definition}
 
 \begin{definition}
-  The addition operation on images is performed by elementwise
+  The addition operation on images is performed by element-wise
   addition.
   \begin{equation}
     \begin{split}
@@ -108,16 +108,16 @@
 
 \begin{definition}
   The image transformation $\phi$ takes an image $I$ and returns a
-  transformed image of the same size as $I$.
+  transformed image.
   \begin{equation}
     \begin{split}
       \phi : \IS &\rightarrow \IS\\
-      I &\mapsto \text{Transform}(I)
+      I &\mapsto \phi(I)
     \end{split}
   \end{equation}
 \end{definition}
 
-The structure $\langle \IS,+,*\rangle$ inherites the properties from
+The structure $\langle \IS,+,*\rangle$ inherits the properties from
 $\langle \RR^+,+,*\rangle$ by just being a vectorized version.
 
 \begin{definition}
@@ -128,17 +128,6 @@ $\langle \RR^+,+,*\rangle$ by just being a vectorized version.
     \begin{split}
       - : \IS \times \IS &\rightarrow \IS\\
       (I_a,I_b) &\mapsto I_a-I_b
-    \end{split}
-  \end{equation}
-\end{definition}
-
-\begin{definition}
-  The image transformation $\phi$ takes an image $I$ and returns a
-  transformed image.
-  \begin{equation}
-    \begin{split}
-      \phi : \IS &\rightarrow \IS\\
-      I &\mapsto \text{Transform}(I)
     \end{split}
   \end{equation}
 \end{definition}
@@ -165,11 +154,3 @@ that defines the qualities of the system.
 \end{description}
 
 Note that all of the above depend on the  model used.
-
-%\subsection{Prob. function as a collection of points with attached weight.}
-%
-%\subsection{Dynamic system}
-%    It's a tuple <space,update,time>
-%    Any mechanical system following newton physics (or relativistic for that matter) can be considered to be an dynamic system
-%    in our case the tuple whould be <feature\_space,update\_rule (the one we are trying to preprocess data to approximate),time>
-
