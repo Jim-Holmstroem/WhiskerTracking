@@ -22,6 +22,8 @@ A whisker can be modeled as a function:
     \end{split}
     \end{equation}
 \end{definition}
+where $\omega$ is a coordinate along the length of the whisker and
+$\text{whisker}(\omega)$ is a point in the $x$-$y$ plane.
 
 The tracking problem is then to find a function $\text{whisker}^*$
 that approximates $\text{whisker}$. The function class used in a
@@ -45,8 +47,8 @@ With this in mind, two classes of functions immediately appear as
 candidates:
 \begin{itemize}
 \item Polynomials $\sum_{i=0}^{n} a_i\omega^i$
-\item Fourier series $\sum_{k=0}^{n} a_k\sin(k\omega) +
-  b_k\cos(k\omega)$
+\item Fourier series $\sum_{k=0}^{n} a_k\sin(\frac{k\pi\omega}{L}) +
+  b_k\cos(\frac{k\pi\omega}{L})$
 \end{itemize}
 
 A brief analysis of both follows.
@@ -92,50 +94,56 @@ whisker.
     arbitrarily small.
 
 \subsection{Polynomial $\Spline{\omega}$}
+The first and simplest candidate is the polynomials. Three terms are
+enough to approximate a whisker well enough that the difference is not
+visible to the naked eye. A whisker function can therefore be modeled
+as a third degree polynomial $\Spline{\omega}$, also known as a
+\emph{spline}.
 
-    Our first and simplest candidate is the third degree polynom $\Spline{\omega}$.
+These define parameterized curves in the $xy$ plane as
+\begin{equation}
+  (\omega,\Spline{\omega})
+\end{equation}
 
-    Parametrically defined as
-    \begin{equation}
-        (\omega,\Spline{\omega})
-    \end{equation}
+This choice can be justified by comparing with the theory of beams
+under small deformations in solid mechanics. After all, a whisker is
+not too different from a beam. The two main assumptions for this to
+hold is that deformations are small and that the effects of motion on
+whisker deformation are negligible. \cite{Hallfasthet} This may not
+quite be the case, but a spline is still capable of approximating the
+momentaneous shape of a whisker well enough.
 
-    This chose can be justified by the theory of beams under small deformations 
-    in the area of strength of materials, after all a whisker is not to far 
-    away from a beamer\cite{Hallfasthet}. The two main assumption
-    for this to hold is a linear elastic material and small deformations which
-    ...
+\subsection{Sine series $\sum a_k\sin \left(\frac{k\pi\omega}{L}\right)$}
+Another promising candidate is the Fourier series. Considering
+\eqref{eq:bv_root}, the Fourier series is reduced to a sine series
+$\sum a_k\sin \left(\frac{k\pi\omega}{L}\right)$. However, such a
+series will always be zero at $\omega = L$, and is therefore not a
+reasonable model for whiskers. To address this, one could instead use
+quarter-periods: $\sum a_k \sin\left( \frac{k\pi\omega}{2L}\right)$,
+but at the cost of losing the orthogonality property of the sine
+basis.
 
-    <example images compared with real whiskers>
-
-    <<Lp analytical>>
-
-\subsection{Sinus serie$\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$}
-    Another promising candidate is the sinus series.
-    
-    Parametrically defined as
-    \begin{equation}
-        (\omega,\sum{a_n\sin (\frac{2\pi n}{L}\omega)})
-    \end{equation}
-
-    
-    The Fourier transform becomes $\sum{a_n\sin (\frac{2\pi n}{L}\omega)}$ when
-    considering (\ref{eq:bv_root}). One can choose just a few $n$ which can be
-    viewed as a few different waves propagating trough the whisker propelled by
-    the whisking. 
-
-    <<Lp analytical>>
-
-
-The force that comes from the head moving on the base of the whisker is just 
-sucked up by the Boundaryvalues and it will still be valid assumptions for the
-elasticline to hold.
-
-Under just a few assumptions that the material is linear elastic and the
-deformations are small we have the ...
-
-\subsection{Theoretical evalutaion}
-    It is hard to analytically justify the chose of $\text{whisker}^*$ since we do not
-    have an analytic model for the $\text{whisker}$.
+These define parameterized curves in the $xy$ plane as
+\begin{equation}
+    (\omega,\sum{a_n\sin (\frac{2\pi n}{L}\omega)})
+\end{equation}
 
 
+The choice of a sine series can be justified by comparing with the
+theory of stiff strings in analytical mechanics. The movement equation
+for a stiff string is a partial differential equation containing the
+second and fourth spatial derivatives. A classic separation of
+variables solution to the equation would be a sine series for the
+spatial part.
+
+\subsection{Theoretical evaluation}
+
+It is hard to analytically justify the choice of $\text{whisker}^*$
+model since we do not have an analytic model for the $\text{whisker}$.
+
+For this thesis, the spline model was used in the tracking engine. The
+main reason for this is that it is slightly simpler than the sine
+model. It also is rather easy to get an intuitive grasp of how the
+parameters affect the curve shape - the $\omega^3$ term mostly affects
+the tip of the whisker while the $\omega$ term affects the overall
+orientation.
