@@ -64,6 +64,7 @@ if __name__=="__main__":
     pylab.subplot(131)
     pylab.plot(x1,response1)
     pylab.axis([-0.00008,0.00008,0,ymax])
+    pylab.title('a3')
 
     a=pylab.gca()
     a.xaxis.set_ticks([-0.00008,-0.00004,0.0,0.00004,0.00008])
@@ -71,10 +72,12 @@ if __name__=="__main__":
     pylab.subplot(132) 
     pylab.plot(x2,response2)
     pylab.axis([-0.04,0.04,0,ymax])
+    pylab.title('a2')
     
     pylab.subplot(133) 
     pylab.plot(x3,response3)
     pylab.axis([-2,2,0,ymax])
+    pylab.title('a1')
 
     pylab.show()
 
