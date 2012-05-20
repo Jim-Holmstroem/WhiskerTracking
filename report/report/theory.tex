@@ -26,7 +26,6 @@ changes between time steps, depending on the previous state.
   \label{fig:mp-graph}
 \end{figure}
 
-
 \section{The Hidden Markov Model}
 
 The working principle of the particle filter is based on the
@@ -64,17 +63,6 @@ The other drawback with high dimensional space is the large
 which results in orders of magnitude higher chance for an point one
 want to approximate to fall outside the sample-set and needs to be
 extrapolated instead of the better alternative of interpolation.
-
-% For example, consider an interval on a number line, where we cover
-% the middle third of the interval with samples.  If we randomly
-% select a number from the interval, there is a one in three chance
-% that our selected number is in the region with samples.  Take this
-% to two dimensions, and we have covered only a ninth of the space,
-% and so on. This means that the chance that the point we want to
-% approximate falls outside the sample set is orders of magnitude
-% higher in higher dimensional spaces, compared to lower dimensional
-% ones.  We need more samples in order to be able to interpolate
-% between samples.
 
 \begin{example} Figure \ref{fig:curse-of-dimensionality} shows 128
 randomly scattered points in 1, 2 and 3 dimensions. Notice how the
@@ -114,13 +102,6 @@ a directed search, which could be done in one of the following ways:
   location and assume that the tracked object cannot travel more than
   $R < g$ grid steps in one time step.  This reduces the volume of the
   (discrete) search space from $\Ordo{g^n}$ to $\Ordo{R^n}$.
-      % \begin{proof}
-      %   Change the coordinate system to generalized spherical
-      %   coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate
-      %   $r$ foreach $r<R$ which gives us a $(N-1)$ dimensional
-      %   search surface, sum up the fixated $r$'s to get the total
-      %   search space.
-      % \end{proof}
 \item With prior knowledge of how the tracked objects
   move\footnote{Such as the state transition probabilites
     $\cprobnext{Z}$ in a HMM} we can direct our search to specific
@@ -135,72 +116,6 @@ technique that employs the second one, by first \emph{predicting} the
 next state and then \emph{filtering} the predictions depending on how
 probable they are.
 
-% This phenomen of having hue searchspace in highdimensinonal space is
-% fairly common and have the name "Curse of dimensionality".
-
-% One way to somewhat overcome this emptyness in space is to have a
-% dynamic (active?) algorithm that adopts the sample density according
-% to the models relative frequency in that area and this results in,
-% for a given amount of samples, its more likely for an sampled model
-% to occure in a more densly pre-sampled (pre-sampled?) area, in fact
-% this method when doing it right (ideally) gives: given a set of
-% samples the overall density for all the samples in the
-% sampledatabase would be optimal) [proof for this will be given in
-% <blabla>] ... (use the world hypotesis instead of sample, or perhaps
-% sampled-hypotesis) (below is perhaps somewhat redudant, but one can
-% pick bits and pieces from both) So having a bias towards trying out
-% more plausible hypotesis for the models innerstate is better than
-% doing a naive exhausted search tru the entire feature space, this
-% could only be used if you have $\le$ 3 DOF as in for example finding
-% straight edges with houghtransformation[ref].  ...  One method that
-% uses prior knowledge of the models PDF and a pretrained database
-% containing knowledge on how to approximate the models PDF in the
-% next timestep is particle filter which is an (instance?) of the
-% ideal bayesian filter.
-
-
-% """ The "Curse of dimensionality", is a term coined by Bellman to
-% describe the problem caused by the exponential increase in volume
-% associated with adding extra dimensions to a (mathematical)
-% space. One implication of the curse of dimensionality is that some
-% methods for numerical solution of the Bellman equation require
-% vastly more computer time when there are more state variables in the
-% value function.
-
-% For example, 100 evenly-spaced sample points suffice to sample a
-% unit interval with no more than 0.01 distance between points; an
-% equivalent sampling of a 10-dimensional unit hypercube with a
-% lattice with a spacing of 0.01 between adjacent points would require
-% 1020 sample points: thus, in some sense, the 10-dimensional
-% hypercube can be said to be a factor of 1018 "larger" than the unit
-% interval. (Adapted from an example by R. E. Bellman, see below.)
-% """
-
-% from: "R. Bellman, Adaptive control Processes, p.94, Princeton
-% University Press, NJ, 1961."
-
-% “In view of all that we have said in the foregoing sections, the
-% many obstacles we appear to have surmounted. What casts the pall
-% over our victory celebration? It is the curse of dimensionality, a
-% malediction that has plagued the scientist from earliest days.”
-
-% """
-%
-% Number of states grows exponentially in n (assuming fixed number of
-% discretization levels per coordinate)
-%
-% """
-
-%
-% """ One solution on how to make the effects of the curse of
-% dimensionality is to make a directed search..  """
-%
-
-%
-% """ Bellmans dynamic programming (DP) requires knowledge of
-% transition probablities of the dynamic system from ones state to the
-% next """
-%
 
 \section{The Particle Filter}
 
@@ -352,7 +267,18 @@ refinements as in section \ref{prep-real}.
 
 \section{Response}
 
-<<intro>>
+\begin{definition}
+    A \emph{response} is how much a hypothesis matches an image. The similarity measure for hypothesis response this thesis is defined by
+    \begin{equation}
+        \Response{x_t}{I_t}{\phi} = \sum{\phi(R(x_t))*\phi(I_t)} \in \RR^+
+    \end{equation}
+    where $\Response{x_t}{I_t}{\phi}$ will later denote the response. \footnote{The denotation $\Response{\cdot}{\cdot}{\phi}$ for response was choosen to show the similaritise with inner product.}
+
+\end{definition}
+
+Assuming $R$ render $x_t$ in the same way as the realworld renderer does we want to know 
+
+How well this is obtained depends on the response curve
 
 \begin{theorem} %TODO svagare?
   \label{thm:response_max}
