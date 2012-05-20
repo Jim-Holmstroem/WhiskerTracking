@@ -16,13 +16,13 @@
   \node[main node] (Z0) [label=left:$p(Z_0)$] {$Z_0$};
   \node[main node] (Z1) [below of=Z0,label=left:$p(Z_1|Z_0)$] {$Z_1$};
   \node[main node] (Z2) [below of=Z1,label=left:$p(Z_2|Z_1)$] {$Z_2$};
-  \node[main node] (Zn) [below of=Z2,label=left:$p(Z_n|Z_{n-1})$] {$Z_n$};
+  \node[main node] (Zt) [below of=Z2,label=left:$p(Z_t|Z_{t-1})$] {$Z_t$};
 
   % Observations I
 
   \node[main node] (I1) [right of=Z1,label=below:$p(I_1|Z_1)$] {$I_1$};
   \node[main node] (I2) [right of=Z2,label=below:$p(I_2|Z_2)$] {$I_2$};
-  \node[main node] (In) [right of=Zn,label=below:$p(I_n|Z_n)$] {$I_n$};
+  \node[main node] (It) [right of=Zt,label=below:$p(I_t|Z_t)$] {$I_t$};
 
   % Z->Z arrows
 
@@ -35,10 +35,10 @@
   \path[every node/.style={font=\sffamily\small}]
     (Z1) edge node [above] {Perception} (I1)
     (Z2) edge node [above] {Perception} (I2)
-    (Zn) edge node [above] {Perception} (In);
+    (Zt) edge node [above] {Perception} (It);
 
   % Dotted arrows
-  \draw[dotted] (Z2) -- (Zn);
+  \draw[dotted] (Z2) -- (Zt);
   
 
 \end{tikzpicture}
