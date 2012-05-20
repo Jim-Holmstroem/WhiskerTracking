@@ -1,5 +1,3 @@
-\section{Background}
-
 With the ever increasing power and mobility of computers, computer
 vision has recently seen a large increase in interest.  Encompassing
 problems such as classification, recognition, perception and tracking,
@@ -35,14 +33,11 @@ were regarded, and the thesis shows that powerful conclusions can be
 drawn by combining multiple visual cues.\footnote{The solution in this
 thesis employs only a single visual cue.}
 
-The most apperent problems in whisker tracking is occlusion, 3D to 2D
-projection inambiguities and motion blur. Other, more subtle problems
-include that the whisker root is constantly occluded by facial
-hairs. This gives us the problem of not knowing where the whiskers are
-rooted, making the whiskers more difficult to model.
-
-\section{Approaching the difficulties}
-The problems above will be addressed as they appear in the thesis.
+The most apparent problems in whisker tracking is occlusion and motion
+blur. Other, more subtle, problems include 3D to 2D projection
+ambiguities and that the whisker root is constantly occluded by facial
+hairs. The latter gives us the problem of not knowing where the
+whiskers are rooted, making the whiskers more difficult to model.
 
 \section{Contributions of this thesis}
 This thesis provides three main contributions:
@@ -50,10 +45,14 @@ This thesis provides three main contributions:
 \item[Functional model] Use of functions as the model, and the $\Lp$
   norm to better represent "distance" between two hypotheses, for the
   prediction part of the particle filter.
-\item[Proof of concept] An example implementation showing that a
-  probabilistic solution is indeed feasible.
+\item[Proof of concept] An example implementation showing that
+  probabilistic whisker tracking is indeed feasible.
 \item[Parameter investigation] Parameter analysis on the algorithm and
   how the tracking parameters affect the quality of tracking.
-  %\footnote{Result on the benchmark\ref{sec:benchmarks_results}.}
-
 \end{description}
+
+This mainly addresses the problem of occlusion. Using a model makes
+the tracking more robust against crossing whiskers, as opposed to pure
+frame-by-frame image analysis where this is often a great
+problem. Similiarly, the problem of overlapping whiskers becomes less
+apparent, but is still an issue.
