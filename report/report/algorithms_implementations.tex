@@ -64,7 +64,7 @@ transition. The set of transitions in the database will be denoted \TS.
     \li Take $v \sim \ndist{0}{\Sigma}$
     \li \Return $ x_t / W + v $
   \end{codebox}
-  \caption{Pseudocode for the prediction function, with the parameters $a$ and $p$.}
+  \caption{Pseudocode for the prediction function. Notice the parameters $a$ and $p$.}
   \label{alg:predict}
 \end{table}
 
@@ -111,9 +111,9 @@ coefficients.
   \begin{codebox}
     \Procname{$\proc{Importance} (x_t, I_t)$}
     \li $ J \gets \phi(R(x_t)) * \phi(I_t)$
-    \li \Return $\mathrm{sum}(J)$
+    \li \Return $\left(\mathrm{sum}(J)\right)^g$
   \end{codebox}
-  \caption{Pseudocode for the importance function. $p$.}
+  \caption{Pseudocode for the importance function. Notice the parameter $g$.}
   \label{alg:importance}
 \end{table}
 
@@ -124,8 +124,9 @@ can be seen in figure \ref{fig:example-mask}. The image $R(x_t)$ is
 then multiplied with $I_t$. This has the result of ``masking'' the
 image $I_t$, extracting the pixels that the whisker would occupy if
 its shape were given by $x_t$. The importance is then calculated as
-the sum of the pixels of $R(x_t) * I_t$, meaning the importance is
-high if the image pixels along $x_t$ are bright.
+the sum of the pixels of $R(x_t) * I_t$, raised to a power $g$. This
+means the importance is high if the image pixels along $x_t$ are
+bright.
 
 \begin{figure}[h]
   \centering
