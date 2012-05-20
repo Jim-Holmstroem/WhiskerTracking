@@ -1,17 +1,9 @@
-\section{Introduction} The core of the tracking engine is a technique
-known as the \emph{particle filter}.  The particle filter is a kind of
-Bayesian filtering where one uses discrete hypotheses, also known as
+The core of the tracking engine is a technique known as the
+\emph{particle filter}.  The particle filter is a kind of Bayesian
+filtering where one uses discrete hypotheses, also known as
 \emph{particles}, to approximate continuous probability density
 functions (PDFs) \cite{ProbRob}.  It builds upon the theory of
 \emph{Markov processes} and the \emph{hidden Markov model}.
-
-
-\begin{figure} \centering
-  \includegraphics[width=0.175\textwidth]{mp-graph.pdf}
-  \caption{Schematic image of a Markov process.}
-  \label{fig:hmm-graph}
-\end{figure}
-
 
 \section{Markov processes} A Markov process is a special case of a
 stochastic process. For a Markov process, the next state depends only
@@ -24,13 +16,16 @@ Z_0\right) = p\left(Z_t|Z_{t-1}\right),
 \end{equation} $p\left(Z_t|Z_{t-1} \wedge Z_{t-2} \wedge \dots \wedge
 Z_0\right)$ is the probability that the system will have state $Z_t$
 at time $t$, given that the previous states where $Z_{t-1},
-Z_{t-2},\dots, Z_0$.
+Z_{t-2},\dots, Z_0$. Figure \ref{fig:mp-graph} shows how the state $Z$
+changes between time steps, depending on the previous state.
 
-\begin{figure} \centering
-  \includegraphics[width=0.35\textwidth]{hmm-graph.pdf}
-  \caption{Schematic image of a hidden Markov model.}
-  \label{fig:hmm-graph}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.175\textwidth]{mp-graph.pdf}
+  \caption{Schematic image of a Markov process.}
+  \label{fig:mp-graph}
 \end{figure}
+
 
 \section{The Hidden Markov Model}
 
@@ -42,7 +37,17 @@ where we cannot measure the state directly - it is
 always a grayscale \emph{image}, therefore the observation is denoted
 $I$.}  of the state. This \emph{perception} is generally
 non-deterministic, so we need to denote it as $p(I_t|Z_t)$ which is
-the probability that we will observe $I_t$ if the state is $Z_t$.
+the probability that we will observe $I_t$ if the state is
+$Z_t$. Figure \ref{fig:hmm-graph} shows how the observation $I_t$ is
+nondeterministic, but depends on the state $Z_t$.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.35\textwidth]{hmm-graph.pdf}
+  \caption{Schematic image of a hidden Markov model.}
+  \label{fig:hmm-graph}
+\end{figure}
+
 
 \section{The Curse of Dimensionality} A phenomenon that becomes
 apparent in high-dimensional spaces is the so-called ``Curse of
@@ -98,17 +103,17 @@ exhaustive search.  An example of this is the Hough transform
 $\rho\theta$ space of line responses on images.
 \end{example}
 
-\subsection{Overcoming the Curse} One way to overcome the curse in the
-context of tracking is to perform a directed search. Let the search be
-in an $n$ dimensional space with a grid of $g$ grid lines in each
-direction.
+\subsection{Overcoming the Curse}
+One way to overcome the curse in the context of tracking is to perform
+a directed search, which could be done in one of the following ways:
 
 \begin{enumerate}
-\item Use the information about the most recent\footnote{In the
-    Bayesian case, the most recent estimate} location and assume that
-  the tracked object cannot travel more than $R < g$ grid steps in one
-  time step.  This reduces the volume of the (discrete) search space
-  from $\Ordo{g^n}$ to $\Ordo{R^n}$.
+\item Let the search be in an $n$ dimensional space with a grid of $g$
+  grid lines in each direction. Use the information about the most
+  recent\footnote{In the Bayesian case, the most recent estimate}
+  location and assume that the tracked object cannot travel more than
+  $R < g$ grid steps in one time step.  This reduces the volume of the
+  (discrete) search space from $\Ordo{g^n}$ to $\Ordo{R^n}$.
       % \begin{proof}
       %   Change the coordinate system to generalized spherical
       %   coordinates $(r,\phi_1,\phi_2,...,\phi_{N-1})$ and fixate
@@ -116,13 +121,19 @@ direction.
       %   search surface, sum up the fixated $r$'s to get the total
       %   search space.
       % \end{proof}
-\item With prior knowledge of how the tracked objects move
-  \footnote{Such as the state transition probabilites $\cprobnext{Z}$
-    in a HMM} we can direct our search to specific regions in the
-  state space, depending on how probable it is for the tracked object
-  to be located there. This reduces the size of the search space
-  depending on how sure we are of the previous state.
+\item With prior knowledge of how the tracked objects
+  move\footnote{Such as the state transition probabilites
+    $\cprobnext{Z}$ in a HMM} we can direct our search to specific
+  regions in the state space, depending on how probable it is for the
+  tracked object to be located there. This reduces the size of the
+  search space depending on how sure we are of the previous state.
 \end{enumerate}
+
+For a system whose dynamics is unknown, it may be difficult to achieve
+the first of these two. The \emph{particle filter} is a general
+technique that employs the second one, by first \emph{predicting} the
+next state and then \emph{filtering} the predictions depending on how
+probable they are.
 
 % This phenomen of having hue searchspace in highdimensinonal space is
 % fairly common and have the name "Curse of dimensionality".
@@ -193,15 +204,10 @@ direction.
 
 \section{The Particle Filter}
 
-One naive way to compute the state $Z_t$ would be to perform an
-exhaustive search in the state space, and select the state for which
-$\cprob{I_t}{Z_t}$ is maximised.<ref:COD>
-
-The particle filter is a technique for reducing the search
-space<ref:COD>. It uses a finite set $X_t$ of hypotheses to
-approximate the PDF $\cprobnext{Z}$ of a HMM. The hypotheses $X_t$ are
-also refered to as \emph{particles}, thereby the term ``particle
-filter''.
+The \emph{particle filter} is a technique for reducing the size of the
+search space. It uses a finite set $X_t$ of hypotheses to approximate
+the PDF $\cprobnext{Z}$ of a HMM. The hypotheses $X_t$ are also
+refered to as \emph{particles}, thereby the term ``particle filter''.
 
 \begin{figure}
   \centering
