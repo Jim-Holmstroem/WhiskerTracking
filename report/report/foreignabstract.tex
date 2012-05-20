@@ -4,17 +4,17 @@ Som ett resultat av detta finns det ett behov av automatisk följning av morrhå
 Nuvarande kommersiella lösningar är antingen extremt dyra, sätter begräsningar på experimentuppställningen
 eller misslyckas i stökiga miljöer eller när överlappning förekommer.
 
-Denna avhandling bidrar med en enkel implementation av ett probabilistiskt följningssystem. 
+Denna avhandling bidrar med en enkel implementation av ett \emph{probabilistiskt} följningssystem. 
 Lösningen använder sig av 
 en teknik som kallas \emph{partikelfilter} för att propagera en morrhårmodell mellan bildrutor 
 i höghastighetsvideo.
-För varje bildruta förutspås nästa tillstånd genom att fråga en förtränad databas 
+För varje bildruta förutspås nästa tillstånd genom att fråga en förtränad \emph{databas} 
 och filtera svaret genom partikelfiltret. 
 Implementationen är skriven i Python 2.6 och använder sig av programbiblioteken NumpPy och SQLite3.
 
 Testresultaten indikerar att metoden är rimlig. 
 Med endast en grovt snarlik databas lyckades algoritmen 
-tracka multipla morrhår, dock endast under korta sekvenser i taget. 
+följa multipla morrhår, dock endast under korta sekvenser i taget. 
 Bättre träningsdata, såsom handmarkerad riktig data, skulle kunna förbättra resultatet väsentligt.
 
 
