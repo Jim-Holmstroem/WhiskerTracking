@@ -58,7 +58,7 @@ for i, P in enumerate(err_norms):
     ax = Axes3D(fig)
 
     X, Y = numpy.meshgrid(aa[1:], pp)
-    Z = maxerr[1,:,1:,1,3]
+    Z = maxerr[best_maxerr[0][0],:,1:,best_maxerr[3][0],best_maxerr[4][0]]
     Z[numpy.where(Z > 1E17)] = None
     surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
     ax.set_title("Maxerr vs. a and p in L%i"%(P))
