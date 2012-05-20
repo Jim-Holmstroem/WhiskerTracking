@@ -5,7 +5,7 @@ import math
 from wmath import render_points
 
 class GWhiskerLayer(wlayer):
-    def __init__(self, particle, dl=5, length=150, width=15, alpha=1,rotation=0.,translate=(0,0)):
+    def __init__(self, particle, dl=5, length=200, width=1, alpha=1,rotation=0.,translate=(0,0)):
         wlayer.__init__(self, alpha)
         self.particle = particle
         self.renderer = GWhiskerRenderer(dl,length,width,rotation,translate)
@@ -48,7 +48,7 @@ class GWhiskerRenderer:
         
         map(fragment_renderer,points)
 
-        context.arc(0,0,3,-math.pi,math.pi)
+        #context.arc(0,0,self.width,-math.pi,math.pi)
         if filled:
             context.fill()
         else:

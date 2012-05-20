@@ -4,7 +4,8 @@ production grade system. High modularity also makes development easier
 and the system more robust against changes, two very important
 qualities during this project.
 
-The implementation is written in Python and consists of three main parts:
+The implementation is written in Python using NumPy and SQLite3, and
+consists of three main parts:
 \begin{description}
   \item[Particle Filter] A direct  implementation of the procedure in
     table \ref{alg:pf}.
@@ -30,13 +31,14 @@ and tracker, respectively.
 
 \subsection{Initilization $x_0$}
 The test implementation needs to be manually initialized. When
-tracking generated whiskers, the states were always known and program
-could therefore be programmatically inserted. When testing on real
-whiskers, the start states were calculated by manually selecting five
-or six pixels along each whisker and using a MATLAB script to find the
-least squares solution for the coefficients $\langle a_1, a_2, a_3
-\rangle$. The problem of automatic initialization is a difficult one
-\cite{Hedvig}, and is not covered in this thesis.
+tracking generated whiskers, the states were always known and the
+initialization could therefore be programmatically inserted. When
+testing on real whiskers, the start states were calculated by manually
+selecting five or six pixels along each whisker and using a MATLAB
+script to find the least squares solution for the coefficients
+$\coeffs$. The problem of automatic
+initialization is a difficult one \cite{Hedvig}, and is not covered in
+this thesis.
 
 \section{The state transition database}
 
@@ -106,8 +108,14 @@ coefficients.
 
 \subsection{Filtering $\cprob{I_t}{x_t}$}
 \label{sec:filtering}
+The \textsc{Importance} function in table \ref{alg:pf} is implemented
+simply as the response of $x_t$ on $I_t$, raised to a power $g$. A
+high $g$ means that the peak in the response is further
+amplified. Figure \ref{fig:example-mask} shows an example of a
+rendered hypothesis, as used for computing the response. See section
+\ref{sec:response} for details on the response.
 
-\begin{table}[h]
+\begin{table}[hb]
   \begin{codebox}
     \Procname{$\proc{Importance} (x_t, I_t)$}
     \li \Return $\Response{x_t}{I_t}{\phi}^g$
@@ -117,7 +125,7 @@ coefficients.
 \end{table}
 
 The \textsc{Importance} function in table \ref{alg:pf} as being the response for $x_t$ on $I_t$.
-\begin{figure}[h]
+\begin{figure}[hb]
   \centering
   \includegraphics[width=0.38\textwidth]{example-mask.png}
   \caption{Example rendered image $R(x_t)$ for some hypothesis $x_t$.}
@@ -153,7 +161,7 @@ a bright background. The filtering function described in the previous
 section expects whisker pixels to be bright, so the images had to be
 inverted. However, the body had the same pixel values as the whiskers,
 meaning no conclusions can be drawn simply by inspecting the value of
-a pixel.
+a pixel. Therefore the following steps also had to be taken.
 
 \subsection{Background subtraction}
 Removing effects like difference in background illumination and static
@@ -161,17 +169,12 @@ objects is preferred in order to minimize faulty responses.
 
 Assuming we always have a static camera setup for each sequence and
 that we have an adequate sequence without the rodent, the background
-$BG$ was captured a priori by taking the mean of the first 100
-frames.\footnote{A sufficient number}
-
-\begin{equation}
-  I_{BG} = \frac{\sum\limits_{bg\in BG}{I_{bg}}}{100}
-\end{equation}
-
-Then we can simply subtract the background $I_{BG}$ from the orignal
-image $I$: \footnote{Worth noting is that more sophisticated
-  background subtraction methods exist, but this solution works
-  relatively well considering the simplicity.}
+$BG$ was captured a priori by taking the mean $I_{BG}$ of the first
+100 frames.\footnote{A sufficient number} Then we can simply subtract
+the background $I_{BG}$ from the orignal image $I$: \footnote{Worth
+  noting is that more sophisticated background subtraction methods
+  exist, but this solution works relatively well considering the
+  simplicity.}
 
 \begin{equation}
   I_{FG} = I - I_{BG}.
@@ -188,9 +191,9 @@ order to highlight the whiskers.
   The image
   \begin{equation}
     \prob{\text{body}}\in \IS
-  \end{equation} is an estimation \footnote{Only needs to be an
-    indication on whether it is a body} on the probablity of the pixel
-  being a body pixel.
+  \end{equation} is an estimation if the probablity of the pixel
+  being a body pixel.\footnote{The estimate only needs to
+    be an indication of whether it is a body}
 \end{definition}
 
 We will assume that the only non-static objects in the image are the
@@ -229,9 +232,9 @@ indicator for the locations of whiskers.
   The image
   \begin{equation}
     \prob{\text{whisker}}\in \IS
-  \end{equation} is an estimation\footnote{Only needs to be an
-    indication on whether it is a whisker.} of the probablity of a
-  pixel being a whisker pixel.
+  \end{equation} is an estimation of the probablity of a pixel being
+  a whisker pixel.\footnote{The estimate only needs to be an
+    indication of whether it is a whisker.}
 \end{definition}
 
 This is naively performed by masking with the inverse
@@ -278,4 +281,4 @@ is extracted:\footnote{In the same way as $\Response{\cdot}{\cdot}{\phi}$ but wi
   \in \ZZ^2,
 \end{equation}
 
-And the frame is then translated accordingly.
+and the frame is then translated accordingly.

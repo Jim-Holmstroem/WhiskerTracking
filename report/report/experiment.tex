@@ -15,7 +15,7 @@ A benchmark was performed in order to identify how tracking
 performance is affected by the different parameters. The benchmark was
 performed on generated videos of synthetic whiskers, which enabled
 programmatic evaluation of the results since the correct shapes of the
-whiskers were known.
+whiskers, the \emph{ground truth}, were known.
 
 \subsection{Test data}
 \label{sec:test-data}
@@ -27,18 +27,20 @@ $a_3, a_2, a_1$. Each $a_i$ was in the range $\left[0,
   \sigma_i\right)$, where $\sigma_3 = 1.6 \cdot 10^{-5}, \sigma_2 =
 4\cdot 10^{-3}, \sigma_1 = 1$. Each whisker was then assigned a random
 phase $d \in \left[0, 2\pi\right)$, and the shape at time step $t$ was
-$\left(\Spline{\omega}\right) \sin(\frac{2\pi t}{30} + d)$. The
-frequency $\frac{1}{30}$ was selected through manual inspection of a
-video of real whiskers. The resulting whiskers were roughly
-reminiscent of real whiskers, and 6 sample frames can be seen in
-figure \ref{fig:benchmark-video}.
+$\left(\Spline{\omega}\right) \sin(\frac{2\pi t}{30} + d)$.
 
-The database was generated with the same parameters, and contained
-$2^{14} = 16384$ transitions. Each transition consisted of a ``from''
-part $\tf$ and a ``to'' part $\tt$. $\tf$ was created by generating a
-base state and phase in the same way as for the video, and setting
-$t=0$. $\tt$ was created by taking $\tf$ and increasing the phase by
-$\frac{2\pi}{30}$.
+The shape and the frequency $\frac{1}{30}$ were selected through
+manual inspection of a video of real whiskers in order to make the
+generated whiskers roughly realistic. The resulting whiskers were
+roughly reminiscent of real whiskers, and 6 sample frames can be seen
+in figure \ref{fig:benchmark-video}.
+
+The database was generated with the same settings as the video, and
+contained $2^{14} = 16384$ transitions. Each transition consisted of a
+``from'' part $\tf$ and a ``to'' part $\tt$. $\tf$ was created by
+generating a base state and phase in the same way as for the video,
+and setting $t=0$. $\tt$ was created by taking $\tf$ and increasing
+the phase by $\frac{2\pi}{30}$.
 
 \begin{figure}
   \centering
@@ -65,11 +67,11 @@ The following parameters were evaluated:
 \item[p] In which $\Lp$ space to compute $\Lpnorm{\tf - x_{t-1}}$ in
   the prediction step
 \item[a] The exponent for the weights in the prediction step, $w =
-  \left(\Lpnorm{\tf - x_{t-1}}\right)^{-a}$
+  \Lpnorm{\tf - x_{t-1}}^{-a}$
 \item[$\sigma$] Standard deviation modifier for the offset in the
   prediction step. Standard deviations for the $\omega^3, \omega^2$
-  and $\omega$ terms are $0.1\sigma\sigma_3, 0.1\sigma\sigma_2$ and
-  $0.1\sigma\sigma_1$, respectively.\footnote{See section
+  and $\omega$ terms are $\sigma\sigma_3, \sigma\sigma_2$ and
+  $\sigma\sigma_1$, respectively.\footnote{See section
     \ref{sec:test-data} for the $\sigma_i$ values.}
 \item[g] The exponent for the importance in the filtering step
 \end{description}
@@ -84,7 +86,7 @@ Table \ref{tbl:testcases} shows the tested values.
     $n$ & 64, 128, 256, 512\\
     $p$ & 2, 4, 8\\
     $a$ & 1, 2, 4, 8\\
-    $\sigma$ & 0.25, 0.5, 1, 2\\
+    $\sigma$ & 0.025, 0.05, 0.1, 0.2\\
     $g$ & 1, 2, 4, 8
   \end{tabular}
   \caption{Specification of test cases.}
@@ -95,17 +97,17 @@ Table \ref{tbl:testcases} shows the tested values.
 
 The benchmark was run on the test video for each combination of
 parameters in table \ref{tbl:testcases}. The output from the benchmark
-is an error tensor $\epsilon_{i,t}$, where index $i, t$ contains
+is an error matrix $\epsilon_{i,t}$, where index $i, t$ contains
 $\Lpnorm[2]{Z_t - x_t}$, the $\Lp[2]$ distance between the ground
 truth and estimated shape for whisker $i$ at time $t$. From this a
 list $\epsilon_i$ was computed as the root mean square of
 $\epsilon_{i,t}$ in the $t$ direction. Finally, the maximum value in
 $\epsilon_i$ was selected as the \emph{error} $\epsilon$ of that
-benchmark. This gives us the benchmark tensor
+run. This gives us the error tensor
 
 \begin{equation}
   E_{n,p,a,\sigma,g} = \argmax{i} \sqrt{\left(\sum\limits_t
-      \epsilon_{i,t}^2 \right)} \text{ for the test case } \left(n, p,
+      \epsilon_{i,t}^2 \right)} ~ \forall \left(n, p,
     a, \sigma, g\right).
 \end{equation}
 

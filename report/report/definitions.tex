@@ -26,42 +26,6 @@
   bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
 \end{definition}
 
-% \subsubsection{Color image}
-%A color image, can similary to grayscale images, be defined as
-% \begin{equation}
-%    \begin{array}{ccc}
-%    RGBimage : \NN^2 &\rightarrow& \NN^3\\
-%    RGBimage : position&\rightarrow&color
-%    \end{array}
-%\end{equation}
-%Which basically is foreach position in the image we have a response
-% color.  An alternitve represenation whould be $\NN^5=\langle
-% pos,value\rangle$.
-%
-%The RGB image space is denoted by
-%\begin{equation}
-%    RGBimage\in \IS_{RGB}
-%\end{equation}
-
-\begin{example}~\\
-  \begin{tabular}{lcr}
-    $
-    \begin{pmatrix} 
-      255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
-      255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
-      255&  255&  255&    0&  255&  255&    0&  255&  255&  255\\
-      255&  255&  255&    0&  255&  255&    0&  255&  255&  255\\
-      255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
-      255&    0&  255&  255&  255&  255&  255&  255&    0&  255\\
-      255&  255&    0&  255&  255&  255&  255&    0&  255&  255\\
-      255&  255&  255&    0&    0&    0&    0&  255&  255&  255\\
-      255&  255&  255&  255&  255&  255&  255&  255&  255&  255\\
-      255&  255&  255&  255&  255&  255&  255&  255&  255&  255
-    \end{pmatrix}$
-    &$\Rightarrow$& \parbox[c]{1em}{\includegraphics[scale=10.0]{smiley.png}}
-    \end{tabular}
-\end{example}
-
 \subsection{Video}
 \begin{definition}
   A \emph{video} is a function mapping an integer to an image:
@@ -95,6 +59,9 @@
       (I_a,I_b) &\mapsto I_a+I_b
     \end{split}
   \end{equation}
+
+  The structure $\langle \IS,+,*\rangle$ inherits the properties from
+  $\langle \RR^+,+,*\rangle$ by just being a vectorized version.
 \end{definition}
 
 \begin{definition}
@@ -110,21 +77,6 @@
 \end{definition}
 
 \begin{definition}
-\label{def:image_transform}
-  The image transformation $\phi$ takes an image $I$ and returns a
-  transformed image.
-  \begin{equation}
-    \begin{split}
-      \phi : \IS &\rightarrow \IS\\
-      I &\mapsto \phi(I)
-    \end{split}
-  \end{equation}
-\end{definition}
-
-The structure $\langle \IS,+,*\rangle$ inherits the properties from
-$\langle \RR^+,+,*\rangle$ by just being a vectorized version.
-
-\begin{definition}
 \label{def:image_subtraction}
   We will use subtraction loosely\footnote{Meaning, no analysis on the
     structure is done.} as elementwise subtraction and then subtract
@@ -133,6 +85,18 @@ $\langle \RR^+,+,*\rangle$ by just being a vectorized version.
     \begin{split}
       - : \IS \times \IS &\rightarrow \IS\\
       (I_a,I_b) &\mapsto I_a-I_b
+    \end{split}
+  \end{equation}
+\end{definition}
+
+\begin{definition}
+\label{def:image_transform}
+  The image transformation $\phi$ takes an image $I$ and returns a
+  transformed image.
+  \begin{equation}
+    \begin{split}
+      \phi : \IS &\rightarrow \IS\\
+      I &\mapsto \phi(I)
     \end{split}
   \end{equation}
 \end{definition}
