@@ -52,7 +52,7 @@ for i, P in enumerate(err_norms):
     best = numpy.where(E[i] == E[i].min())
 
     print "Least maxerr for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%i"%((P, maxerr.min()) + get_params_for_index(best_maxerr))
-    print "Least error for L%i:  %f\tn=%i, p=%i, a=%i, g=%i, s=%i"%((P, E[i].min()) + get_params_for_index(best))
+    print "Least error  for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%i"%((P, E[i].min()) + get_params_for_index(best))
 
     fig = plt.figure()
     ax = Axes3D(fig)
