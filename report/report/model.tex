@@ -51,11 +51,12 @@ candidates:
   b_k\cos(\frac{k\pi\omega}{L})$
 \end{itemize}
 
-A brief analysis of both follows.
+A brief analysis of both will follow, after a discussion of
+simplifications and difference measures..
 
 \subsection{Simplifications}
 One simplification one might make is to assume that the root of the
-whisker is fixed in some point on the cheek. This means that we can
+whisker is fixed in some point on the snout. This means that we can
 let the whisker function be defined in a head-fixed coordinate system
 for each whisker, with the root of the whisker at the origin. This
 gives us the boundary condition
@@ -66,7 +67,7 @@ gives us the boundary condition
 
 Manual inspection of whisker videos suggests that this is not the case
 for real whiskers. However, there seems to be some point within the
-cheek that stays approximately still and can be regarded as the root
+snouts that stays approximately still and can be regarded as the root
 of the whisker. A better model could take this into account, but that
 will not be covered in this thesis.
 
@@ -85,20 +86,20 @@ where $D>0$ is the thickness at the root and $L>0$ is the total length of the
 whisker.
 
 \subsection{Difference measure}
-    The standard way to quantify distance between functions defined on an
-    interval $\interval{a}{b}$ is to use the norm in the $\Lp[2](a, b)$
-    Hilbert space. In this thesis, the norms for $p = 2, 4, 8$ will be
-    used, and the impact of the choice of $p$ will be investigated. This
-    means that condition 1 above says the model must be such that the
-    $\Lp$ distance $\Lpnorm{\text{whisker} - \text{whisker*}}$ can be made
-    arbitrarily small.
+The standard way to quantify distance between functions defined on an
+interval $\interval{a}{b}$ is to use the norm in the
+$\Lp[2](\interval{a}{b}, 1)$ Hilbert space. In this thesis, the norms
+for $p = 2, 4, 8$ will be used, and the impact of the choice of $p$
+will be investigated. This means that condition 1 above says the model
+must be such that the $\Lp$ distance $\Lpnorm{\text{whisker} -
+  \text{whisker*}}$ can be made sufficiently small.
 
 \subsection{Polynomial $\Spline{\omega}$}
-The first and simplest candidate is the polynomials. Three terms are
-enough to approximate a whisker well enough that the difference is not
-visible to the naked eye. A whisker function can therefore be modeled
-as a third degree polynomial $\Spline{\omega}$, also known as a
-\emph{spline}.
+The first and simplest candidate is the polynomials. Manual tests in
+MATLAB indicate that three terms are enough to approximate a whisker
+well enough that the difference is not visible to the naked eye. A
+whisker function can therefore be modeled as a third degree polynomial
+$\Spline{\omega}$, also known as a \emph{spline}.
 
 These define parameterized curves in the $xy$ plane as
 \begin{equation}
@@ -121,7 +122,8 @@ series will always be zero at $\omega = L$, and is therefore not a
 reasonable model for whiskers. To address this, one could instead use
 quarter-periods: $\sum a_k \sin\left( \frac{k\pi\omega}{2L}\right)$,
 but at the cost of losing the orthogonality property of the sine
-basis.
+basis. Manual tests in MATLAB indicate that such a series to third
+order performs approximately the same as a spline.
 
 These define parameterized curves in the $xy$ plane as
 \begin{equation}
@@ -132,14 +134,23 @@ These define parameterized curves in the $xy$ plane as
 The choice of a sine series can be justified by comparing with the
 theory of stiff strings in analytical mechanics. The movement equation
 for a stiff string is a partial differential equation containing the
-second and fourth spatial derivatives. A classic separation of
-variables solution to the equation would be a sine series for the
-spatial part.
+second and fourth spatial derivatives.\footnote{Source: Solving
+  exercise 7.10 of \cite{VarKalk} using variational calculus.} A
+classic separation of variables solution to the equation would be a
+sine series for the spatial part.
 
 \subsection{Theoretical evaluation}
 
-It is hard to analytically justify the choice of $\text{whisker}^*$
+It is hard to theoretically justify the choice of $\text{whisker}^*$
 model since we do not have an analytic model for the $\text{whisker}$.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.45\textwidth]{rat-splines.png}
+  \includegraphics[width=0.45\textwidth]{rat-sines.png}
+  \caption{Comparison of whisker models. Left: Splines, Right: Sine series}
+  \label{fig:model-comparison}
+\end{figure}
 
 For this thesis, the spline model was used in the tracking engine. The
 main reason for this is that it is slightly simpler than the sine

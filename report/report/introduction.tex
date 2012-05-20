@@ -20,24 +20,24 @@ uses its whiskers.
 
 \section{Difficulties}
 In general, the main difficulty in tracking and localization is to
-separate the tracked object from clutter and occlusion. In the case of
-whisker tracking, the dominant problems are that whiskers often
-overlap, and the relatively low spatial and temporal resolution in
-highspeed video results in subpixel whiskers and motion
-blur. \cite{WhiskerVideography}
-
-In 2001, Hedvig Sidenbladh investigated probabilistic methods for
-tracking three-dimensional human motion in monocular
-video. \cite{Hedvig} Many of the problems inherent in computer vision
-were regarded, and the thesis shows that powerful conclusions can be
-drawn by combining multiple visual cues.\footnote{The solution in this
-thesis employs only a single visual cue.}
+separate the tracked object from clutter and occlusion. In 2001,
+Hedvig Sidenbladh investigated probabilistic methods for tracking
+three-dimensional human motion in monocular video. \cite{Hedvig} Many
+of the problems inherent in computer vision were regarded, and the
+thesis shows that powerful conclusions can be drawn by combining
+multiple visual cues.\footnote{The solution in this thesis employs
+  only a single visual cue.}
 
 The most apparent problems in whisker tracking is occlusion and motion
 blur. Other, more subtle, problems include 3D to 2D projection
 ambiguities and that the whisker root is constantly occluded by facial
 hairs. The latter gives us the problem of not knowing where the
-whiskers are rooted, making the whiskers more difficult to model.
+whiskers are rooted, making the whiskers more difficult to model. The
+relatively low spatial and temporal resolution in highspeed video may
+also result in subpixel whiskers and motion
+blur.\cite{WhiskerVideography}
+
+
 
 \section{Contributions of this thesis}
 This thesis provides three main contributions:

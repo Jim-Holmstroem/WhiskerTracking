@@ -33,12 +33,12 @@ The working principle of the particle filter is based on the
 where we cannot measure the state directly - it is
 ``hidden''\cite{EncyclopediaMachineLearning}.  Instead we obtain an
 \emph{observation} $I$\footnote{In this thesis, the observation is
-always a grayscale \emph{image}, therefore the observation is denoted
-$I$.}  of the state. This \emph{perception} is generally
+  always a grayscale \emph{image}, therefore the observation is
+  denoted $I$.}  of the state. This \emph{perception} is generally
 non-deterministic, so we need to denote it as $p(I_t|Z_t)$ which is
 the probability that we will observe $I_t$ if the state is
-$Z_t$. Figure \ref{fig:hmm-graph} shows how the observation $I_t$ is
-nondeterministic, but depends on the state $Z_t$.
+$Z_t$. Figure \ref{fig:hmm-graph} shows how the observation $I_t$ fits
+into the underlying Markov process.
 
 \begin{figure}
   \centering
@@ -58,11 +58,14 @@ samples to obtain a sample density of $C$ in a $n$-dimensional space.
 The first consequence of this is that in order to approximate a
 high-dimensional function one needs orders of magnitude more samples.
 
-The other drawback with high dimensional space is the large
-``borders'' of the sample-set compared to lower dimensional space
-which results in orders of magnitude higher chance for an point one
-want to approximate to fall outside the sample-set and needs to be
-extrapolated instead of the better alternative of interpolation.
+The other drawback of high dimensional spaces is the ``borders'' of
+the sample set compared to lower dimensional spaces. The result is
+that the chance for point one wants to approximate to fall outside the
+sample set is orders of magnitude greater, and the point then needs to
+be extrapolated instead of the better alternative of interpolation.
+
+The following examples illustrate some of the difficulties with high
+dimensional spaces, as well as a case when an exhaustive is feasible.
 
 \begin{example} Figure \ref{fig:curse-of-dimensionality} shows 128
 randomly scattered points in 1, 2 and 3 dimensions. Notice how the
@@ -110,11 +113,8 @@ a directed search, which could be done in one of the following ways:
   search space depending on how sure we are of the previous state.
 \end{enumerate}
 
-For a system whose dynamics is unknown, it may be difficult to achieve
-the first of these two. The \emph{particle filter} is a general
-technique that employs the second one, by first \emph{predicting} the
-next state and then \emph{filtering} the predictions depending on how
-probable they are.
+The next section will describe a technique for reducing the size of
+the search space in this fashion.
 
 
 \section{The Particle Filter}
@@ -128,10 +128,10 @@ refered to as \emph{particles}, thereby the term ``particle filter''.
   \centering
   \includegraphics[width=0.8\textwidth]{hmm-pf-graph.pdf}
   \caption{Schematic image of the particle filter alongside a HMM.}
-  \label{fig:hmm-graph}
+  \label{fig:hmm-pf-graph}
 \end{figure}
 
-Figure \ref{fig:hmm-graph} shows the principle of the particle filter
+Figure \ref{fig:hmm-pf-graph} shows the principle of the particle filter
 working alongside a hidden Markov model. The following is the core
 function of the particle filter:
 
@@ -142,31 +142,38 @@ function of the particle filter:
 
 More particles mean greater accuracy, since the PDF can then be
 approximated more closely. However, using many particles increses
-computational cost.  Therefore the number of particles is an important
-trade-off.  The particle filter employs a few tricks to \emph{filter}
-the hypotheses, tending to keep probable ones and throwing improbable
-ones away, in order to intelligently reduce the number of particles
-needed for a good approximation. The filter works in four steps:
+computational cost. The particle filter employs a few tricks to
+\emph{filter} the hypotheses, tending to keep probable ones and
+throwing improbable ones away, in order to intelligently reduce the
+number of particles needed for a good approximation. The filter works
+in four steps:
 
 \begin{description}
 \item[Prediction] The hypotheses $X_{t-1}$ are updated in the
   \emph{prediction} step to an approximation $\bar{X}_t$ of
-  $\cprobnext{Z}$.  This is done by drawing new samples
+  $\cprobnext{Z}$.  This is done by drawing new samples from
   $\cprobnext{x}$, for each $x_{t-1}$ in $X_{t-1}$.
 \item[Perception] By measuring the state of the system, we gain an
   \emph{observation} $I_t \sim \cprob{I_t}{Z_t}$ of the state $Z_t$.
 \item[Filtering] The observation $I_t$ of the system is then used for
   filtering bad hypotheses out of $\bar{X}_t$.  We draw samples $X_t$
   from $\bar{X}_t$ with probabilities given by
-  $\cprob{I_t}{\bar{X}_t}$. The result will be a surjection, where
-  $X_t$ will be a subset of $\bar{X}_t$ where more probable hypotheses
-  appear multiple times.<ref:problem without sigma> For this reason,
-  this is also known as the \emph{resampling} step. The set $X_t$ is
-  the \emph{belief}, our approximation of $\cprobnext{Z}$.
+  $\cprob{I_t}{\bar{X}_t}$. The resulting $X_t$ will be a subset of
+  $\bar{X}_t$ where more probable hypotheses appear multiple
+  times. For this reason, this is also known as the \emph{resampling}
+  step. The set $X_t$ is the \emph{belief}, our approximation of
+  $\cprobnext{Z}$.
+  
+  The property $\bar{X}_t \subset X_t$ can cause problems if the
+  prediction step is deterministic. This is because hypotheses
+  ``condense'' into the most probable ones during filtering, meaning
+  that all hypotheses will eventually be the same if the prediction
+  step is deterministic.
+
 \item[Selection] Finally, we produce a single hypothesis $x_t$ from
   $X_t$ as our \emph{estimate} of the state $Z_t$. Assuming $X_t$ is a
   good approximation of $\cprobnext{Z}$, and that $\cprobnext{Z}$ is
-  unimodal, the means value of $X_t$ is a good estimate since it
+  unimodal, the mean value of $X_t$ is a good estimate since it
   approximates the expectation of $\cprobnext{Z}$.  If $\cprobnext{Z}$
   is multimodal, however, the mean could be a bad estimate since the
   expectation may be very improbable.
@@ -184,32 +191,19 @@ The reason why this works is the following theorem, which is Theorem
   \cprob{x_t}{I_t \wedge \dots \wedge I_0} = \kappa \cprob{I_t}{x_t} \int{ \cprobnext{x}\cprob{x_{t-1}}{I_{t-1} \wedge \dots \wedge I_0} \mathrm{d}x_{t-1}},
   \label{thm:pf-grand}
 \end{equation}
-where $\kappa$ is a normalization constant
+where $\kappa$ is a normalization constant.
 
 For the proof of this, see \cite{Hedvig}.
 
 \end{theorem}
 
-Let's sketch out the connection between this and what we've done so
-far. <<THIS WILL BE EDITED.>> For a more rigorous derivation, see chapter 4 of \cite{ProbRob}.
+Remembering that we approximate $\cprob{x_{t-1}}{I_{t-1} \wedge \dots
+  \wedge I_0}$ with the set $X_{t-1}$, one can see the connection to
+the following algorithm.
 
-In this thesis, $\cprob{x_t}{I_t \wedge \dots \wedge I_0}$ is
-approximated as the set $X_t$ of hypotheses. Substituting this into
-\eqref{thm:pf-grand} and replacing the integral with a sum yields
-
-\begin{equation}
-  X_t = \kappa \cprob{I_t}{x_t} \sum { \cprobnext{x} X_{t-1} }.
-\end{equation}
-
-Note that this is horrible abuse of notation, but from here we can
-take the step to
-
-\begin{equation}
-  X_t \sim \cprob{I_t}{x_t} \cprobnext{x}
-\end{equation}
 
 \subsection{The Particle Filter algorithm}
-\begin{table}
+\begin{table}[hb]
   \begin{codebox}
     \Procname{$\proc{Particle-Filter} (X_{t-1},I_t)$}
     \li $\bar{X}_t \gets \emptyset$
@@ -266,22 +260,27 @@ in the form of a backlit rodent}, edges, ridges\cite{Hedvig} or different
 refinements as in section \ref{prep-real}.
 
 \section{Response}
+\label{sec:response}
 
 \begin{definition}
-    A \emph{response} is how much a hypothesis matches an image. The similarity measure for hypothesis response this thesis is defined by
+  A \emph{response} is how much a hypothesis matches an image. The
+  similarity measure for hypothesis response this thesis is defined by
     \begin{equation}
         \label{eq:response}
         \Response{x_t}{I_t}{\phi} = \sum{\phi(R(x_t))*\phi(I_t)} \in \RR^+
     \end{equation}
-    where $\Response{x_t}{I_t}{\phi}$ will denote the response. 
-    \footnote{The denotation $\Response{\cdot}{\cdot}{\phi}$ for response was choosen to show the similaritise with inner product.}
+    where $\Response{x_t}{I_t}{\phi}$ will denote the response.
+    \footnote{The notation $\Response{\cdot}{\cdot}{\phi}$ for
+      response was chosen to show the similarity with inner product.}
 
 \end{definition}
 
-Assuming $R$ renders $x_t$ perfectly and that $I_t$ does not have clutter, the maximum response will uniquely
-\footnote{Disregarding the phenomena of having $\exists x_a\neq x_b : R(x_a)=R(x_b)$},
-be when the two underlying models coinside by theorem \ref{thm:response_max}.
-How nice the response peak is is highly dependent on all the terms in \eqref{eq:response}.
+Assuming $R$ renders $x_t$ perfectly and that $I_t$ does not have
+clutter, the maximum response will uniquely\footnote{Disregarding the
+  phenomenon of having $\exists x_a\neq x_b : R(x_a)=R(x_b)$}, be when
+the two underlying models coincide, by theorem \ref{thm:response_max}.
+How nice the response peak is is highly dependent on all the terms in
+\eqref{eq:response}.
 
 \begin{theorem} %TODO svagare?
   \label{thm:response_max}
@@ -295,7 +294,7 @@ How nice the response peak is is highly dependent on all the terms in \eqref{eq:
   \end{equation}
 \end{theorem}
 \begin{proof}
-  Firstly define the window function as
+  We first define the window function
 
   \begin{IEEEeqnarray*}{s"r?c?l}
     & W_a^b(x) & = &
@@ -328,8 +327,8 @@ How nice the response peak is is highly dependent on all the terms in \eqref{eq:
   dimensions since we can just repeat the process one dimension at a
   time.
     
-  All riemann functions with compact support can be written as a superposition of finite number of finite windows
-  like this
+  All Riemann functions with compact support can be written as a
+  superposition of finite number of finite windows like this
   \begin{equation*}
     f(x)=\sum{c_iW_{a_i}^{b_i}(x)},
   \end{equation*}
