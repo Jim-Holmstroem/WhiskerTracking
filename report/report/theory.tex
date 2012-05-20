@@ -270,19 +270,22 @@ refinements as in section \ref{prep-real}.
 \begin{definition}
     A \emph{response} is how much a hypothesis matches an image. The similarity measure for hypothesis response this thesis is defined by
     \begin{equation}
+        \label{eq:response}
         \Response{x_t}{I_t}{\phi} = \sum{\phi(R(x_t))*\phi(I_t)} \in \RR^+
     \end{equation}
-    where $\Response{x_t}{I_t}{\phi}$ will later denote the response. \footnote{The denotation $\Response{\cdot}{\cdot}{\phi}$ for response was choosen to show the similaritise with inner product.}
+    where $\Response{x_t}{I_t}{\phi}$ will denote the response. 
+    \footnote{The denotation $\Response{\cdot}{\cdot}{\phi}$ for response was choosen to show the similaritise with inner product.}
 
 \end{definition}
 
-Assuming $R$ render $x_t$ in the same way as the realworld renderer does we want to know 
-
-How well this is obtained depends on the response curve
+Assuming $R$ renders $x_t$ perfectly and that $I_t$ does not have clutter, the maximum response will uniquely
+\footnote{Disregarding the phenomena of having $\exists x_a\neq x_b : R(x_a)=R(x_b)$},
+be when the two underlying models coinside by theorem \ref{thm:response_max}.
+How nice the response peak is is highly dependent on all the terms in \eqref{eq:response}.
 
 \begin{theorem} %TODO svagare?
   \label{thm:response_max}
-  Let $f$ be a positive Riemann function with compact support,
+  Let $f$ be a positive Riemann function with finite support,
   defined on a set $\Omega$. Then
   \begin{equation}
     \argmax{\bar{e}}
@@ -325,13 +328,12 @@ How well this is obtained depends on the response curve
   dimensions since we can just repeat the process one dimension at a
   time.
     
-  All riemann functions can be written as a superposition of windows
+  All riemann functions with compact support can be written as a superposition of finite number of finite windows
   like this
   \begin{equation*}
     f(x)=\sum{c_iW_{a_i}^{b_i}(x)},
   \end{equation*}
-  
-  and therefore \eqref{thm:response-max-eqn} holds for any Riemann function $f$ with finite support.
+  and therefore \eqref{thm:response-max-eqn} holds for any Riemann function $f$.
   
 \end{proof}
 
