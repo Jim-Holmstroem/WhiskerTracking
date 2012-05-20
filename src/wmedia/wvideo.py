@@ -51,7 +51,6 @@ class wvideo(wlayer):
         else:
             raise Exception("input_data-list has len=0")
 
-
     def init_with_filename(self,filename):
         """
         load PNGVIN file from filename
@@ -99,5 +98,4 @@ class wvideo(wlayer):
     def image_shape(self):
         assert len(self.imgs) > 0, "Video is empty"
         return self.imgs[0].data.shape
-
 
