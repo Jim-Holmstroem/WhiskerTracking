@@ -56,23 +56,15 @@ for i, P in enumerate(err_norms):
 
     fig = plt.figure()
     ax = Axes3D(fig)
-    X = aa[1:]
-    Y = pp
-    
-    X, Y = numpy.meshgrid(X, Y)
+
+    X, Y = numpy.meshgrid(aa[1:], pp)
     Z = maxerr[1,:,1:,1,3]
     Z[numpy.where(Z > 1E17)] = None
-    
     surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
-    #ax.set_zlim3d(0, 150)
-    #ax.w_zaxis.set_major_locator(LinearLocator(10))
-    #ax.w_zaxis.set_major_formatter(FormatStrFormatter('%.03f'))
-
     ax.set_title("Maxerr vs. a and p in L%i"%(P))
     ax.set_xlabel('a')
     ax.set_ylabel('p')
     ax.set_zlabel('E')
-    
     fig.colorbar(surf)
     
 plt.show()
