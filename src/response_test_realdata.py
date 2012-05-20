@@ -1,7 +1,7 @@
 import gtk
 
 from wgui import wwindow,wlayermanager
-from wmedia import wvideo,testscreen
+from wmedia import wimage,wvideo,testscreen
 
 import math
 import numpy
@@ -17,25 +17,28 @@ from wview.gwhisker import GWhiskerLayer
 if __name__=="__main__":
     layermanager = wlayermanager()
     
-    tries = 64
+    tries = 64*4
 
     testrange=range(-tries,tries+1)
-    testalpha=1.0
+    testalpha=0.3
 
+
+    pos=(272.,126.)
+    w=3
 
     whisker3=wvideo(map(lambda b:
-        GWhiskerLayer((float(b*(16/float(tries)))/(512**2),0,0,0),rotation=0,translate=(256.,256.)),testrange),alpha=testalpha)
+        GWhiskerLayer((float(b*(16/float(tries)))/(512**2),0,0,0),rotation=0,width=w,translate=pos),testrange),alpha=testalpha)
     whisker2=wvideo(map(lambda b:
-        GWhiskerLayer((0,float(b*(16/float(tries)))/512,0,0),rotation=0,translate=(256.,256.)),testrange),alpha=testalpha)
+        GWhiskerLayer((0,float(b*(16/float(tries)))/512,0,0),rotation=0,width=w,translate=pos),testrange),alpha=testalpha)
     whisker1=wvideo(map(lambda b:
-        GWhiskerLayer((0,0,float(b*(16/float(tries)))/8,0),rotation=0,translate=(256.,256.)),testrange),alpha=testalpha)
-    zero=wvideo(map(lambda b:
-        GWhiskerLayer((0,0,0,0),rotation=0.,translate=(256.,256.)),testrange),alpha=testalpha)
+        GWhiskerLayer((0,0,float(b*(16/float(tries)))/8,0),rotation=0,width=w,translate=pos),testrange),alpha=testalpha)
+
+    testimage=wimage("/misc/projects/whisker/video/m8_multi-frames/preprocessed_whiskers/frame-0488.png")
+    zero=wvideo([testimage]*len(testrange),alpha=testalpha)
     
     x1=numpy.array(map(lambda b:float(b*(16/float(tries)))/(512**2),testrange))
     x2=numpy.array(map(lambda b:float(b*(16/float(tries)))/512,testrange))
     x3=numpy.array(map(lambda b:float(b*(16/float(tries)))/8,testrange))
-    
     
     #phi
     zerot=zero
@@ -81,12 +84,12 @@ if __name__=="__main__":
 
     pylab.show()
 
-
-    #layermanager.add_layer(whisker3)
-    #layermanager.add_layer(whisker2)
+    layermanager.add_layer(testimage)
     layermanager.add_layer(whisker1)
+    layermanager.add_layer(whisker2)
+    layermanager.add_layer(whisker3)
   
-    layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
+    #layermanager.exportPNGVIN(make_video_path("gwhisker_spline_test.pngvin"))
 
     win=wwindow(layermanager)
 
