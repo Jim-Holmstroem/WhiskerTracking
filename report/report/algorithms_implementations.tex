@@ -174,8 +174,8 @@ objects is preferred in order to minimize faulty responses.
 Assuming we always have a static camera setup for each sequence and
 that we have an adequate sequence without the rodent, the background
 $BG$ was captured a priori by taking the mean $I_{BG}$ of the first
-100 frames as seen in figure \ref{fig:orignal_bg}.\footnote{A sufficient number} Then we can simply subtract
-the background $I_{BG}$ from the orignal image $I$ and getting the result shown in figure \ref{fig:subtract}: \footnote{Worth
+100 frames as seen to the left in figure \ref{fig:orignal_bg}.\footnote{A sufficient number} Then we can simply subtract
+the background $I_{BG}$ from the orignal image $I$ and getting the result shown to the right in figure \ref{fig:subtract}: \footnote{Worth
 noting is that more sophisticated background subtraction methods
 exist, but this solution works relatively well considering the
 simplicity.}
@@ -218,7 +218,7 @@ order to highlight the whiskers.
 We will assume that the only non-static objects in the image are the
 whiskers and body. One simple feature that easily classifies
 $\prob{\text{whisker}}$ from $\prob{\text{body}}$ is size. Blurring
-the image removes fine structures and retains larger which can be seen in figure \ref{fig:blured_snout}.  This was
+the image removes fine structures and retains larger which can be seen to the left in figure \ref{fig:blured_snout}.  This was
 performed by convoluting the image with a Gaussian with
 ${\sigma=9}$px:\footnote{The value of $\sigma$ was obtained by manual
   testing and inspection.}
@@ -236,7 +236,7 @@ $\prob{\text{body}}$ was then used to create a \emph{mask} $I_{\text{body}}$:
   I_{\text{body}} = \prob{\text{body}}>0.6 \in \IS,
 \end{equation}
 meaning $I_{\text{body}}$ is white where $\prob{\text{body}}$ is greater than
-0.6 and black everywhere else, the result is displayed in figure \ref{fig:blured_snout}.\footnote{The 0.6 threshold was found,
+0.6 and black everywhere else, the result is displayed to the right in figure \ref{fig:blured_snout}.\footnote{The 0.6 threshold was found,
 through manual testing, to make the body stable between frames.}
 
 \begin{figure}
