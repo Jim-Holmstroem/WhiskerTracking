@@ -16,8 +16,8 @@ DATA_DIRECTORY = "data"
 """Directory for files generated when running the program, relative to ROOT_DIRECTORY"""
 RUN_DIRECTORY = "run"
 
-IMAGE_WIDTH = 640
-IMAGE_HEIGHT = 300
+IMAGE_WIDTH = 220
+IMAGE_HEIGHT = 220
 
 def make_path(*args):
     """Make the given path an absolute path by prepending ROOT_DIRECTORY

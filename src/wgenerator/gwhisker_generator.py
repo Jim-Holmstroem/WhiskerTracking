@@ -14,11 +14,19 @@ class GWhiskerGenerator(Generator):
 
     PARAMETER_GROUPS = [3]
 
+    A_LIMITS = 0.000016 * numpy.array((0, 1))
+    B_LIMITS = 0.004 * numpy.array((0, 1))
+    C_LIMITS = 1 * numpy.array((0, 1))
+
+    DT = 2*math.pi/30
+
+    """
     DT = math.pi/32
 
     A_LIMITS = (-0.00004, 0.00004)
     B_LIMITS = (-0.010, 0.010)
     C_LIMITS = (-0.5, 0.5)
+    """
 
     dl = 5
     length = 150
@@ -45,9 +53,14 @@ class GWhiskerGenerator(Generator):
             self.renderers.append(GWhiskerRenderer(self.dl, self.length, self.width, translate=self.translate[i]))
 
     def goto_time(self, base_states, t):
+        return base_states * numpy.vstack((numpy.sin(t), numpy.sin(t), numpy.sin(t))).T
+
+    """
+    def goto_time(self, base_states, t):
         cp = base_states.copy()
         cp[:,1] *= numpy.sin(t)
         return cp
+    """
 
     def generate_training_transitions(self):
     
@@ -73,11 +86,10 @@ class GWhiskerGenerator(Generator):
         states = numpy.zeros((num_frames, state.size))
 
         t = numpy.random.uniform(0, math.pi*2)
-        dt = math.pi/32
 
         for i in xrange(num_frames):
             states[i,:] = self.goto_time(state, t)
-            t += self.dt*dt
+            t += self.dt*self.DT
         
         return numpy.array(states)
     
