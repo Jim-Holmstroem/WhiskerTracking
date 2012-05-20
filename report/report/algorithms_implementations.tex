@@ -140,98 +140,132 @@ high if the image pixels along $x_t$ are bright.
 In the images of real rodents used for testing, the rodent was
 illuminated from below, meaning it and its whiskers were dark against
 a bright background. The filtering function described in the previous
-section expects whisker pixels to be bright and the body has the same 
-pixel values as the whiskers, so the images had to be inverted.
+section expects whisker pixels to be bright, so the images had to be
+inverted. However, the body had the same pixel values as the whiskers,
+meaning no conclusions can be drawn simply by inspecting the value of
+a pixel.
 
-\subsection{Subtracting background}
-    Removing effects like difference in background illumination 
-    and static objects is prefered to minimize faulty responses. 
+\subsection{Background subtraction}
+Removing effects like difference in background illumination and static
+objects is preferred in order to minimize faulty responses.
 
-    Assuming we always have a static camera setup foreach sequence and 
-    that we have a adiquit sequence without the rodent.
-    The background was captured a priori by taking a mean\ref{def:image_addition} 
-    of the 100\footnote{Just a sufficient number} first frames $BG$ 
-    \begin{equation}
-        I_{BG} = \frac{\sum\limits_{bg\in BG}{I_{bg}}}{\#\left\{BG\right\}}.
-    \end{equation}
-    <<image showing the mean background>>
+Assuming we always have a static camera setup for each sequence and
+that we have an adequate sequence without the rodent, the background
+$BG$ was captured a priori by taking the mean of the first 100
+frames.\footnote{A sufficient number}
 
-    Then we can simply subtract\ref{def:image_subtraction} the background $I_{BG}$ 
-    from the orignal image $I$
-    \footnote{
-    Worth noting is that more sofisticated methods exists to subtract the background, 
-    but this solution works relatively well considering the simplicity.
-    }
-   
-    \begin{equation}
-        I_{FG} = I - I_{BG}
-    \end{equation}
-    <<example with the 3 images involved above alongside eachother>>
+\begin{equation}
+  I_{BG} = \frac{\sum\limits_{bg\in BG}{I_{bg}}}{100}
+\end{equation}
 
+Then we can simply subtract the background $I_{BG}$ from the orignal
+image $I$: \footnote{Worth noting is that more sophisticated
+  background subtraction methods exist, but this solution works
+  relatively well considering the simplicity.}
 
-\subsection{Finding the body $\prob{\text{body}}$}
-    Finding the body has two purposes, firstly to find the head-coordinate system 
-    and secondly to subtract the body from the image to find whiskers.
-    \begin{definition}
-        \begin{equation}
-            \prob{\text{body}}\in \IS
-        \end{equation} Is an estimation\footnote{Only needs to be an indication on wether 
-        it is a body} on the probablity of the pixel to be a householding a rodent body.
-    \end{definition}
-    Assuming that the only non-static objects in the image is the whiskers and body.
-    One simple feature that easily classifies $\prob{\text{whisker}}$ from 
-    $\prob{\text{body}}$ is size. Bluring the image removes fine structures 
-    and retains larger ones.
-    This was performed by convoluting the image with a gaussian with ${\sigma=9}$px\footnote{The value for $\sigma$ was obtained by manual testing.}
-    \begin{equation}
-        \prob{\text{body}} = I_{blur} = I_{FG}\star \text{gauss}(0,\sigma)
-    \end{equation}
-    <<example of the blur showing that the whiskers has almost disapeared>>
-    Which then was made to a mask by 
-    \begin{equation}
-        \text{body} = \prob{\text{body}}>0.6 \in \IS.\footnote{0.6 found to be a value making the body stable between frames}
-    \end{equation}
-    representing the location of the body.
-    <<example showing p(body) och body alongside each other>>
+\begin{equation}
+  I_{FG} = I - I_{BG}.
+\end{equation}
+<<3 images: image, mean background, after subtraction>>
 
-\subsection{Estimating $\prob{whisker}$}
-    Getting an indicator on the location of whiskers is needed for the filtering.\ref{sec:filtering}
-    \begin{definition}
-        \begin{equation}
-            \prob{whisker}\in \IS
-        \end{equation} Is an estimation\footnote{Only needs to be an indication on wether it is a whisker} on the probablity of the pixel to be a householding a rodent whisker.
-    \end{definition}
-    This is na\"{i}vly performed by
-    \begin{equation}
-        \prob{\text{whisker}} = I_{FG}*(1-\text{body})
-    \end{equation}
+\subsection{Find the body $\prob{\text{body}}$}
+\label{sec:findbody}
+Finding the body has two purposes. First, to find the head-fixed
+coordinate system. Second, to subtract the body from the image in
+order to highlight the whiskers.
+
+\begin{definition}
+  The image
+  \begin{equation}
+    \prob{\text{body}}\in \IS
+  \end{equation} is an estimation \footnote{Only needs to be an
+    indication on whether it is a body} on the probablity of the pixel
+  being a body pixel.
+\end{definition}
+
+We will assume that the only non-static objects in the image are the
+whiskers and body. One simple feature that easily classifies
+$\prob{\text{whisker}}$ from $\prob{\text{body}}$ is size. Blurring
+the image removes fine structures and retains larger ones.  This was
+performed by convoluting the image with a Gaussian with
+${\sigma=9}$px:\footnote{The value of $\sigma$ was obtained by manual
+  testing and inspection.}
+
+\begin{equation}
+  \prob{\text{body}} = I_{blur} = I_{FG} \star \ndist{0}{\sigma}.
+\end{equation}
+Note that $\ndist{\mu}{\sigma}$ traditionally denotes a set of normal
+distributed stochastic variables. In this thesis, we will also use
+this to denote the PDF of the normal distribution, and let the context
+provide the distinction.
+
+<<example of the blur showing that the whiskers has almost disapeared>>
+
+$\prob{\text{body}}$ was then used to create a \emph{mask} $I_{\text{body}}$:
+\begin{equation}
+  I_{\text{body}} = \prob{\text{body}}>0.6 \in \IS,
+\end{equation}
+meaning $I_{\text{body}}$ is white where $\prob{\text{body}}$ is greater than
+0.6 and black everywhere else.\footnote{The 0.6 threshold was found,
+  through manual testing, to make the body stable between frames.}
+
+<<example showing p(body) och body alongside each other>>
+
+\subsection{Find the whiskers $\prob{\text{whisker}}$}
+The filtering described in section \ref{sec:filtering} needs an
+indicator for the locations of whiskers.
+
+\begin{definition}
+  The image
+  \begin{equation}
+    \prob{\text{whisker}}\in \IS
+  \end{equation} is an estimation\footnote{Only needs to be an
+    indication on whether it is a whisker.} of the probablity of a
+  pixel being a whisker pixel.
+\end{definition}
+
+This is naively performed by masking with the inverse
+$\bar{I}_{\text{body}}$ of $I_{\text{body}}$:
+
+\begin{equation}
+  \prob{\text{whisker}} = I_{FG} * \bar{I}_{\text{body}}.
+\end{equation}
 
     <<example showing the above>>
 
-\subsection{Estimate snout translation}
-    Firstly we hand pick the first frame where the snout is fully visible and use this frame as reference to estimate the translation.
-    The mask is then again blured out with a $\sigma=$5px\footnote{Obtained by manual testing.} and filtered through a prewittfilter
-    
-    \begin{equation}
-       \text{snout}_{ref} = \sqrt{(\text{snout} \star \text{prewitt}_x)^2 + ( \text{snout} \star \text{prewitt}_y )^2}\in\IS
-    \end{equation}
-    to smooth out the response of the edges.
+\subsection{Find the snout coordinate system}
+The whisker model does not take head movements into account, and
+therefore expects whisker roots to be stationary throughout the
+sequence. Therefore, the video is translated such that the head stays
+approximately fixed throughout the image sequence.
 
-    Then a local search within $5$px\footnote{This could easily be extended to include rotation.} from the last location was 
-    performed foreach image in the sequence
-    \begin{equation}
-       \text{translation} = \argmax{(x,y)\in\text{close}}
-                                {
-                                    (\sum 
-                                        \text{translate}(\text{snout}_{ref},-(x,y))*\text{snout}
-                                    )
-                                } \in \ZZ^2
-    \end{equation}
-    where $\text{snout}$ is the current image under the same filter as $\text{snout}_{ref}$
+For this, we use a transformation $\phi$ that extracts the shape of
+the body. $\phi$ first blurs the image\footnote{The value $\sigma = $
+  5 pixels was obtained through manual testing.}, to smooth out the
+response, then applies a Prewitt filter:
+\begin{IEEEeqnarray*}{rCl}
+  \phi_{\text{blur}}(I) &=& I \star \ndist{0}{5\mathrm{px}}\\
+  \phi(I) &=& \sqrt{(\phi_{\text{blur}}(I) \star \text{Prewitt}_x)^2 +
+    ( \phi_{\text{blur}}(I) \star \text{Prewitt}_y )^2}.
+\end{IEEEeqnarray*}
+that extracts the shape of the body.
 
-\subsection{Fixate the head programmatically}
-    As a last touch we transform the video to fixate the head coordinates to 
-    simplify the tracking analysis, 
-    this will not effect the final result one could simply pass 
-    the moving coordinate system directly to the tracker. 
+The first frame where the snout is fully visible is hand picked
+and used to create an image $I_{\text{ref}} = \phi(I_{\text{body}})$,
+where $I_{\text{body}}$ is created through the steps detailed in
+section \ref{sec:findbody}.
 
+A local search within $5$px from the last location is then
+performed\footnote{This could easily be extended to include rotation
+  as well.}  for each body image $I_{\text{body}}$ in the
+sequence. The translation $(\Delta x, \Delta y)$ from $I_{\text{ref}}$
+is extracted:
+\begin{equation}
+  (\Delta x, \Delta y) = \argmax{(x,y)~\text{close}}
+  (\sum 
+  \text{translate}(I_{\text{ref}},-(x,y))*\phi(I_{\text{body}})
+  )
+  \in \ZZ^2,
+\end{equation}
+
+And the frame is then translated accordingly.
