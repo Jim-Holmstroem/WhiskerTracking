@@ -1,14 +1,17 @@
-The interest in studying rodent whiskers has recently seen a significant increase, 
-particularly in the field of neurophysiology. As a result, there is a need for automatic 
-tracking of whisker movements. Currently available commercial solutions either are 
-extremely expensive, restrict the experiment setup, or fail in the presence of 
-\emph{clutter} or occlusion. 
+The interest in studying rodent whiskers has recently seen a
+significant increase, particularly in the field of neurophysiology. As
+a result, there is a need for automatic tracking of whisker
+movements. Currently available commercial solutions either are
+extremely expensive, restrict the experiment setup, or fail in the
+presence of \emph{clutter} or occlusion.
 
-This thesis proposes a proof-of-concept implementation of a \emph{probabilistic} tracking system. 
-This solution uses a technique known as the \emph{particle filter} to propagate a whisker model between frames of high speed video. 
-In each frame, the next state of the model is predicted by querying a pre-trained \emph{database} and filtering the results 
-through the particle filter. The implementation is written in Python
-2.6 using NumPy and SQLite3.
+This thesis proposes a proof-of-concept implementation of a
+\emph{probabilistic} tracking system.  This solution uses a technique
+known as the \emph{particle filter} to propagate a whisker model
+between frames of high speed video.  In each frame, the next state of
+the model is predicted by querying a pre-trained \emph{database} and
+filtering the results through the particle filter. The implementation
+is written in Python 2.6 using NumPy and SQLite3.
 
 Testing results indicate that the approach is feasible. Even using a
 rather crude database, the tracker manages to track multiple real
@@ -16,4 +19,5 @@ whiskers at once, though only for short sequences at a time. Better
 training data, such as hand-labeled real data, might vastly improve
 the result.
 
-\textbf{Keywords:} Tracking, Multiple, Whisker, Particle Filter, Transition Database, Model Evaluation, Proof-of-Concept
+\textbf{Keywords:} Tracking, Multiple, Whisker, Particle Filter,
+Transition Database, Model Evaluation, Proof-of-Concept

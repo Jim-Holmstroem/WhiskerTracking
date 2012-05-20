@@ -1,21 +1,26 @@
 
-Intresset för att studera morrhår hos gnagare har på senare tid ökat, speciellt inom neurofysiologin.
-Som ett resultat av detta finns det ett behov av automatisk följning av morrhår.
-Nuvarande kommersiella lösningar är antingen extremt dyra, sätter begräsningar på experimentuppställningen
-eller misslyckas i stökiga miljöer eller när överlappning förekommer.
+Intresset för att studera morrhår hos gnagare har på senare tid
+ökat, speciellt inom neurofysiologin.  Som ett resultat av detta
+finns det ett behov av automatisk följning av morrhår.  Nuvarande
+kommersiella lösningar är antingen extremt dyra, sätter
+begräsningar på experimentuppställningen eller misslyckas i
+stökiga miljöer eller när överlappning förekommer.
 
-Denna avhandling bidrar med en enkel implementation av ett \emph{probabilistiskt} följningssystem. 
-Lösningen använder sig av 
-en teknik som kallas \emph{partikelfilter} för att propagera en morrhårmodell mellan bildrutor 
-i höghastighetsvideo.
-För varje bildruta förutspås nästa tillstånd genom att fråga en förtränad \emph{databas} 
-och filtera svaret genom partikelfiltret. 
-Implementationen är skriven i Python 2.6 och använder sig av programbiblioteken NumpPy och SQLite3.
+Denna avhandling bidrar med en enkel implementation av ett
+\emph{probabilistiskt} följningssystem.  Lösningen använder sig av
+en teknik som kallas \emph{partikelfilter} för att propagera en
+morrhårmodell mellan bildrutor i höghastighetsvideo.  För varje
+bildruta förutspås nästa tillstånd genom att fråga en förtränad
+\emph{databas} och filtera svaret genom partikelfiltret.
+Implementationen är skriven i Python 2.6 och använder sig av
+programbiblioteken NumpPy och SQLite3.
 
-Testresultaten indikerar att metoden är rimlig. 
-Med endast en grovt snarlik databas lyckades algoritmen 
-följa multipla morrhår, dock endast under korta sekvenser i taget. 
-Bättre träningsdata, såsom handmarkerad riktig data, skulle kunna förbättra resultatet väsentligt.
+Testresultaten indikerar att metoden är rimlig.  Med endast en grovt
+snarlik databas lyckades algoritmen följa multipla morrhår, dock
+endast under korta sekvenser i taget.  Bättre träningsdata, såsom
+handmarkerad riktig data, skulle kunna förbättra resultatet
+väsentligt.
 
 
-\textbf{Nyckelord:} Följning, Multipla, Morrhår, Partikelfilter, Övergångsdatabas, Modelevaluering, Proof-of-Concept
+\textbf{Nyckelord:} Följning, Multipla, Morrhår, Partikelfilter,
+Övergångsdatabas, Modelevaluering, Proof-of-Concept
