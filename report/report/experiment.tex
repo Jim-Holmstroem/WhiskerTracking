@@ -74,7 +74,48 @@ The following parameters were evaluated:
 \item[g] The exponent for the importance in the filtering step
 \end{description}
 
-This yields the evaluation tensor $\Phi_{n,p,a,\sigma,g}$.
+Table \ref{tbl:testcases} shows the tested values.
+
+\begin{table}
+  \centering
+  \begin{tabular}{c|l}
+    Parameter & Values\\
+    \hline
+    $n$ & 64, 128, 256, 512\\
+    $p$ & 2, 4, 8\\
+    $a$ & 1, 2, 4, 8\\
+    $\sigma$ & 0.25, 0.5, 1, 2\\
+    $g$ & 1, 2, 4, 8
+  \end{tabular}
+  \caption{Specification of test cases.}
+  \label{tbl:testcases}
+\end{table}
+
+\subsection{Benchmark procedure}
+
+The benchmark was run on the test video for each combination of
+parameters in table \ref{tbl:testcases}. The output from the benchmark
+is an error tensor $\epsilon_{i,t}$, where index $i, t$ contains
+$\Lpnorm[2]{Z_t - x_t}$, the $\Lp[2]$ distance between the ground
+truth and estimated shape for whisker $i$ at time $t$. From this a
+list $\epsilon_i$ was computed as the root mean square of
+$\epsilon_{i,t}$ in the $t$ direction. Finally, the maximum value in
+$\epsilon_i$ was selected as the \emph{error} $\epsilon$ of that
+benchmark. This gives us the benchmark tensor
+
+\begin{equation}
+  E_{n,p,a,\sigma,g} = \argmax{i} \sqrt{\left(\sum\limits_t
+      \epsilon_{i,t}^2 \right)} \text{ for the test case } \left(n, p,
+    a, \sigma, g\right).
+\end{equation}
+
+Note that the absolute magnitude of the error $\epsilon$ is irrelevant
+- it is the ratios between these errors that is interesting. One could
+argue for instead using the relative error $\Lpnorm[2]{Z_t - x_t} /
+\Lpnorm[2]{Z_t}$, but the relative error is misleading here. The
+reason is that a deviation from a very bent whisker would then be
+considered better than the same deviation from a very straight
+whisker. Therefore the absolute error is used for the analysis.
 
 TODO (check the comments here)
 %TODO define phi:img->img
