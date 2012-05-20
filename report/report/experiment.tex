@@ -86,7 +86,7 @@ The measures that will be used as fitness of the parameters:
             integrating over time the the difference
             with the ground truth (do this for L{1:10} and see if it correlates with
             the p choosed (to see how much it deviates from the ground truth)
-        \item[$\int{\sum{\phi{R(x_t)}\phi{I_t}} }dt$] 
+        \item[$\int{\Response{x_t}{I_t}{\phi} }dt$] 
             integrating over time the response
             for the choosed hypothesis (to see how the different image transformation
             affects the results, that is if it only follows what it thinks is best
