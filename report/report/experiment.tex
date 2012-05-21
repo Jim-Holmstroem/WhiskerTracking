@@ -111,6 +111,30 @@ run. This gives us the error tensor
     a, \sigma, g\right).
 \end{equation}
 
+However, the tests for $p=8$ took a very long time to run, and some
+tests did not finish in time. This included all tests for $n=512$ and
+$p=8$. These and the test specifications in table
+\ref{tbl:unfinished-runs} were not included in the analysis.
+
+\begin{table}[h]
+  \centering
+  \begin{tabular}{ccccc}
+    $n$ & $p$ & $a$ & $\sigma$ & $g$\\
+    \hline
+    64 & 8 & 4 & 0.5 & 8\\
+    64 & 8 & 8 & 0.5 & 1\\
+    64 & 8 & 8 & 1 & 2\\
+    64 & 8 & 8 & 0.25 & 4\\
+    512 & 2 & 4 & 0.25 & 4\\
+    512 & 2 & 4 & 0.5 & 4\\
+    512 & 2 & 4 & 1 & 4\\
+    512 & 4 & 1 & 2 & 8
+  \end{tabular}
+  \caption{Unfinished test runs. Omitted are $\left(512, 8, a, \sigma,
+      g\right) ~ \forall a, \sigma, g$.}
+  \label{tbl:unfinished-runs}
+\end{table}
+
 Note that the absolute magnitude of the error $\epsilon$ is irrelevant
 - it is the ratios between these errors that is interesting. One could
 argue for instead using the relative error $\Lpnorm[2]{Z_t - x_t} /
@@ -118,6 +142,24 @@ argue for instead using the relative error $\Lpnorm[2]{Z_t - x_t} /
 reason is that a deviation from a very bent whisker would then be
 considered better than the same deviation from a very straight
 whisker. Therefore the absolute error is used for the analysis.
+
+Since the error tensor is five-dimensional, displaying all of its
+contents is not feasible. Instead the index $\left(n_0, p_0, a_0,
+  \sigma_0, g_0\right)$ for which $E_{n_0, p_0, a_0, \sigma_0,g_0}$ is
+minimized was used as the common point of the following plots. Using
+this index, the the cross sections
+\begin{IEEEeqnarray}{rCl}
+  E_{a,p} &=& E_{n_0, p, a, \sigma_0, g_0} ~ \forall p, a\\
+  E_{s,g} &=& E_{n_0, p_0, a_0, \sigma, g} ~ \forall \sigma, g
+\end{IEEEeqnarray}
+were extracted and plotted.
+
+Also investigated was the effect of computing $E$ using the $\Lp[4]$
+and $\Lp[8]$ norms, in order to see if this had some correlation to
+the choice of $p$. However, the resulting $E_{a,p}$ and $E_{s,g}$ for
+$\Lp[2], \Lp[4]$ and $\Lp[8]$ all had the same qualitative behaviour,
+so the $\Lp[4]$ and $\Lp[8]$ versions of $E$ are omitted from this
+report.
 
 The measures that will be used as fitness of the parameters:
     \begin{description}
