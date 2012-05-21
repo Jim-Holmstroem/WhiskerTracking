@@ -84,7 +84,7 @@ dimensions, respectively.}
 \end{example}
 
 \begin{example} For a $16$ DOF model one needs $10^{16}=10$
-quadrillion datapoints to acquire a density of $10$ samples per unit
+quadrillion data points to acquire a density of $10$ samples per unit
 volume. Millions of gigabytes would be needed just to store the
 samples.
 \end{example}
@@ -107,7 +107,7 @@ a directed search, which could be done in one of the following ways:
   $R < g$ grid steps in one time step.  This reduces the volume of the
   (discrete) search space from $\Ordo{g^n}$ to $\Ordo{R^n}$.
 \item With prior knowledge of how the tracked objects
-  move\footnote{Such as the state transition probabilites
+  move\footnote{Such as the state transition probabilities
     $\cprobnext{Z}$ in a HMM} we can direct our search to specific
   regions in the state space, depending on how probable it is for the
   tracked object to be located there. This reduces the size of the
@@ -123,7 +123,7 @@ the search space using the second of these methods.
 The \emph{particle filter} is a technique for reducing the size of the
 search space. It uses a finite set $X_t$ of hypotheses to approximate
 the PDF $\cprobnext{Z}$ of a HMM. The hypotheses $X_t$ are also
-refered to as \emph{particles}, thereby the term ``particle filter''.
+referred to as \emph{particles}, thereby the term ``particle filter''.
 
 \begin{figure}
   \centering
@@ -142,7 +142,7 @@ function of the particle filter:
 \end{quote}
 
 More particles mean greater accuracy, since the PDF can then be
-approximated more closely. However, using many particles increses
+approximated more closely. However, using many particles increases
 computational cost. The particle filter employs a few tricks to
 \emph{filter} the hypotheses, tending to keep probable ones and
 throwing improbable ones away, in order to intelligently reduce the
@@ -255,7 +255,7 @@ estimated with a set $X_{t-1}$ of $N$ particles.
 \end{quote}
 A \emph{visual cue} is an image transformation $\phi$ that extracts
 some property of the image, such as intensity
-\footnote{In our case this is possible since we have an homogenous object
+\footnote{In our case this is possible since we have an homogeneous object
 in the form of a backlit rodent}, edges, ridges\cite{Hedvig} or different 
 refinements as in section \ref{prep-real}.
 
@@ -324,7 +324,7 @@ How nice the response peak is is highly dependent on all the terms in
   
   This trivially holds for superposition of windows, since all windows
   will scale and translate the same way.  With a finite support, $e=0$
-  is the only solution. Additionaly, this also holds in higher finite
+  is the only solution. Additionally, this also holds in higher finite
   dimensions since we can just repeat the process one dimension at a
   time.
     
