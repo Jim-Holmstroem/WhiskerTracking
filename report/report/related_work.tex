@@ -21,18 +21,15 @@ be visible to both cameras at all times.
 \section{Unsupervised Whisker Tracking in Unrestrained Behaving
   Animals}
 
-\cite{UnsupervisedTracking} provides a solution that
+\cite{UnsupervisedTracking} provides a solution that uses
+frame-by-frame image analysis of off-line monocular images, and does
+not impose other restrictions on the setup. The solution is based on
+creating vector fields using anisotropy in the image and tracks
+movements along the full length of the whiskers. It is fully
+automatic, and successfully tracks up to 8 whiskers on each side of
+the snout simultaneously, though it suffered some difficulties when
+applied on full whisker arrays.
 
-
-Image flow, gabur
-
-It works well under temporary occlusion but needs clipping of most
-whiskers and thereby introduce possible effects to the experimental
-results.
-
-
-
-        
 
 \section{Probabilistic Tracking and Reconstruction of 3D Human Motion in Monocular Video Sequences\cite{Hedvig}}
     
