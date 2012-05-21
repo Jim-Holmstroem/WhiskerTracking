@@ -37,7 +37,19 @@ as seen in figure \ref{fig:Epa-maxerr-L2} which is almost flat in the
 $p$ direction. Apparently, computing the distances in any of the
 tested $\Lp$ spaces seems to suffice. It should be noted, however,
 that many tests for $p=8$ were left out because of the long
-computation time in the testing implementation.
+computation time in the testing implementation. Considering the
+increased computation time associated with higher $p$, as illustrated
+in figure \ref{fig:Lp-complexity}, it is probably best to settle for
+$p=2$ and instead increase the particle count, for the same
+computational cost or less.
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.6\textwidth]{Lp_complexity.pdf}
+  \caption{Computation times for computing $\Lpnorm{10^{-7}\omega^3 +
+      10^-3\omega^2 + 150\omega}$ 16384 times.}
+  \label{fig:Lp-complexity}
+\end{figure}
 
 The value of $a$ that yielded the best result was $a=2$. The error
 increased by more than 20\% when $a$ was increased to 4 or 8, and more
@@ -70,16 +82,17 @@ whiskers moved away, and the model instances frequently jumped between
 whiskers in the video. In conclusion, the time scale is perhaps one of
 the most important properties of the training data.
 
-Finally, the value of the parameter $g$ that minimized $E$ was $g=4$. The
-dependence of $E$ on $g$, however, is unclear and no real conclusions
-can be drawn from the results. No qualitative behaviour can be seen in
-the $g$ direction of figure \ref{fig:Esg-maxerr-L2}. It is also difficult
-to predict what values of $g$ should give a good performance - a high
-$g$ amplifies high responses, but a high response does not necessarily
+Finally, the value of the parameter $g$ that minimized $E$ was
+$g=4$. The dependence of $E$ on $g$, however, is unclear and no real
+conclusions can be drawn from the results. No qualitative behaviour
+can be seen in the $g$ direction of figure \ref{fig:Esg-maxerr-L2}. It
+is also difficult to predict what values of $g$ should give a good
+performance. A low $g$ would make clutter too important. A high $g$
+amplifies high responses, but a high response does not necessarily
 mean that the posture coincides well with the whisker it is intended
-to track, or any whisker at all. For instance, in the test run on real
-video there was a small, bright whisker above the top tracked whisker,
-which sometimes gave a higher response than the intended whisker.
+to track. For instance, in the test run on real video there was a
+small, bright whisker above the top tracked whisker, which sometimes
+gave a higher response than the latter.
 
 
 
@@ -101,18 +114,24 @@ greatest weaknesses of the testing implementation:
 
 \end{itemize}
 
-One important aspect of tracking is that an algorithm could believe to
-be performing well even when the result is wrong. A good example of
-this is the test performed here on real whiskers. Because of a
-limitation in the model, the model instances had to be rooted inside
+A combination of these manifested clearly in the run on real
+data. Because of the first, the whisker models had to be rooted inside
 the snout, meaning no response at all could be collected in a radius
 of a few pixels from the root. This means that the estimated posture
 could emerge from the snout at multiple locations and get comparable
 responses, which in turn means the model could sometimes find a better
 match by switching to another whisker. This combined with the low
 temporal resolution of the video - which sometimes makes it difficult
-even for a human to notice a ``swap'' - makes it difficult for the
-tracker keep the model tracking the same whisker.
+even for a human to notice a ``swap'' between whiskers - makes it
+difficult for the tracker to keep the model tracking the same
+whisker. We therefore draw the following conclusion.
+
+\begin{quote}
+  A good whisker model must account for movements of the whisker
+  ``root'' along the surface of the snout.
+\end{quote}
+
+
 
 % use the word dataset, training data, test data(generated) test
 % data(real) [test set] mention bias
