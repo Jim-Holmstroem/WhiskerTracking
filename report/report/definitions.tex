@@ -7,8 +7,7 @@
 % invariant (if your not intending to measure things like angles or
 % size that is)
 
-\section{Images and videos}
-\subsection{Grayscale image}
+\section{Images and Image Processing}
 \begin{definition}
 
   A grayscale \emph{image} can be defined as a function
@@ -26,15 +25,12 @@
   bit integers.\footnote{Integers in the range $\interval{0}{255}$.}
 \end{definition}
 
-\subsection{Video}
 \begin{definition}
   A \emph{video} is a function mapping an integer to an image:
   \begin{equation}
     \text{video} : \NN \rightarrow \IS.
   \end{equation}
 \end{definition}
-
-\section{Image Processing}
 
 \begin{definition}
  \label{def:hypothesis_render}
@@ -103,7 +99,8 @@
 
 \section{States, hypotheses and estimates}
 A system is said to have a \emph{state}. The state is some quantity
-that defines the qualities of the system.
+that defines the qualities of the system. Below follows definitions of
+key terms and quantities used throughout the thesis.
 
 \begin{description}
 \item[State] The state of a system is denoted $Z$. When time is
@@ -121,5 +118,4 @@ that defines the qualities of the system.
 \item[Degrees of Freedom] The number of adjustable parameters in a
   model, often abbreviated DOF.
 \end{description}
-
 Note that all of the above depend on the  model used.

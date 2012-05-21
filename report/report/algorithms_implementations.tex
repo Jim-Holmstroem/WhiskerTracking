@@ -17,6 +17,12 @@ consists of three main parts:
     $\cprob{I_n}{x_n}$ to the particle filter.
 \end{description}
 
+The implementation was developed in two steps. It was first tested on
+tracking white squares against a black background. The purpose of this
+was to begin with very simple test cases until the general parts of
+the algorithm were in place. After that, whisker tracking modules were
+developed and tested on artificially generated whisker videos.
+
 \section{The particle filter}
 The particle filter implementation is a direct implementation of the
 procedure in table \ref{alg:pf}. It is implemented as a function that
