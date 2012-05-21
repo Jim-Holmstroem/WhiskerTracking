@@ -43,9 +43,9 @@ for ni, n in enumerate(nn):
                         E[i,ni,pi,ai,gi,si,:] = absolute_rms_time[:,i]
 
 def get_params_for_index(index):
-    return (nn[index[0]], pp[index[1]], aa[index[2]], gg[index[3]], ss[index[4]])
+    return (nn[index[0]], pp[index[1]], aa[index[2]], gg[index[3]], ss[index[4]]/10.0)
 
-for i, P in enumerate(err_norms):
+for i, P in enumerate(err_norms[:1]):
     maxerr = E[i].max(axis=5)
     
     best_maxerr = numpy.where(maxerr == maxerr.min())
@@ -53,6 +53,15 @@ for i, P in enumerate(err_norms):
 
     print "Least maxerr for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%((P, maxerr.min()) + get_params_for_index(best_maxerr))
     print "Least error  for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%((P, E[i].min()) + get_params_for_index(best))
+
+    import sys
+    plottype = "surf"
+    if len(sys.argv) > 1:
+        plottype = sys.argv[1]
+
+    ################################
+    #            E_{p,a}           #
+    ################################
 
     fig = plt.figure()
     ax = Axes3D(fig)
@@ -92,16 +101,69 @@ for i, P in enumerate(err_norms):
             return wireframeplot()
         raise TypeError("No such plot function.")
 
-    import sys
-    plottype = "surf"
-    print sys.argv
-    if len(sys.argv) > 1:
-        plottype = sys.argv[1]
     plot(plottype)
 
     ax.set_title("Maxerr vs. a and p in L%i"%(P))
     ax.set_xlabel('a')
     ax.set_ylabel('p')
     ax.set_zlabel('E')
+
+
+    ################################
+    #            E_{s,g}           #
+    ################################
     
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    mins = 2
+    maxs = len(ss)-1
+    ming = 0
+    maxg = len(gg)
+
+    X = numpy.array(ss[mins:maxs])/10.0
+    Y = gg[ming:maxg]
+
+    X, Y = numpy.meshgrid(X, Y)
+    Z = maxerr[best_maxerr[0][0],best_maxerr[1][0],best_maxerr[2][0],ming:maxg,mins:maxs]
+    Z[numpy.where(Z > 1E17)] = None
+
+    def scatterplot():
+        return ax.scatter(X.flatten(), Y.flatten(), Z.flatten())#, rstride=1, cstride=1, cmap=cm.jet)
+    
+    def surfplot():
+        surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+        fig.colorbar(surf)
+        return surf
+
+    def wireframeplot():
+        return ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+
+    def plot(s):
+        if s == "scatter":
+            return scatterplot()
+        if s == "surf":
+            return surfplot()
+        if s == "wireframe":
+            return wireframeplot()
+        raise TypeError("No such plot function.")
+
+    plot(plottype)
+
+    ax.set_title("Maxerr vs. sigma and g in L%i"%(P))
+    ax.set_xlabel('sigma')
+    ax.set_ylabel('g')
+    ax.set_zlabel('E')
+    
+    ################################
+    #              E_n             #
+    ################################
+    
+    fig = plt.figure()
+    plt.semilogx(nn, maxerr[:,best_maxerr[1][0],best_maxerr[2][0],best_maxerr[3][0],best_maxerr[4][0]], nn, maxerr[:,best_maxerr[1][0],best_maxerr[2][0],best_maxerr[3][0],best_maxerr[4][0]], 'r*', basex=2)
+    plt.axis((2**5.75, 2**9.25, 0, 80))
+    plt.xlabel('n')
+    plt.ylabel('E')
+    plt.title("Max error vs. number of particles")
+
 plt.show()
