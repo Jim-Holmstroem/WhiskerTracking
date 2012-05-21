@@ -44,8 +44,16 @@ for frame=1:N
         end
     end
 
-    imshow(img_edge/2+imtranslate(ref_edge,largest_response(2),largest_response(3))/2);
+    %imshow(img_edge/2+imtranslate(ref_edge,largest_response(2),largest_response(3))/2);
+
+    render = zeros([size(img_edge) 3]);
+    render(:,:,1) = img_edge;
+    render(:,:,2) = imtranslate(ref_edge,largest_response(2),largest_response(3));
+    imshow(render);
+    
     drawnow;
+
+    pause;
 
     positions(frame,:)=gather(largest_response)';
     last.a=largest_response(1);
