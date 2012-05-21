@@ -180,7 +180,8 @@ minimized was used as the common point of the following plots. Using
 this index, the the cross sections
 \begin{IEEEeqnarray}{rCl}
   E_{p,a} &=& E_{n_0, p, a, \sigma_0, g_0} ~ \forall p, a\\
-  E_{\sigma,g} &=& E_{n_0, p_0, a_0, \sigma, g} ~ \forall \sigma, g
+  E_{\sigma,g} &=& E_{n_0, p_0, a_0, \sigma, g} ~ \forall \sigma, g\\
+  E_n &=& E_{n, p_0, a_0, \sigma_0, g_0} ~ \forall n
 \end{IEEEeqnarray}
 were extracted and plotted.
 
@@ -192,8 +193,17 @@ so the $\Lp[4]$ and $\Lp[8]$ versions of $E$ are omitted from this
 report.
 
 \subsection{Results}
+
+The minimum of $E_{n,p,a,\sigma,g}$ was found to be 38.18 for
+\begin{equation*}
+  n=512, p=2, a=2, g=4, s=0.2.
+\end{equation*}
+
 Figures \ref{fig:Epa-maxerr-L2} and \ref{fig:Esg-maxerr-L2} show
-$E_{p,a}$ and $E_{\sigma,g}$, respectively.
+$E_{p,a}$ and $E_{\sigma,g}$, respectively. Figures
+\ref{fig:Epa-maxerr-L2-nobig} and \ref{fig:Esg-maxerr-L2-nobig} show
+the same graphs, but with the dominant points removed. Figure
+\ref{fig:En-maxerr-L2} shows $E_n$.
 
 \begin{figure}[hb]
   \centering
@@ -224,6 +234,14 @@ $E_{p,a}$ and $E_{\sigma,g}$, respectively.
   \caption{$E_{\sigma,g}$ with dominant points removed.}
   \label{fig:Esg-maxerr-L2-nobig}
 \end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{benchmark/En-maxerr-L2.pdf}
+  \caption{$E_n$. Note the logarithmic scale of $n$.}
+  \label{fig:En-maxerr-L2}
+\end{figure}
+
 
 \begin{verbatim}
 Mål:
