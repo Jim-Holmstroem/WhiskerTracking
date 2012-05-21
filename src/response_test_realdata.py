@@ -61,12 +61,20 @@ if __name__=="__main__":
     response3=numpy.array((zerot*whisker3t).sum())/normalize
 
     ymax = max([max(response1),max(response2),max(response3)])
+    ymin = 0
+
+    padding =0.025
+
+    def add_zero():
+        pylab.hold(True)
+        pylab.plot([0,0],[ymin,ymax+padding],'r--')
 
     pylab.figure(1)
     
     pylab.subplot(131)
     pylab.plot(x1,response1)
-    pylab.axis([-0.00008,0.00008,0,ymax])
+    add_zero()
+    pylab.axis([-0.00008,0.00008,ymin,ymax+padding])
     pylab.title('a3')
 
     a=pylab.gca()
@@ -74,12 +82,14 @@ if __name__=="__main__":
     
     pylab.subplot(132) 
     pylab.plot(x2,response2)
-    pylab.axis([-0.04,0.04,0,ymax])
+    add_zero()
+    pylab.axis([-0.04,0.04,ymin,ymax+padding])
     pylab.title('a2')
     
     pylab.subplot(133) 
     pylab.plot(x3,response3)
-    pylab.axis([-2,2,0,ymax])
+    add_zero()
+    pylab.axis([-2,2,ymin,ymax+padding])
     pylab.title('a1')
 
     pylab.show()
