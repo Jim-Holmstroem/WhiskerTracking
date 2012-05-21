@@ -60,9 +60,10 @@ high-dimensional function one needs orders of magnitude more samples.
 
 The other drawback of high dimensional spaces is the ``borders'' of
 the sample set compared to lower dimensional spaces. The result is
-that the chance for point one wants to approximate to fall outside the
-sample set is orders of magnitude greater, and the point then needs to
-be extrapolated instead of the better alternative of interpolation.
+that the chance for a point one wants to approximate to fall outside
+the sample set is orders of magnitude greater, and the point then
+needs to be extrapolated instead of the better alternative of
+interpolation.
 
 The following examples illustrate some of the difficulties with high
 dimensional spaces, as well as a case when an exhaustive is feasible.
@@ -114,7 +115,7 @@ a directed search, which could be done in one of the following ways:
 \end{enumerate}
 
 The next section will describe a technique for reducing the size of
-the search space in this fashion.
+the search space using the second of these methods.
 
 
 \section{The Particle Filter}
@@ -264,10 +265,11 @@ refinements as in section \ref{prep-real}.
 
 \begin{definition}
   A \emph{response} is how much a hypothesis matches an image. The
-  similarity measure for hypothesis response this thesis is defined by
+  similarity measure for hypothesis response in this thesis is defined
+  by
     \begin{equation}
         \label{eq:response}
-        \Response{x_t}{I_t}{\phi} = \sum{\phi(R(x_t))*\phi(I_t)} \in \RR^+
+        \Response{x_t}{I_t}{\phi} = \sum{\phi(R(x_t))*\phi(I_t)}
     \end{equation}
     where $\Response{x_t}{I_t}{\phi}$ will denote the response.
     \footnote{The notation $\Response{\cdot}{\cdot}{\phi}$ for

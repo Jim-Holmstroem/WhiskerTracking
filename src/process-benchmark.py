@@ -1,24 +1,27 @@
+import matplotlib.pyplot as plt
 import numpy
 import os
 import pylab
 import sys
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+from matplotlib.ticker import LinearLocator, FixedLocator, FormatStrFormatter
 
 absolute_error_path_pattern = "/misc/projects/whisker/results/GWhiskerTracker_n=%i_p=%i_a=%i_g=%i_s=%s/absolute_error.npy"
 
 sigma_limits = numpy.array((0.000016, 0.004, 1))/10
 
+err_norms = (2, 4, 8)
+num_whiskers = 6
 nn = (64, 128, 256, 512)
 pp = (2, 4, 8)
 aa = (1, 2, 4, 8)
 gg = (1, 2, 4, 8)
-ss = (0.25, 0.5, 1, 2)
+ss = (0.25, 0.5, 1, 2, 4)
 
-pylab.figure(1)
-pylab.title("Worst error versus $a$, varying $p$")
+tensor_dim = (len(err_norms), len(nn), len(pp), len(aa), len(gg), len(ss), num_whiskers)
 
-E = numpy.ones((len(nn), len(pp), len(aa), len(gg), len(ss))) * 1E18
-E_l4 = numpy.ones((len(nn), len(pp), len(aa), len(gg), len(ss))) * 1E18
-E_l8 = numpy.ones((len(nn), len(pp), len(aa), len(gg), len(ss))) * 1E18
+E = numpy.ones(tensor_dim) * 1E18
 
 for ni, n in enumerate(nn):
     for pi, p in enumerate(pp):
@@ -33,63 +36,134 @@ for ni, n in enumerate(nn):
                         continue
                     
                     absolute_errors = numpy.load(path)
-                    absolute_sum_time = absolute_errors.sum(axis=2)
                     absolute_rms_time = ((absolute_errors**2).mean(axis=2))**0.5
-                    #worst = absolute_sum_time.max(axis=0)
-                    worst = absolute_rms_time.max(axis=0)
-                    #print absolute_errors
-                    #print absolute_rms_time
-                    #print worst
-                    E[ni,pi,ai,gi,si], E_l4[ni,pi,ai,gi,si], E_l8[ni,pi,ai,gi,si] = worst
-                    
+#                    print absolute_rms_time
+#                    print absolute_rms_time.max(axis=0)
+                    for i, norm in enumerate(err_norms):
+                        E[i,ni,pi,ai,gi,si,:] = absolute_rms_time[:,i]
 
-win = numpy.where(E == E.min())
-print "Best results for L2: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%(E.min(), nn[win[0]],pp[win[1]],aa[win[2]],gg[win[3]],ss[win[4]])
+def get_params_for_index(index):
+    return (nn[index[0]], pp[index[1]], aa[index[2]], gg[index[3]], ss[index[4]]/10.0)
 
-win_l4 = numpy.where(E_l4 == E_l4.min())
-print "Best results for L4: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%(E_l4.min(), nn[win[0]],pp[win[1]],aa[win[2]],gg[win[3]],ss[win[4]])
+for i, P in enumerate(err_norms[:1]):
+    maxerr = E[i].max(axis=5)
+    
+    best_maxerr = numpy.where(maxerr == maxerr.min())
+    best = numpy.where(E[i] == E[i].min())
 
-win_l8 = numpy.where(E_l8 == E_l8.min())
-print "Best results for L8: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%(E_l8.min(), nn[win[0]],pp[win[1]],aa[win[2]],gg[win[3]],ss[win[4]])
+    print "Least maxerr for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%((P, maxerr.min()) + get_params_for_index(best_maxerr))
+    print "Least error  for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%((P, E[i].min()) + get_params_for_index(best))
 
-sys.exit()
+    import sys
+    plottype = "surf"
+    if len(sys.argv) > 1:
+        plottype = sys.argv[1]
+
+    ################################
+    #            E_{p,a}           #
+    ################################
+
+    fig = plt.figure()
+    ax = Axes3D(fig)
+
+    mina = 0
+    maxa = len(aa)
+    minp = 0
+    maxp = len(pp)
+
+    if best_maxerr[0] == 3:
+        maxp -= 1
+
+    X = aa[mina:maxa]
+    Y = pp[minp:maxp]
+
+    X, Y = numpy.meshgrid(X, Y)
+    Z = maxerr[best_maxerr[0][0],minp:maxp,mina:maxa,best_maxerr[3][0],best_maxerr[4][0]]
+    Z[numpy.where(Z > 1E17)] = None
+
+    def scatterplot():
+        return ax.scatter(X.flatten(), Y.flatten(), Z.flatten())#, rstride=1, cstride=1, cmap=cm.jet)
+    
+    def surfplot():
+        surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+        fig.colorbar(surf)
+        return surf
+
+    def wireframeplot():
+        return ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+
+    def plot(s):
+        if s == "scatter":
+            return scatterplot()
+        if s == "surf":
+            return surfplot()
+        if s == "wireframe":
+            return wireframeplot()
+        raise TypeError("No such plot function.")
+
+    plot(plottype)
+
+    ax.set_title("Maxerr vs. a and p in L%i"%(P))
+    ax.set_xlabel('a')
+    ax.set_ylabel('p')
+    ax.set_zlabel('E')
 
 
-pylab.loglog(erra, err, '-*', basex=2, basey=10, label="$N$=%i, $p$=%i"%(E[n,p]))
+    ################################
+    #            E_{s,g}           #
+    ################################
+    
+    fig = plt.figure()
+    ax = Axes3D(fig)
 
-pylab.xlabel("a")
-pylab.ylabel("Worst error")
-pylab.legend()
-pylab.axis((2**-0.2, 2**3.2, 10, 10**3))
+    mins = 2
+    maxs = len(ss)-1
+    ming = 0
+    maxg = len(gg)
 
+    X = numpy.array(ss[mins:maxs])/10.0
+    Y = gg[ming:maxg]
 
-pylab.figure(2)
-pylab.title("Worst error versus $a$, varying $N$")
-for n in nn:
-    for p in (4,):
-        
-        erra = []
-        err = []
-        
-        for a in aa:
-            path = absolute_error_path_pattern%(n, p, a)
-            if not os.path.exists(path):
-                continue
+    X, Y = numpy.meshgrid(X, Y)
+    Z = maxerr[best_maxerr[0][0],best_maxerr[1][0],best_maxerr[2][0],ming:maxg,mins:maxs]
+    Z[numpy.where(Z > 1E17)] = None
 
-            absolute_errors = numpy.load(path)
-            absolute_rms_time = ((absolute_errors**2).mean(axis=2))**0.5
-            worst = absolute_rms_time.max(axis=0)
+    def scatterplot():
+        return ax.scatter(X.flatten(), Y.flatten(), Z.flatten())#, rstride=1, cstride=1, cmap=cm.jet)
+    
+    def surfplot():
+        surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+        fig.colorbar(surf)
+        return surf
 
-            erra.append(a)
-            err.append(worst[0])
-                
-        pylab.loglog(erra, err, '-*', basex=2, basey=10, label="$N$=%i, $p$=%i"%(n,p))
+    def wireframeplot():
+        return ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
 
-pylab.xlabel("$a$")
-pylab.ylabel("Worst error")
-pylab.legend()
-pylab.axis((2**-0.2, 2**3.2, 10, 10**3))
+    def plot(s):
+        if s == "scatter":
+            return scatterplot()
+        if s == "surf":
+            return surfplot()
+        if s == "wireframe":
+            return wireframeplot()
+        raise TypeError("No such plot function.")
 
+    plot(plottype)
 
-pylab.show()
+    ax.set_title("Maxerr vs. sigma and g in L%i"%(P))
+    ax.set_xlabel('sigma')
+    ax.set_ylabel('g')
+    ax.set_zlabel('E')
+    
+    ################################
+    #              E_n             #
+    ################################
+    
+    fig = plt.figure()
+    plt.semilogx(nn, maxerr[:,best_maxerr[1][0],best_maxerr[2][0],best_maxerr[3][0],best_maxerr[4][0]], nn, maxerr[:,best_maxerr[1][0],best_maxerr[2][0],best_maxerr[3][0],best_maxerr[4][0]], 'r*', basex=2)
+    plt.axis((2**5.75, 2**9.25, 0, 80))
+    plt.xlabel('n')
+    plt.ylabel('E')
+    plt.title("Max error vs. number of particles")
 
+plt.show()
