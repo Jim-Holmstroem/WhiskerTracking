@@ -20,3 +20,6 @@ run:
 	bibtex report
 	pdflatex report.tex
 	pdflatex report.tex
+
+light:    
+	pdflatex report.tex
