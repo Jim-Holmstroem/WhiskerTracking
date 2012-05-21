@@ -21,22 +21,98 @@ the parameters for further studies on real whiskers. A configuration
 that fails even under ideal circumstances is not very likely to
 succeed on real data.
 
+\section{Discussion of benchmark results}
+As expected, the highest number of particles yielded the best
+result. This is not surprising, since more particles mean the PDFs can
+be more closely approximated. However, as figure \ref{fig:En-maxerr-L2}
+shows, the decrease in error per increase in particle count gets
+smaller and smaller, meaning even a significant increase in particle
+count does not guarantee a measurable decrease in error. The model
+used in this thesis has only 3 DOF, which can at most barely be
+considered high-dimensional, meaning more particles may not be
+necessary for similiar whisker models.
+
+The value of $p$ does not seem to notably affect tracking performance,
+as seen in figure \ref{fig:Epa-maxerr-L2} which is almost flat in the
+$p$ direction. Apparently, computing the distances in any of the
+tested $\Lp$ spaces seems to suffice. It should be noted, however,
+that many tests for $p=8$ were left out because of the long
+computation time in the testing implementation.
+
+The value of $a$ that yielded the best result was $a=2$. The error
+increased by more than 20\% when $a$ was increased to 4 or 8, and more
+than tripled for $a=1$. This is reasonable, since a we want close
+transitions to recieve higher weights, but a too high $a$ would make
+the weighted mean converge to the argmax function instead, taking only
+a single training transition into account.
+
+The modifier $\sigma$ for the standard deviation of the offset to the
+sampled particles had a large impact on the error. The best value was
+$0.2$, the maximum value, meaning the magnitude of the could be
+roughly a fifth of the width of the populated region of the database
+in each direction. This may be a bit surprising at first thought, but
+one has to remember that the database used was artificially
+generated. Even real data samples suffer selection bias if the
+training data is not sampled from the model one intends to
+learn.\footnote{As mentioned in the section ``Data Preparation'' of
+  Encyclopedia of Machine Learning. \cite{EncyclopediaMachineLearning}}
+In this case, the training data is not sampled from real data, and
+furthermore was generated with settings guessed after inspection of
+whisker videos. This means that the training data is probably a bad
+representative of whisker dynamics, and a large $\sigma$ therefore
+helps ``blur out'' the deficiencies of the training data.
+
+Another note on the bias effect of the database is the size of the
+time step. In the first runs performed on real data, the time scale of
+the database was approximately two thirds that of the video. The
+result was that the posture estimations were left behind when the
+whiskers moved away, and the model instances frequently jumped between
+whiskers in the video. In conclusion, the time scale is perhaps one of
+the most important properties of the training data.
+
+Finally, the value of the parameter $g$ that minimized $E$ was $g=4$. The
+dependence of $E$ on $g$, however, is unclear and no real conclusions
+can be drawn from the results. No qualitative behaviour can be seen in
+the $g$ direction of figure \ref{fig:Esg-maxerr-L2}. It is also difficult
+to predict what values of $g$ should give a good performance - a high
+$g$ amplifies high responses, but a high response does not necessarily
+mean that the posture coincides well with the whisker it is intended
+to track, or any whisker at all. For instance, in the test run on real
+video there was a small, bright whisker above the top tracked whisker,
+which sometimes gave a higher response than the intended whisker.
 
 
 
 
-% Note on data preperation <encylcopedia> on the database training:
-% "much of the theory on which learning systems are based assumes that
-% the training data are a random sample of the population about which
-% the user wishes to learn a model.  Howe, much historical data
-% represent biased samples, for example, data that have been easy to
-% collect or thath have been considered interesting for some other
-% purpose."  Our data is generated randomly and would work as perfect
-% as can be BUT the bias will have a great effect when running on
-% realdata... mention timescale problems for example, (worked like
-% shit)
-%
+% One can say that $a$ determines how local the weighted mean should
+% be.
 
+
+
+\section{Discussion of the testing implementation}
+
+Judging by the results of the run on real data, the following are the
+greatest weaknesses of the testing implementation:
+
+\begin{itemize}
+\item The whisker model expects whisker roots to be stationary.
+\item The response function\footnote{Including the chosen
+    transformation $\phi$} is too simple.
+
+\end{itemize}
+
+One important aspect of tracking is that an algorithm could believe to
+be performing well even when the result is wrong. A good example of
+this is the test performed here on real whiskers. Because of a
+limitation in the model, the model instances had to be rooted inside
+the snout, meaning no response at all could be collected in a radius
+of a few pixels from the root. This means that the estimated posture
+could emerge from the snout at multiple locations and get comparable
+responses, which in turn means the model could sometimes find a better
+match by switching to another whisker. This combined with the low
+temporal resolution of the video - which sometimes makes it difficult
+even for a human to notice a ``swap'' - makes it difficult for the
+tracker keep the model tracking the same whisker.
 
 % use the word dataset, training data, test data(generated) test
 % data(real) [test set] mention bias

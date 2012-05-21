@@ -140,9 +140,10 @@ run. This gives us the error tensor
 \end{equation}
 
 However, some tests took a very long time to run, and therefore some
-did not finish in time. This included all tests for $n=512$ and
-$p=8$. These and the test specifications in table
-\ref{tbl:unfinished-runs} were not included in the analysis.
+did not finish in time. This included all tests for $n=512$ and $p=8$,
+some of whose running times were observed to exceed 12 hours. These
+test cases and the ones specified in table \ref{tbl:unfinished-runs}
+were not included in the analysis.
 
 \begin{table}[h]
   \centering
@@ -254,9 +255,8 @@ from the tracking sequence. Figure \ref{fig:rtracking-jump} shows how
 the model of the lower whisker ``jumps'' to another whisker further
 down the array. Figure \ref{fig:rtracking-jump-coincide} shows another
 jump, this time resulting in both models coinciding. Figure
-\ref{fig:rtracking-false-positive} shows how both models
-simultaneously jump to other whiskers, the top being a false positive
-on a smaller whisker.
+\ref{fig:rtracking-double-jump} shows how both models
+simultaneously jump to other whiskers, the top being a smaller whisker.
 
 \begin{figure}[p]
   \centering
@@ -306,10 +306,8 @@ on a smaller whisker.
   \centering
   \includegraphics[width=0.45\textwidth]{tracking/frame-00121.png}
   \includegraphics[width=0.45\textwidth]{tracking/frame-00122.png}
-  \caption{Frames 122 and 123. The model of the top whisker jumps to a
-    false positive, and the model of the lower whisker jumps to the
-    top whisker.}
-  \label{fig:rtracking-false-positive}
+  \caption{Frames 122 and 123. Both models jump simultaneously.}
+  \label{fig:rtracking-double-jump}
 \end{figure}
 
 
