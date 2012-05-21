@@ -1,68 +1,63 @@
 
-Care must be taken when doing this type of experimental analysis on generated whiskers, and then
-applying the conclusions on real whiskers. 
-To quote Encyclopedia of Machine Learning\cite{EncyclopediaMachineLearning} under the section ``Algorithm Evaluation''
+
+Care must be taken when doing this type of experimental analysis on
+artificial data, and then applying the conclusions on real
+data. Quoting Encyclopedia of Machine Learning
+\cite{EncyclopediaMachineLearning}, section ``Algorithm Evaluation'':
+
 \begin{quote}
-    However, much machine learning
-    research includes experimental studies in which algorithms 
-    are compared using a set of data sets with little
-    or no consideration given to what class of applications
-    those data sets might represent. It is dangerous to draw
-    general conclusions about relative performance on any
-    application from relative performance on this sample
-    of some unknown class of applications. Such experimental
-    evaluation has become known disparagingly as a bake-off.
+  ``However, much machine learning research includes experimental
+  studies in which algorithms are compared using a set of data sets
+  with little or no consideration given to what class of applications
+  those data sets might represent. It is dangerous to draw general
+  conclusions about relative performance on any application from
+  relative performance on this sample of some unknown class of
+  applications. Such experimental evaluation has become known
+  disparagingly as a bake-off.''
 \end{quote}
 
-But the results should still probably give some direction for the parameters for further studies on real whiskers.
+However, the results should still be able to give some direction for
+the parameters for further studies on real whiskers. A configuration
+that fails even under ideal circumstances is not very likely to
+succeed on real data.
 
 
 
 
-%Note on data preperation <encylcopedia>
-%on the database training:
-%"much of the theory on which learning systems are based assumes that the training data are a random sample of 
-%the population about which the user wishes to learn a model.  Howe, much historical data represent biased 
-%samples, for example, data that have been easy to collect or thath have been considered interesting for some other purpose."
-%Our data is generated randomly and would work as perfect as can be BUT
-%the bias will have a great effect when running on realdata... mention timescale problems for example, (worked like shit) 
+
+% Note on data preperation <encylcopedia> on the database training:
+% "much of the theory on which learning systems are based assumes that
+% the training data are a random sample of the population about which
+% the user wishes to learn a model.  Howe, much historical data
+% represent biased samples, for example, data that have been easy to
+% collect or thath have been considered interesting for some other
+% purpose."  Our data is generated randomly and would work as perfect
+% as can be BUT the bias will have a great effect when running on
+% realdata... mention timescale problems for example, (worked like
+% shit)
 %
 
 
-%use the word dataset, training data, test data(generated) test data(real) [test set] mention bias
+% use the word dataset, training data, test data(generated) test
+% data(real) [test set] mention bias
 
-%analysis on the use of analytical solution for Lp which is norm on the function itself (seen as an inf-dimensional vector) instead of its parameters (which we tested and had som problems with)
-
-
-%supervised learning (add in text and analysis)
-
-
-
-%
-%
-%
-%
-%
-%
-%
-
-%
-% 
-%
-%
-%
-%
-%
-
-%One cant just see the tracking by just trying one step at the time in the same way as the database "generated" since we must measure the tendency for the
-%algorithm to break down after a while, althoug it could be a fast interesting measure that we easily could have runned to see short term effects of 
-%changing the parameters then going up to longer term effects.
+% analysis on the use of analytical solution for Lp which is norm on
+% the function itself (seen as an inf-dimensional vector) instead of
+% its parameters (which we tested and had som problems with)
 
 
+% supervised learning (add in text and analysis)
+%
+% One cant just see the tracking by just trying one step at the time
+% in the same way as the database "generated" since we must measure
+% the tendency for the algorithm to break down after a while, althoug
+% it could be a fast interesting measure that we easily could have
+% runned to see short term effects of changing the parameters then
+% going up to longer term effects.
+%
+% "A learning algorithm must interpolate appropriate predictions for
+% regions of the instance space that are not included in the training
+% data." - Encyclopedia (>model evaluation)
 
-%"A learning algorithm must interpolate appropriate predictions for regions of
-%the instance space that are not included in the training data." - Encyclopedia
-%(>model evaluation)
 
-
-%Can a particlefilter overfit?(should this perhaps be in theory?)
+% Can a particlefilter overfit?(should this perhaps be in theory?)
