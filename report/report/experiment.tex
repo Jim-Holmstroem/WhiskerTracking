@@ -1,12 +1,10 @@
-The results consist of three main parts:
+The results consist of two parts:
 \begin{itemize}
 \item A benchmark of the impact of different parameters on the
   tracking performance, performed on artificial videos and evaluated
   programmatically
-\item Test runs on real data with the best performing parameters from
+\item A test run on real data with the best performing parameters from
   the benchmark, evaluated manually
-\item Conclusions concerning the feasibility of a probabilistic
-  whisker tracking system.
 \end{itemize}
 
 \section{Parameter Benchmark}
@@ -205,14 +203,14 @@ $E_{p,a}$ and $E_{\sigma,g}$, respectively. Figures
 the same graphs, but with the dominant points removed. Figure
 \ref{fig:En-maxerr-L2} shows $E_n$.
 
-\begin{figure}[hb]
+\begin{figure}[p]
   \centering
   \includegraphics[width=0.8\textwidth]{benchmark/Epa-maxerr-L2.pdf}
   \caption{$E_{p,a}$.}
   \label{fig:Epa-maxerr-L2}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[p]
   \centering
   \includegraphics[width=0.8\textwidth]{benchmark/Epa-maxerr-L2-nobig.pdf}
   \caption{$E_{p,a}$ with dominant points removed. Notice that the
@@ -221,21 +219,21 @@ the same graphs, but with the dominant points removed. Figure
   \label{fig:Epa-maxerr-L2-nobig}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[p]
   \centering
   \includegraphics[width=0.8\textwidth]{benchmark/Esg-maxerr-L2.pdf}
   \caption{$E_{\sigma,g}$.}
   \label{fig:Esg-maxerr-L2}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[p]
   \centering
   \includegraphics[width=0.8\textwidth]{benchmark/Esg-maxerr-L2-nobig.pdf}
   \caption{$E_{\sigma,g}$ with dominant points removed.}
   \label{fig:Esg-maxerr-L2-nobig}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[p]
   \centering
   \includegraphics[width=0.8\textwidth]{benchmark/En-maxerr-L2.pdf}
   \caption{$E_n$. Note the logarithmic scale of $n$.}
@@ -243,6 +241,79 @@ the same graphs, but with the dominant points removed. Figure
 \end{figure}
 
 
+\section{Run on real data}
+
+The parameters $\left(n_0, p_0, a_0, \sigma_0, g_0\right)$ from the
+parameter benchmark were used for running the tracker on a real
+whisker video of 131 frames. The performance was evaluated manually.
+
+Figure \ref{fig:rtracking} shows the first 18 frames, including the
+manually initialized start frame. Green lines are the estimated shapes
+of the whiskers.. The following figures show a selection of images
+from the tracking sequence. Figure \ref{fig:rtracking-jump} shows how
+the model of the lower whisker ``jumps'' to another whisker further
+down the array. Figure \ref{fig:rtracking-jump-coincide} shows another
+jump, this time resulting in both models coinciding. Figure
+\ref{fig:rtracking-false-positive} shows how both models
+simultaneously jump to other whiskers, the top being a false positive
+on a smaller whisker.
+
+\begin{figure}[p]
+  \centering
+  \begin{tabular}{ccc}
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00000.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00001.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00002.png}\\
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00003.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00004.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00005.png}\\
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00006.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00007.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00008.png}\\
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00009.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00010.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00011.png}\\
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00012.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00013.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00014.png}\\
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00015.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00016.png} &
+    \includegraphics[width=0.3\textwidth]{tracking/frame-00017.png}\\
+  \end{tabular}
+  \caption{The 18 first frames from tracking results on real data.}
+  \label{fig:rtracking}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=0.45\textwidth]{tracking/frame-00021.png}
+  \includegraphics[width=0.45\textwidth]{tracking/frame-00022.png}
+  \caption{Frames 22 and 23. The model of the lower whisker ``jumps''
+    to another whisker.}
+  \label{fig:rtracking-jump}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=0.45\textwidth]{tracking/frame-00044.png}
+  \includegraphics[width=0.45\textwidth]{tracking/frame-00045.png}
+  \caption{Frames 45 and 46. The model of the lower whisker jumps to
+    another whisker, this time coinciding with the top model.}
+  \label{fig:rtracking-jump-coincide}
+\end{figure}
+
+\begin{figure}[p]
+  \centering
+  \includegraphics[width=0.45\textwidth]{tracking/frame-00121.png}
+  \includegraphics[width=0.45\textwidth]{tracking/frame-00122.png}
+  \caption{Frames 122 and 123. The model of the top whisker jumps to a
+    false positive, and the model of the lower whisker jumps to the
+    top whisker.}
+  \label{fig:rtracking-false-positive}
+\end{figure}
+
+
+\begin{comment}
 \begin{verbatim}
 Mål:
   - Någon form av slutsats huruvida det är rimligt att fortsätta
@@ -281,3 +352,4 @@ And all this are done for all 4 benchmark videos.
 %1. Since we have prior knowledge about the effect off varying the parameters n,N
 %they will firstly be set to a sufficently large value.
 %2. A partion of the test-matrix will then be evaluated by ... parameter group 
+\end{comment}
