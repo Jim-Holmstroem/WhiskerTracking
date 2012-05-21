@@ -32,7 +32,7 @@ for ni, n in enumerate(nn):
                     path = absolute_error_path_pattern%(n,p,a,g,s*sigma_limits)
                     
                     if not os.path.exists(path):
-#                        print "Did not find n=%i, p=%i, a=%i, g=%i, s=%i"%(n,p,a,g,s)
+                        print "Did not find n=%i, p=%i, a=%i, g=%i, s=%f"%(n,p,a,g,s)
                         continue
                     
                     absolute_errors = numpy.load(path)
@@ -51,20 +51,57 @@ for i, P in enumerate(err_norms):
     best_maxerr = numpy.where(maxerr == maxerr.min())
     best = numpy.where(E[i] == E[i].min())
 
-    print "Least maxerr for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%i"%((P, maxerr.min()) + get_params_for_index(best_maxerr))
-    print "Least error  for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%i"%((P, E[i].min()) + get_params_for_index(best))
+    print "Least maxerr for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%((P, maxerr.min()) + get_params_for_index(best_maxerr))
+    print "Least error  for L%i: %f\tn=%i, p=%i, a=%i, g=%i, s=%f"%((P, E[i].min()) + get_params_for_index(best))
 
     fig = plt.figure()
     ax = Axes3D(fig)
 
-    X, Y = numpy.meshgrid(aa[1:], pp)
-    Z = maxerr[best_maxerr[0][0],:,1:,best_maxerr[3][0],best_maxerr[4][0]]
+    mina = 0
+    maxa = len(aa)
+    minp = 0
+    maxp = len(pp)
+
+    if best_maxerr[0] == 3:
+        maxp -= 1
+
+    X = aa[mina:maxa]
+    Y = pp[minp:maxp]
+
+    X, Y = numpy.meshgrid(X, Y)
+    Z = maxerr[best_maxerr[0][0],minp:maxp,mina:maxa,best_maxerr[3][0],best_maxerr[4][0]]
     Z[numpy.where(Z > 1E17)] = None
-    surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+
+    def scatterplot():
+        return ax.scatter(X.flatten(), Y.flatten(), Z.flatten())#, rstride=1, cstride=1, cmap=cm.jet)
+    
+    def surfplot():
+        surf = ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+        fig.colorbar(surf)
+        return surf
+
+    def wireframeplot():
+        return ax.plot_wireframe(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+
+    def plot(s):
+        if s == "scatter":
+            return scatterplot()
+        if s == "surf":
+            return surfplot()
+        if s == "wireframe":
+            return wireframeplot()
+        raise TypeError("No such plot function.")
+
+    import sys
+    plottype = "surf"
+    print sys.argv
+    if len(sys.argv) > 1:
+        plottype = sys.argv[1]
+    plot(plottype)
+
     ax.set_title("Maxerr vs. a and p in L%i"%(P))
     ax.set_xlabel('a')
     ax.set_ylabel('p')
     ax.set_zlabel('E')
-    fig.colorbar(surf)
     
 plt.show()
