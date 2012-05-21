@@ -302,8 +302,8 @@ section \ref{sec:findbody}.
 
 A local search within $5$px from the last location is then
 performed\footnote{This could easily be extended to include rotation
-  as well.}  for each body image $I_{\text{body}}$ in the
-sequence. The translation $(\Delta x, \Delta y)$ from $I_{\text{ref}}$
+  as well.} for each body image $I_{\text{body}}$ in the
+sequence, which can be seen in figure \ref{fig:tracked_snout}. The translation $(\Delta x, \Delta y)$ from $I_{\text{ref}}$
 is extracted:\footnote{In the same way as $\Response{\cdot}{\cdot}{\phi}$ but without the hypothesis.}
 \begin{equation}
   (\Delta x, \Delta y) = \argmax{(x,y)~\text{close}}
@@ -312,5 +312,14 @@ is extracted:\footnote{In the same way as $\Response{\cdot}{\cdot}{\phi}$ but wi
   )
   \in \ZZ^2,
 \end{equation}
-
 and the frame is then translated accordingly.
+
+\begin{figure}
+\begin{center}
+    \includegraphics[width=\textwidth]{snout_tracked.png}
+\end{center}
+\caption{Showing the snout coordinate system tracking in progress, the best match is shown. Reference image is in green and the tracked image is red, the overlapping becomes yellow.}
+\label{fig:tracked_snout}
+\end{figure}
+
+
