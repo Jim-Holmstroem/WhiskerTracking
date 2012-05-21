@@ -160,10 +160,6 @@ that is an hypotesis is just given parameters on the model
 what then is the model evaluation as described in the encyclopedia in our case?
 ================================================
 
-=============== RANDOM ===================
-
-+, having signature R->R
-
 ==Lookup words from above(are these relevant?)==
 >Hypotesis Language (under ANN.crossreference)
 >Semi supervised learning (Co-training)
@@ -174,12 +170,12 @@ what then is the model evaluation as described in the encyclopedia in our case?
 >Leave-on-out error (interesting)
 >>Naive bayes, do we use these assumptions in PF?
 >Supervised learning
->Could one apply reinforcement learning somehow taking "the future" decision into consideration, that is if i choose this as most.prob solution at t what whould that give me in t+1,t+2,.. (basically heightens the total expected result, that is the result for the entire video, and since we dont run this in realtime we can use these types of expensive algorthims. (check it out further before going in to it more)
+>Could one apply reinforcement learning somehow taking "the future" decision into consideration, that is if i 
+choose this as most.prob solution at t what whould that give me in t+1,t+2,.. (basically heightens the total expected result, that is 
+the result for the entire video, and since we dont run this in realtime we can use these types of expensive algorthims. (check it out further before going in to it more)
 
 ===================================================================
 Its work a bit in the same way as feature selection the more uncertain you are if a feature parameter is correct the more you spread the search there
-(Is it possible for the algorithm to sense when you are unceratain of the value for some parameter and lay extra effort until you have it ?) an example would be if one could dynamically choose the number of particles needed depending on how sure you are about the result (after all this isnt a realtime application)
-
-===========================================
-According to "Att genomföra projektarbeten"
+(Is it possible for the algorithm to sense when you are unceratain of the value for some parameter and lay extra effort until you have it ?)
+an example would be if one could dynamically choose the number of particles needed depending on how sure you are about the result (after all this isnt a realtime application)
 
