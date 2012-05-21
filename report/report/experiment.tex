@@ -27,12 +27,12 @@ running Ubuntu Linux 10.04.
 
 The test data consisted of a single generated video of artificial
 whiskers. The video contained 6 whiskers and was 64 frames long. Each
-whisker had length 200 and a random base shape $\Spline{\omega}$, with
-$a_3, a_2, a_1$. Each $a_i$ was in the range $\left[0,
-  \sigma_i\right)$, where $\sigma_3 = 1.6 \cdot 10^{-5}, \sigma_2 =
-4\cdot 10^{-3}, \sigma_1 = 1$. Each whisker was then assigned a random
-phase $d \in \left[0, 2\pi\right)$, and the shape at time step $t$ was
-$\left(\Spline{\omega}\right) \sin(\frac{2\pi t}{30} + d)$.
+whisker had length 200 and a random base shape $\Spline{\omega}$. Each
+$a_i$ was in the range $\left[0, \sigma_i\right)$, where $\sigma_3 =
+1.6 \cdot 10^{-5}, \sigma_2 = 4\cdot 10^{-3}, \sigma_1 = 1$. Each
+whisker was then assigned a random phase $d \in \left[0, 2\pi\right)$,
+and the shape at time step $t$ was $\left(\Spline{\omega}\right)
+\sin(\frac{2\pi t}{30} + d)$.
 
 The shape and the frequency $\frac{1}{30}$ were selected through
 manual inspection of a video of real whiskers in order to make the
@@ -244,9 +244,14 @@ the same graphs, but with the dominant points removed. Figure
 
 \section{Run on real data}
 
-The parameters $\left(n_0, p_0, a_0, \sigma_0, g_0\right)$ from the
-parameter benchmark were used for running the tracker on a real
-whisker video of 131 frames. The performance was evaluated manually.
+The parameters $p_0, a_0, \sigma_0, g_0$ from the parameter benchmark
+were used for running the tracker on a real whisker video of 131
+frames. The particle count $n$, however, was set to 128 to reduce
+computation time.\footnote{This was performed late in the project, and
+  there was no time to run the test with 512 particles. The error
+  should roughly follow the behaviour in figure \ref{fig:En-maxerr-L2},
+  perhaps steeper since real data poses more difficulties.} The
+performance was evaluated manually.
 
 Figure \ref{fig:rtracking} shows the first 18 frames, including the
 manually initialized start frame. Green lines are the estimated shapes
@@ -280,7 +285,9 @@ simultaneously jump to other whiskers, the top being a smaller whisker.
     \includegraphics[width=0.3\textwidth]{tracking/frame-00016.png} &
     \includegraphics[width=0.3\textwidth]{tracking/frame-00017.png}\\
   \end{tabular}
-  \caption{The 18 first frames from tracking results on real data.}
+  \caption{The 18 first frames from tracking results with 128
+    particles on real data, ordered left-to-right, top-to-bottom. The
+    first frame shows the initialization.}
   \label{fig:rtracking}
 \end{figure}
 
@@ -312,7 +319,6 @@ simultaneously jump to other whiskers, the top being a smaller whisker.
 
 
 \begin{comment}
-\begin{verbatim}
 Mål:
   - Någon form av slutsats huruvida det är rimligt att fortsätta
 undersöka detta
@@ -325,7 +331,6 @@ undersöka detta
 Rapporten:
   - Går det att skala problemet? Undersök.
   - Jämför lösningar
-\end{verbatim}
 
 The measures that will be used as fitness of the parameters:
     \begin{description}

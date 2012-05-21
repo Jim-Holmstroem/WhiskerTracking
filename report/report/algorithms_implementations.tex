@@ -110,7 +110,10 @@ the prediction nondeterministic.
 
 The tracker uses the whisker model described in chapter 4 and
 internally represents whiskers with the tuple $\coeffs$ of polynomial
-coefficients.
+coefficients. When multiple whiskers are to be tracked, they are
+tracked independently in sequence as individual tracking
+assignments. This means that the whisker models cannot account for
+each other's positions.
 
 \subsection{Filtering $\cprob{I_t}{x_t}$}
 \label{sec:filtering}

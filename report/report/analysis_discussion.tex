@@ -47,7 +47,7 @@ computational cost or less.
   \centering
   \includegraphics[width=0.6\textwidth]{Lp_complexity.pdf}
   \caption{Computation times for computing $\Lpnorm{10^{-7}\omega^3 +
-      10^-3\omega^2 + 150\omega}$ 16384 times.}
+      10^-3\omega^2 + 150\omega}$ 16384 times for $p=2,4,8$.}
   \label{fig:Lp-complexity}
 \end{figure}
 
@@ -102,16 +102,17 @@ gave a higher response than the latter.
 
 
 
-\section{Discussion of the testing implementation}
+\section{Possible improvements}
 
 Judging by the results of the run on real data, the following are the
-greatest weaknesses of the testing implementation:
+greatest weaknesses of the testing implementation:\footnote{Excluding
+  the fact that the database is probably not representative of whisker
+  dynamics}
 
 \begin{itemize}
 \item The whisker model expects whisker roots to be stationary.
 \item The response function\footnote{Including the chosen
     transformation $\phi$} is too simple.
-
 \end{itemize}
 
 A combination of these manifested clearly in the run on real
@@ -127,11 +128,42 @@ difficult for the tracker to keep the model tracking the same
 whisker. We therefore draw the following conclusion.
 
 \begin{quote}
-  A good whisker model must account for movements of the whisker
-  ``root'' along the surface of the snout.
+  A good whisker model must account for movements of the whisker root
+  along the surface of the snout.
 \end{quote}
 
+Here the ``root'' of the whisker refers to the point where the whisker
+shaft emerges from the snout.
 
+Other possible improvements include:
+
+\begin{itemize}
+\item Developing a statistically rigorous response function. The one
+  used in this thesis is very simple, and only gives a rough estimate
+  of the probability that a hypothesis matches a whisker in the image,
+  as indicated by figure \ref{fig:response_real}. A better solution
+  might be to create a classifier that estimates the probability of a
+  pixel being part of a whisker as opposed to the probability of being
+  a non-whisker pixel, and combine multiple visual cues.\footnote{As
+    is common in computer vision, and also used by
+    Sidenbladh. \cite{Hedvig}} This might also include motion and
+  direction cues, and not only pure pixel cues. A direction cue could
+  consider the directions of whiskers, making it easier to cancel
+  noise caused when whiskers cross.
+
+  One could also investigate if it is possible to combine the particle
+  filter with the analysis developed by Voigts et
+  al. \cite{UnsupervisedTracking} as it proved to be a powerful
+  classifier even on its own.
+
+\item Having the tracker manage all whiskers simultaneously, as
+  opposed to independently in sequence as is used in this thesis. The
+  tracker could then avoid mapping multiple whisker models to the same
+  whisker in the image, and attempt a perfect bipartite matching
+  between time steps. This could make the jumps between whiskers less
+  frequent, or perhaps eliminate them altogether.
+
+\end{itemize}
 
 % use the word dataset, training data, test data(generated) test
 % data(real) [test set] mention bias
