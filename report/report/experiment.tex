@@ -17,6 +17,13 @@ performed on generated videos of synthetic whiskers, which enabled
 programmatic evaluation of the results since the correct shapes of the
 whiskers, the \emph{ground truth}, were known.
 
+The benchmarks were run on about 16 computers\footnote{This varied in
+  time as other students also wanted access to the computers.} in the
+computer halls Grå and Karmosin at KTH for two nights. The computers
+were all equipped with 2.83 GHz quad-core Intel\textregistered \;
+Core\texttrademark \; 2 Quad processors and 3.8 GiB of RAM, and were
+running Ubuntu Linux 10.04.
+
 \subsection{Test data}
 \label{sec:test-data}
 
@@ -76,7 +83,30 @@ The following parameters were evaluated:
 \item[g] The exponent for the importance in the filtering step
 \end{description}
 
-Table \ref{tbl:testcases} shows the tested values.
+Table \ref{tbl:testcases} shows the tested values. The values to test
+were chosen for the following reasons:
+
+\begin{description}
+\item[n] 512 particles was the most the computer systems could handle
+  in reasonable time. This was then scaled down to 64 as lower
+  particle counts are, subjectively, quite uninteresting.
+\item[p] The $\Lp$ norm computation implementation used only handled
+  even values of $p$. Computation time increased rapidly with $p$, so
+  $p=8$ was the highest value for which the computations could be done
+  in time.
+\item[a] The range was chosen to start from 1 because lower values
+  would counteract the intended purpose of the parameter. The end 8
+  was chosen since higher values were believed to restrict the
+  prediction too much.
+\item[$\sigma$] The max value 0.2 was selected so that each parameter
+  could vary roughly a fifth of the parameter space in each
+  direction. The other three were selected as lower, exponentially
+  spaced points.
+\item[g] The range was selected in the same way as that of $a$.
+\end{description}
+
+All value series were spaced exponentially since orders of magnitude
+are most interesting in this benchmark.
 
 \begin{table}
   \centering
@@ -99,20 +129,20 @@ The benchmark was run on the test video for each combination of
 parameters in table \ref{tbl:testcases}. The output from the benchmark
 is an error matrix $\epsilon_{i,t}$, where index $i, t$ contains
 $\Lpnorm[2]{Z_t - x_t}$, the $\Lp[2]$ distance between the ground
-truth and estimated shape for whisker $i$ at time $t$. From this a
+truth and estimated shape for whisker $i$ at time $t$. From this, a
 list $\epsilon_i$ was computed as the root mean square of
 $\epsilon_{i,t}$ in the $t$ direction. Finally, the maximum value in
 $\epsilon_i$ was selected as the \emph{error} $\epsilon$ of that
 run. This gives us the error tensor
 
 \begin{equation}
-  E_{n,p,a,\sigma,g} = \argmax{i} \sqrt{\left(\sum\limits_t
-      \epsilon_{i,t}^2 \right)} ~ \forall \left(n, p,
+  E_{n,p,a,\sigma,g} = \argmax{i} \sqrt{\frac{\sum\limits_t
+      \epsilon_{i,t}^2}{64} } ~ \forall \left(n, p,
     a, \sigma, g\right).
 \end{equation}
 
-However, the tests for $p=8$ took a very long time to run, and some
-tests did not finish in time. This included all tests for $n=512$ and
+However, some tests took a very long time to run, and therefore some
+did not finish in time. This included all tests for $n=512$ and
 $p=8$. These and the test specifications in table
 \ref{tbl:unfinished-runs} were not included in the analysis.
 
@@ -121,14 +151,14 @@ $p=8$. These and the test specifications in table
   \begin{tabular}{ccccc}
     $n$ & $p$ & $a$ & $\sigma$ & $g$\\
     \hline
-    64 & 8 & 4 & 0.5 & 8\\
-    64 & 8 & 8 & 0.5 & 1\\
-    64 & 8 & 8 & 1 & 2\\
-    64 & 8 & 8 & 0.25 & 4\\
-    512 & 2 & 4 & 0.25 & 4\\
-    512 & 2 & 4 & 0.5 & 4\\
-    512 & 2 & 4 & 1 & 4\\
-    512 & 4 & 1 & 2 & 8
+    64 & 8 & 4 & 0.05 & 8\\
+    64 & 8 & 8 & 0.05 & 1\\
+    64 & 8 & 8 & 0.1 & 2\\
+    64 & 8 & 8 & 0.025 & 4\\
+    512 & 2 & 4 & 0.025 & 4\\
+    512 & 2 & 4 & 0.05 & 4\\
+    512 & 2 & 4 & 0.1 & 4\\
+    512 & 4 & 1 & 0.2 & 8
   \end{tabular}
   \caption{Unfinished test runs. Omitted are $\left(512, 8, a, \sigma,
       g\right) ~ \forall a, \sigma, g$.}
@@ -149,17 +179,66 @@ contents is not feasible. Instead the index $\left(n_0, p_0, a_0,
 minimized was used as the common point of the following plots. Using
 this index, the the cross sections
 \begin{IEEEeqnarray}{rCl}
-  E_{a,p} &=& E_{n_0, p, a, \sigma_0, g_0} ~ \forall p, a\\
-  E_{s,g} &=& E_{n_0, p_0, a_0, \sigma, g} ~ \forall \sigma, g
+  E_{p,a} &=& E_{n_0, p, a, \sigma_0, g_0} ~ \forall p, a\\
+  E_{\sigma,g} &=& E_{n_0, p_0, a_0, \sigma, g} ~ \forall \sigma, g
 \end{IEEEeqnarray}
 were extracted and plotted.
 
 Also investigated was the effect of computing $E$ using the $\Lp[4]$
 and $\Lp[8]$ norms, in order to see if this had some correlation to
-the choice of $p$. However, the resulting $E_{a,p}$ and $E_{s,g}$ for
+the choice of $p$. However, the resulting $E_{p,a}$ and $E_{\sigma,g}$ for
 $\Lp[2], \Lp[4]$ and $\Lp[8]$ all had the same qualitative behaviour,
 so the $\Lp[4]$ and $\Lp[8]$ versions of $E$ are omitted from this
 report.
+
+\subsection{Results}
+Figures \ref{fig:Epa-maxerr-L2} and \ref{fig:Esg-maxerr-L2} show
+$E_{p,a}$ and $E_{\sigma,g}$, respectively.
+
+\begin{figure}[hb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{benchmark/Epa-maxerr-L2.pdf}
+  \caption{$E_{p,a}$.}
+  \label{fig:Epa-maxerr-L2}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{benchmark/Epa-maxerr-L2-nobig.pdf}
+  \caption{$E_{p,a}$ with dominant points removed. Notice that the
+    plot has been rotated so that the $p$ axis now extends to the
+    left.}
+  \label{fig:Epa-maxerr-L2-nobig}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{benchmark/Esg-maxerr-L2.pdf}
+  \caption{$E_{\sigma,g}$.}
+  \label{fig:Esg-maxerr-L2}
+\end{figure}
+
+\begin{figure}
+  \centering
+  \includegraphics[width=0.8\textwidth]{benchmark/Esg-maxerr-L2-nobig.pdf}
+  \caption{$E_{\sigma,g}$ with dominant points removed.}
+  \label{fig:Esg-maxerr-L2-nobig}
+\end{figure}
+
+\begin{verbatim}
+Mål:
+  - Någon form av slutsats huruvida det är rimligt att fortsätta
+undersöka detta
+    - Identifiera problem och svårigheter
+      - Vad är svårare? Försök kvantifiera svårigheter hos problemen
+    - Utvärdera prestanda hos algoritmen
+      - Tid
+      - Resultat
+
+Rapporten:
+  - Går det att skala problemet? Undersök.
+  - Jämför lösningar
+\end{verbatim}
 
 The measures that will be used as fitness of the parameters:
     \begin{description}
@@ -180,7 +259,7 @@ And all this are done for all 4 benchmark videos.
 
 %"There are many metrics by which a model may be assessed." - Encyclopedia
 
-%Tillvägagångsätt:
+%TillvÃ¤gagÃ¥ngsÃ¤tt:
 %1. Since we have prior knowledge about the effect off varying the parameters n,N
 %they will firstly be set to a sufficently large value.
 %2. A partion of the test-matrix will then be evaluated by ... parameter group 
