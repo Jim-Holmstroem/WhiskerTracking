@@ -66,7 +66,7 @@ for i, P in enumerate(err_norms[:1]):
     fig = plt.figure()
     ax = Axes3D(fig)
 
-    mina = 0
+    mina = 1#1
     maxa = len(aa)
     minp = 0
     maxp = len(pp)
@@ -78,8 +78,13 @@ for i, P in enumerate(err_norms[:1]):
     Y = pp[minp:maxp]
 
     X, Y = numpy.meshgrid(X, Y)
+    print X
+    print Y
+
     Z = maxerr[best_maxerr[0][0],minp:maxp,mina:maxa,best_maxerr[3][0],best_maxerr[4][0]]
     Z[numpy.where(Z > 1E17)] = None
+
+    print Z
 
     def scatterplot():
         return ax.scatter(X.flatten(), Y.flatten(), Z.flatten())#, rstride=1, cstride=1, cmap=cm.jet)
@@ -116,7 +121,7 @@ for i, P in enumerate(err_norms[:1]):
     fig = plt.figure()
     ax = Axes3D(fig)
 
-    mins = 2
+    mins = 0#2
     maxs = len(ss)-1
     ming = 0
     maxg = len(gg)
@@ -127,6 +132,7 @@ for i, P in enumerate(err_norms[:1]):
     X, Y = numpy.meshgrid(X, Y)
     Z = maxerr[best_maxerr[0][0],best_maxerr[1][0],best_maxerr[2][0],ming:maxg,mins:maxs]
     Z[numpy.where(Z > 1E17)] = None
+    print Z
 
     def scatterplot():
         return ax.scatter(X.flatten(), Y.flatten(), Z.flatten())#, rstride=1, cstride=1, cmap=cm.jet)

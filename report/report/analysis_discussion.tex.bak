@@ -30,7 +30,7 @@ smaller and smaller, meaning even a significant increase in particle
 count does not guarantee a measurable decrease in error. The model
 used in this thesis has only 3 DOF, which can at most barely be
 considered high-dimensional, meaning more particles may not be
-necessary for similar whisker models.
+necessary for similiar whisker models.
 
 The value of $p$ does not seem to notably affect tracking performance,
 as seen in figure \ref{fig:Epa-maxerr-L2} which is almost flat in the
@@ -54,7 +54,7 @@ computational cost or less.
 The value of $a$ that yielded the best result was $a=2$. The error
 increased by more than 20\% when $a$ was increased to 4 or 8, and more
 than tripled for $a=1$. This is reasonable, since a we want close
-transitions to receive higher weights, but a too high $a$ would make
+transitions to recieve higher weights, but a too high $a$ would make
 the weighted mean converge to the argmax function instead, taking only
 a single training transition into account.
 
@@ -84,7 +84,7 @@ the most important properties of the training data.
 
 Finally, the value of the parameter $g$ that minimized $E$ was
 $g=4$. The dependence of $E$ on $g$, however, is unclear and no real
-conclusions can be drawn from the results. No qualitative behavior
+conclusions can be drawn from the results. No qualitative behaviour
 can be seen in the $g$ direction of figure \ref{fig:Esg-maxerr-L2}. It
 is also difficult to predict what values of $g$ should give a good
 performance. A low $g$ would make clutter too important. A high $g$
