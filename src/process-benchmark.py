@@ -167,6 +167,7 @@ for i, P in enumerate(err_norms[:1]):
     
     fig = plt.figure()
     plt.semilogx(nn, maxerr[:,best_maxerr[1][0],best_maxerr[2][0],best_maxerr[3][0],best_maxerr[4][0]], nn, maxerr[:,best_maxerr[1][0],best_maxerr[2][0],best_maxerr[3][0],best_maxerr[4][0]], 'r*', basex=2)
+    fig.get_axes()[0].set_xticklabels([str(2**n) for n in xrange(5,10)])
     plt.axis((2**5.75, 2**9.25, 0, 80))
     plt.xlabel('n')
     plt.ylabel('E')

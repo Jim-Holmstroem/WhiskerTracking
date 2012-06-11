@@ -60,17 +60,18 @@ a single training transition into account.
 
 The modifier $\sigma$ for the standard deviation of the offset to the
 sampled particles had a large impact on the error. The best value was
-$0.2$, the maximum value, meaning the magnitude of the could be
+$0.2$, the maximum value, meaning the magnitude of the offset could be
 roughly a fifth of the width of the populated region of the database
 in each direction. This may be a bit surprising at first thought, but
 one has to remember that the database used was artificially
 generated. Even real data samples suffer selection bias if the
 training data is not sampled from the model one intends to
 learn.\footnote{As mentioned in the section ``Data Preparation'' of
-  Encyclopedia of Machine Learning. \cite{EncyclopediaMachineLearning}}
-In this case, the training data is not sampled from real data, and
-furthermore was generated with settings guessed after inspection of
-whisker videos. This means that the training data is probably a bad
+  Encyclopedia of Machine
+  Learning. \cite{EncyclopediaMachineLearning}} In this case, the
+training data is not sampled from real data, and furthermore was
+generated with settings guessed after inspection of whisker
+videos. This means that the training data is probably a bad
 representative of whisker dynamics, and a large $\sigma$ therefore
 helps ``blur out'' the deficiencies of the training data.
 

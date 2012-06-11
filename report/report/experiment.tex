@@ -134,7 +134,7 @@ $\epsilon_i$ was selected as the \emph{error} $\epsilon$ of that
 run. This gives us the error tensor
 
 \begin{equation}
-  E_{n,p,a,\sigma,g} = \argmax{i} \sqrt{\frac{\sum\limits_t
+  E_{n,p,a,\sigma,g} = \max{i} \sqrt{\frac{\sum\limits_t
       \epsilon_{i,t}^2}{64} } ~ \forall \left(n, p,
     a, \sigma, g\right).
 \end{equation}
@@ -234,7 +234,7 @@ the same graphs, but with the dominant points removed. Figure
   \label{fig:Esg-maxerr-L2-nobig}
 \end{figure}
 
-\begin{figure}[p]
+\begin{figure}[htb]
   \centering
   \includegraphics[width=0.8\textwidth]{benchmark/En-maxerr-L2.pdf}
   \caption{$E_n$. Note the logarithmic scale of $n$.}
