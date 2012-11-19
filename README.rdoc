@@ -2,6 +2,9 @@
 Bachelordegree project in machinelearning. The goal is to use statistical 
 methods to get reliable unsupervised rat whisker tracking in highspeed video. 
 
+== Report
+The report can be found at <https://github.com/Jim-Holmstroem/WhiskerTracking/blob/master/report/report/report.pdf?raw=true>
+
 == Project requirements:
 === WhiskerTracker
 * python >=2.6.5 <http://www.python.org>
